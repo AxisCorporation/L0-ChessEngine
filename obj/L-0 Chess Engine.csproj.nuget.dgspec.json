@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Zain Farhan\\Desktop\\Test-C#\\L-0 Chess Engine\\L-0 Chess Engine.csproj": {}
+    "C:\\Users\\daudk\\OneDrive\\Code\\C#\\Chess Engine\\L0-ChessEngine\\L-0 Chess Engine.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Zain Farhan\\Desktop\\Test-C#\\L-0 Chess Engine\\L-0 Chess Engine.csproj": {
+    "C:\\Users\\daudk\\OneDrive\\Code\\C#\\Chess Engine\\L0-ChessEngine\\L-0 Chess Engine.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Zain Farhan\\Desktop\\Test-C#\\L-0 Chess Engine\\L-0 Chess Engine.csproj",
+        "projectUniqueName": "C:\\Users\\daudk\\OneDrive\\Code\\C#\\Chess Engine\\L0-ChessEngine\\L-0 Chess Engine.csproj",
         "projectName": "L-0 Chess Engine",
-        "projectPath": "C:\\Users\\Zain Farhan\\Desktop\\Test-C#\\L-0 Chess Engine\\L-0 Chess Engine.csproj",
-        "packagesPath": "C:\\Users\\Zain Farhan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Zain Farhan\\Desktop\\Test-C#\\L-0 Chess Engine\\obj\\",
+        "projectPath": "C:\\Users\\daudk\\OneDrive\\Code\\C#\\Chess Engine\\L0-ChessEngine\\L-0 Chess Engine.csproj",
+        "packagesPath": "C:\\Users\\daudk\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\daudk\\OneDrive\\Code\\C#\\Chess Engine\\L0-ChessEngine\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Zain Farhan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\daudk\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -43,9 +43,9 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "direct"
+          "auditMode": "all"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net9.0": {
@@ -88,7 +88,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

@@ -64,3 +64,4 @@ C:\Users\Zain Farhan\Desktop\Test-C#\L-0 Chess Engine\obj\Debug\net9.0\refint\L-
 C:\Users\Zain Farhan\Desktop\Test-C#\L-0 Chess Engine\obj\Debug\net9.0\L-0 Chess Engine.pdb
 C:\Users\Zain Farhan\Desktop\Test-C#\L-0 Chess Engine\obj\Debug\net9.0\L-0 Chess Engine.genruntimeconfig.cache
 C:\Users\Zain Farhan\Desktop\Test-C#\L-0 Chess Engine\obj\Debug\net9.0\ref\L-0 Chess Engine.dll
+C:\Users\Zain Farhan\Desktop\Test-C#\L-0 Chess Engine\obj\Debug\net9.0\L-0 Chess Engine.sourcelink.json

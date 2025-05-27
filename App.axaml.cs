@@ -1,6 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using L_0_Chess_Engine.Views;
 
 namespace L_0_Chess_Engine;
 

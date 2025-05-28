@@ -5,5 +5,5 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="L_0_Chess_Engine.Views.MainWindow"
         Title="L_0_Chess_Engine">
-    Welcome to Avalonia!
+    A Random Change!
 </Window>

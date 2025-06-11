@@ -1,5 +1,5 @@
 # L-0 Chess Engine
-**Edit Access**: Zain Farhan
+**Edit Access:** Zain Farhan
 
 This Repo is owned and maintained by some LUMS students for the purposes of using it for their Summer Project. This is a Chess Engine build from scratch using the Avalonia UI with the .NET framework.
 ## Table of Contends
@@ -68,6 +68,7 @@ Below are the guidelines for the code of conduct we recommend that you follow. T
 - Any merge request must be approved by their designated code reviewer or the Admin.
 - Any pull request must be approved by a code reviewer and one other contributor.
 - All code reviewers must provide a Valid Description for any rejection.
+- Avoid making paragraphs worth of comments.
 - Avoid making self-explanatory comments:
 ```
   // Counter for Moves
@@ -81,7 +82,7 @@ Below are the guidelines for the code of conduct we recommend that you follow. T
 - Avoid ambiguous names (e.g. `Backup2.txt`).
 - Unreasonable requests (e.g. a merge request consisting of more than a 1,000 lines) will not be humoured.
 
-A failure to comply may result in your code be rejected or even being taken out of the development team based on how egregious the non-compliance is.
+A failure to comply may result in your code be rejected or even you being taken out of the development team based on how egregious the non-compliance is.
 
 ## Naming Scheme
 

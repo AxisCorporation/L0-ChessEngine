@@ -7,12 +7,13 @@ This Repo is owned and maintained by some LUMS students for the purposes of usin
 1. [Introduction](#introduction)
 2. [To-Do List](#To-Do)
 3. [Guidelines](#Guidelines)
-4. [Naming Schemes](#Naming-Schemes)
+4. [Naming Schemes](#Naming-Scheme)
 5. [Resources](#Resources)
 6. [Permissions](#Permissions)
+
 ## Introduction
 
-We will first have to re-create the entire game of chess in Avalonia, then we will try to create a Chess Bot by implementing a Min-Max Algorithm. This is the baseline for our project requirements, once and if we achieve this, we will try to implement more difficult solution. Like training a Chess Bot using Reinforcement Learning (A type of Machine Learning). These Base and Extra tasks may change over the course of development and can be viewed in the [To-Do List](#To-Do).
+We will first have to re-create the entire game of chess in Avalonia, then we will try to create a Chess Bot by implementing a Basic Min-Max Algorithm. This is the baseline for our project requirements, once and if we achieve this, we will try to implement more difficult solutions. Like training a Chess Bot using Reinforcement Learning (A type of Machine Learning). These Base and Extra tasks may change over the course of development and can be viewed in the [To-Do List](#To-Do).
 
 Please make sure you have all the required tools installed and ready:
 - Framework: .NET 9.0 sdk (I also recommend downloading the .NET 8.0 runtime)
@@ -26,25 +27,31 @@ MVVM stands for Model–View–ViewModel. It’s a design pattern used to organi
 
 MVVM breaks this into 3 parts:
 
-- 1. **Model:** 
+1. **Model:** 
 This is your data layer.  It includes the weather data and logic to fetch it from the internet or a database. No UI code here.
 
-- 2. **View:**
+2. **View:**
 This is the UI — what the user sees and interacts with. Buttons, labels, graphs, etc. It doesn’t know where the data comes from or how it’s processed. It just shows it. So in our case it would just be the weather information.
 
-- 3. **View-Model:**
+3. **View-Model:**
 This is the middle layer between the View and the Model. It takes raw data from the Model and prepares it for the View. For example, it might convert "23.4°C" into "Warm day" for display. The View-Model also handles UI events, like when the user taps a button to refresh the weather.
 
 ## To-Do
+The Development Cycles have been divided into various Stages.
 
-Base Tasks:
+### Stage 1
 - [ ] Main Menu
-- [ ] Basic Chess Implementation
-- [ ] A Basic Min Max Algorithm
+- [ ] Backend
+  - [ ] Chess Board
+  - [ ] Chess Pieces
+  - [ ] Moving Chess Pieces (No Validation)
+- [ ] Frontend
+  - [ ] Displaying Chess Board
+  - [ ] Displaying Chess Pieces
 
-Extra Tasks:
+### Stage ω
 - [ ] A Reinforced Trained Engine
-- [ ] Database Integration (Optional)
+- [ ] Database Integration
 
 ## Guidelines
 
@@ -85,9 +92,9 @@ Please use the following naming conventions when writing and submitting code, ch
 - Classes/Interfaces: *PascalCase*
 - Files: *PascalCase*
 
-Though these will not be strictly enforced, the naming convention used must be sensible and integrate well with the existing code base or it may be rejected.
+Though these will not be strictly enforced, the naming convention used must be sensible and integrate well with the existing code base, or it may be rejected.
 
-Additionally, following the official naming scheme would be appreciate but is not required. For additional info, [see here](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
+Additionally, following the official naming scheme would be appreciated but is not required. For additional info, [see here](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
 
 ## Resources
 

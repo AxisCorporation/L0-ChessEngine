@@ -110,6 +110,7 @@ Video Tutorials:
 
 Chess:
 - [How to Play Chess](https://www.chess.com/learn-how-to-play-chess)
+- [Forsyth-Edwards Notation (FEN)](https://www.chess.com/terms/fen-chess)
 - [Chess Programming WiKi](https://www.chessprogramming.org/Main_Page)
 - [Tom Kerrigan’s Simple Chess Program](https://www.tckerrigan.com/Chess/TSCP/)
 - [Chess Programming](https://www.chessprogramming.net/)

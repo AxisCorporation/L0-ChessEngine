@@ -7,12 +7,13 @@ This Repo is owned and maintained by some LUMS students for the purposes of usin
 1. [Introduction](#introduction)
 2. [To-Do List](#To-Do)
 3. [Guidelines](#Guidelines)
-4. [Naming Schemes](#Naming-Schemes)
+4. [Naming Schemes](#Naming-Scheme)
 5. [Resources](#Resources)
 6. [Permissions](#Permissions)
+
 ## Introduction
 
-We will first have to re-create the entire game of chess in Avalonia, then we will try to create a Chess Bot by implementing a Min-Max Algorithm. This is the baseline for our project requirements, once and if we achieve this, we will try to implement more difficult solution. Like training a Chess Bot using Reinforcement Learning (A type of Machine Learning). These Base and Extra tasks may change over the course of development and can be viewed in the [To-Do List](#To-Do).
+We will first have to re-create the entire game of chess in Avalonia, then we will try to create a Chess Bot by implementing a Basic Min-Max Algorithm. This is the baseline for our project requirements, once and if we achieve this, we will try to implement more difficult solutions. Like training a Chess Bot using Reinforcement Learning (A type of Machine Learning). These Base and Extra tasks may change over the course of development and can be viewed in the [To-Do List](#To-Do).
 
 Please make sure you have all the required tools installed and ready:
 - Framework: .NET 9.0 sdk (I also recommend downloading the .NET 8.0 runtime)
@@ -20,20 +21,39 @@ Please make sure you have all the required tools installed and ready:
 - Operating System: Windows 10 or newer (Recommended but not required)
 - Integrated Development Environment: JetBrains Rider (Recommended but not required)
 
----
+### MVVM Paradigm
+
+MVVM stands for Model–View–ViewModel. It’s a design pattern used to organize code, especially in apps with a user interface (like mobile or desktop apps). It helps separate the logic of your app (how it works) from the way it looks. For example, let's say we are building a weather app.
+
+MVVM breaks this into 3 parts:
+
+1. **Model:** 
+This is your data layer.  It includes the weather data and logic to fetch it from the internet or a database. No UI code here.
+
+2. **View:**
+This is the UI — what the user sees and interacts with. Buttons, labels, graphs, etc. It doesn’t know where the data comes from or how it’s processed. It just shows it. So in our case it would just be the weather information.
+
+3. **View-Model:**
+This is the middle layer between the View and the Model. It takes raw data from the Model and prepares it for the View. For example, it might convert "23.4°C" into "Warm day" for display. The View-Model also handles UI events, like when the user taps a button to refresh the weather.
+
 ## To-Do
+The Development Cycles have been divided into various Stages.
 
-Base Tasks:
-- [ ] Main Menu
-- [ ] Basic Chess Implementation
-- [ ] A Basic Min Max Algorithm
+### Stage 1
+- [ ] Main Menu - Ali
+- [ ] Backend
+  - [ ] Chess Board - Isaac
+  - [ ] Chess Pieces - Zain
+  - [ ] Moving Chess Pieces (No Move Validation) - [Reserved - Haya]: Daud
+- [ ] Frontend
+  - [ ] Displaying Chess Board - Kalsoom
+  - [ ] Displaying Chess Pieces - Daud
 
-Extra Tasks:
+### Stage ω
 - [ ] A Reinforced Trained Engine
-- [ ] Database Integration (Optional)
+- [ ] Database Integration
 
----
-# Guidelines
+## Guidelines
 
 Below are the guidelines for the code of conduct we recommend that you follow. Though these will not be strictly enforced, we **highly suggest** following them:
 - Contributors must make all of their changes on branches.
@@ -63,7 +83,6 @@ Below are the guidelines for the code of conduct we recommend that you follow. T
 
 A failure to comply may result in your code be rejected or even being taken out of the development team based on how egregious the non-compliance is.
 
----
 ## Naming Scheme
 
 Please use the following naming conventions when writing and submitting code, changes which do not follow be **may not be accepted**:
@@ -73,11 +92,10 @@ Please use the following naming conventions when writing and submitting code, ch
 - Classes/Interfaces: *PascalCase*
 - Files: *PascalCase*
 
-Though these will not be strictly enforced, the naming convention used must be sensible and integrate well with the existing code base or it may be rejected.
+Though these will not be strictly enforced, the naming convention used must be sensible and integrate well with the existing code base, or it may be rejected.
 
-Additionally, following the official naming scheme would be appreciate but is not required. For additional info, [see here](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
+Additionally, following the official naming scheme would be appreciated but is not required. For additional info, [see here](https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/coding-style/identifier-names)
 
----
 ## Resources
 
 Official Documentation:
@@ -87,9 +105,21 @@ Official Documentation:
 Video Tutorials:
 - [C# for Absolute Beginners](https://youtube.com/playlist?list=PLPV2KyIb3jR4CtEelGPsmPzlvP7ISPYzR&si=kc9i4wZJKezL6RRK)
 - [C# Basics](https://youtu.be/GhQdlIFylQ8?si=kuTilL_nES_pctFF)
-- [Avalonia UI](https://youtube.com/playlist?list=PLrW43fNmjaQWwIdZxjZrx5FSXcNzaucOO&si=f2XPAjseWJGIPJyP)
+- [Avalonia UI](https://youtube.com/playlist?list=PLJYo8bcmfTDF6ROxC8QMVw9Zr_3Lx4Lgd&si=lsUY6YDOKVZBhFwv)
+- [Avalonia UI Comprehensive](https://youtube.com/playlist?list=PLrW43fNmjaQWwIdZxjZrx5FSXcNzaucOO&si=f2XPAjseWJGIPJyP)
 
----
-## Permissions
-- Admin/Owner: Zain Farhan
-- Head Developer: Daud
+Chess:
+- [How to Play Chess](https://www.chess.com/learn-how-to-play-chess)
+- [Forsyth-Edwards Notation (FEN)](https://www.chess.com/terms/fen-chess)
+- [Chess Programming WiKi](https://www.chessprogramming.org/Main_Page)
+- [Tom Kerrigan’s Simple Chess Program](https://www.tckerrigan.com/Chess/TSCP/)
+- [Chess Programming](https://www.chessprogramming.net/)
+
+## Permissions And Roles
+
+- Admin/Owner, CEO: Zain Farhan
+- Head Developer, Head Communications: Daud Khawaja
+- Head Debt Collector: Haya Afareen
+- Head Zain Hater: Kalsoom Nawaz
+- Unpaid Intern: Isaac Ashar
+- Unpaid Intern: Ali Qaisar

@@ -40,14 +40,14 @@ This is the middle layer between the View and the Model. It takes raw data from 
 The Development Cycles have been divided into various Stages.
 
 ### Stage 1
-- [ ] Main Menu
+- [ ] Main Menu - Ali
 - [ ] Backend
-  - [ ] Chess Board
-  - [ ] Chess Pieces
-  - [ ] Moving Chess Pieces (No Validation)
+  - [ ] Chess Board - Isaac
+  - [ ] Chess Pieces - Zain
+  - [ ] Moving Chess Pieces (No Move Validation) - [Reserved - Haya]: Daud
 - [ ] Frontend
-  - [ ] Displaying Chess Board
-  - [ ] Displaying Chess Pieces
+  - [ ] Displaying Chess Board - Kalsoom
+  - [ ] Displaying Chess Pieces - Daud
 
 ### Stage ω
 - [ ] A Reinforced Trained Engine
@@ -115,7 +115,11 @@ Chess:
 - [Tom Kerrigan’s Simple Chess Program](https://www.tckerrigan.com/Chess/TSCP/)
 - [Chess Programming](https://www.chessprogramming.net/)
 
-## Permissions
+## Permissions And Roles
 
-- Admin/Owner: Zain Farhan
-- Head Developer: Daud
+- Admin/Owner, CEO: Zain Farhan
+- Head Developer, Head Communications: Daud Khawaja
+- Head Debt Collector: Haya Afareen
+- Head Zain Hater: Kalsoom Nawaz
+- Unpaid Intern: Isaac Ashar
+- Unpaid Intern: Ali Qaisar

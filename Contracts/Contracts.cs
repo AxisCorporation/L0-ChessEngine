@@ -6,8 +6,8 @@ public record Coordinate(int X, int Y);
 
 public interface IChessPiece
 {
-    public bool IsWhite { get; set; }
     public PieceType Type { get; set; }
+    public bool IsWhite { get; }
 }
 
 public interface IChessBoard

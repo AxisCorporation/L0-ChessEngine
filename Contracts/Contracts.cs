@@ -19,6 +19,8 @@ public interface IChessBoard
     public void MakeMove(IMove move);
     public void ResetBoard();
     protected void PrintBoardToTerminal();
+
+    protected bool ReadFEN(int[,] board, string fen);
 }
 
 public interface IGameManager

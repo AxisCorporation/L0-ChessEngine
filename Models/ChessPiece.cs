@@ -27,4 +27,16 @@ public class ChessPiece : IChessPiece
         get => (Type & PieceType.White) == PieceType.White;
     }
 
+    // Constructors
+
+    public ChessPiece()
+    {
+        Type = PieceType.White | PieceType.Pawn;
+    }
+
+    public ChessPiece(PieceType type)
+    {
+        Type = type;
+    }
+
 }

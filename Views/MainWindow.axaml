@@ -3,7 +3,33 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:vm="clr-namespace:L_0_Chess_Engine.ViewModels"
+        x:DataType="vm:ChessBoardViewModel"
         x:Class="L_0_Chess_Engine.Views.MainWindow"
         Title="L_0_Chess_Engine">
-    Welcome to L-0 Chess Engine!
+    
+    <StackPanel>
+        
+        <TextBlock Text="~" HorizontalAlignment="Center"></TextBlock>
+        
+        <ItemsControl ItemsSource="{Binding Board}">
+            
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            
+            <!-- <ItemsControl.ItemTemplate> -->
+            <!--     <DataTemplate> -->
+            <!--         <Border Background="Aquamarine" BorderThickness="10" Margin="0"></Border> -->
+            <!--     </DataTemplate> -->
+            <!-- </ItemsControl.ItemTemplate> -->
+        
+        </ItemsControl>
+        
+        <Button HorizontalAlignment="Center" Margin="10" Command="{Binding ButtonClick}">Black Rook</Button>
+        
+    </StackPanel>
+    
 </Window>

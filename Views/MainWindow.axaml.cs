@@ -11,7 +11,7 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
         
-        // ChessBoard myBoard = new ChessBoard();
-        // DataContext = new ChessBoardViewModel(myBoard);
+        ChessBoard myBoard = new ChessBoard();
+        DataContext = new ChessBoardViewModel(myBoard); // hi
     }
 }

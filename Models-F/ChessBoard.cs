@@ -10,6 +10,17 @@ namespace L_0_Chess_Engine.Fake
         public bool IsCheck { get; set; }
         public bool IsCheckMate { get; set; }
 
+        public ChessBoard()
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    Grid[i, j] = new ChessPiece();
+                }
+            }
+        }
+
         public void PrintBoardToTerminal()
         {
             

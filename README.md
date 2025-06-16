@@ -118,7 +118,7 @@ Chess:
 ## Permissions And Roles
 
 - Admin/Owner, CEO: Zain Farhan
-- Head Developer, Head Communications: Daud Khawaja
+- Head Developer, Head Communications, Cult Leader: Daud Khawaja
 - Head Debt Collector: Haya Afareen
 - Head Zain Hater: Kalsoom Nawaz
 - Unpaid Intern: Isaac Ashar

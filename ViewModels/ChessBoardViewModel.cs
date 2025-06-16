@@ -10,7 +10,7 @@ public partial class ChessBoardViewModel : ObservableObject
     public ObservableCollection<ChessPieceViewModel> GridPieces { get; set; } = [];
     SChessBoard SampleBoard = new();
 
-    public ChessBoardViewModel()
+    public ChessBoardViewModel()    
     {
         foreach (var Piece in SampleBoard.Grid)
         {

@@ -1,20 +1,30 @@
 ﻿using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
+
 public class ChessBoard : IChessBoard
 {
     public IChessPiece[,] Grid { get; set; }
     public bool IsCheck { get; set; }
     public bool IsCheckMate { get; set; }
+
     public ChessBoard() //constructer to initialize
     {
-        Grid = new IChessPiece[8, 8];
+        // I have already implemented the Chess Piece Class, so you didn't need to initialize it to the Interface anymore
+        // This Initializes every piece to a White Pawn but that won't be a problem with the Reset Board function
+        Grid = new ChessPiece[8, 8];
         IsCheck = false;
         IsCheckMate = false;
+
         ResetBoard(); // Initialize the board
     }
 
-    public void MakeMove(IMove move);
+    public void MakeMove(IMove move)
+    {
+        // Zain here, it's better to leave functions that you haven't implemented yet empty rather than
+        // just leaving their function signature, I mean doesn't all the red error lines annoy you?
+    }
+
     public void ResetBoard()
     {
         for (int i = 0; i < 8; i++)
@@ -55,6 +65,17 @@ public class ChessBoard : IChessBoard
             Grid[6, i] = new ChessPiece(PieceType.Black | PieceType.Pawn);
         }
     }
-    protected void PrintBoardToTerminal();
-    protected bool ReadFEN(int[,] board, string fen);
+
+    public void PrintBoardToTerminal()
+    {
+        // Also this functions should be "public" not "protected"
+    }
+
+    public bool ReadFEN(int[,] board, string fen)
+    {
+        // Also also, be a bit mindfull of your code format, like leaving one line empyty after every function.
+        // Makes the code neat, clean, and readable. Consistency is Key Here.
+        
+        return false; // Returns False till you actually implement this
+    }
 }

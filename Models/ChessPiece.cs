@@ -6,7 +6,7 @@ namespace L_0_Chess_Engine.Models;
 [Flags]
 public enum PieceType
 {
-    None,
+    Empty,
     Pawn,
     Knight,
     Bishop,

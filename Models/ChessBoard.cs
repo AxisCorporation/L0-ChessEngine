@@ -21,7 +21,7 @@ public class ChessBoard : IChessBoard
         {
             for (int j = 0; j < 8; j++)
             {
-                Grid[i, j] = null;
+                Grid[i, j] = new ChessPiece(PieceType.Empty);
             }
         }
 
@@ -52,7 +52,7 @@ public class ChessBoard : IChessBoard
 
         for (int i = 0; i < 8; i++)
         {
-            Grid[6, i] = new ChessPiece(PieceType.White | PieceType.Pawn);
+            Grid[6, i] = new ChessPiece(PieceType.Black | PieceType.Pawn);
         }
     }
     protected void PrintBoardToTerminal();

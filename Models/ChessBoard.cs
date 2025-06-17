@@ -1,4 +1,5 @@
 ﻿using L_0_Chess_Engine.Contracts;
+using System;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -7,6 +8,9 @@ public class ChessBoard : IChessBoard
     public IChessPiece[,] Grid { get; set; }
     public bool IsCheck { get; set; }
     public bool IsCheckMate { get; set; }
+
+    //Constant FEN for the starting position
+    private const string DefaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
     public ChessBoard() //constructer to initialize
     {
@@ -27,43 +31,7 @@ public class ChessBoard : IChessBoard
 
     public void ResetBoard()
     {
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                Grid[i, j] = new ChessPiece(PieceType.Empty);
-            }
-        }
-
-        // White pieces first
-        Grid[0, 0] = new ChessPiece(PieceType.White | PieceType.Rook);
-        Grid[0, 1] = new ChessPiece(PieceType.White | PieceType.Knight);
-        Grid[0, 2] = new ChessPiece(PieceType.White | PieceType.Bishop);
-        Grid[0, 3] = new ChessPiece(PieceType.White | PieceType.Queen);
-        Grid[0, 4] = new ChessPiece(PieceType.White | PieceType.King);
-        Grid[0, 5] = new ChessPiece(PieceType.White | PieceType.Bishop);
-        Grid[0, 6] = new ChessPiece(PieceType.White | PieceType.Knight);
-        Grid[0, 7] = new ChessPiece(PieceType.White | PieceType.Rook);
-
-        for (int i = 0; i < 8; i++)
-        {
-            Grid[1, i] = new ChessPiece(PieceType.White | PieceType.Pawn);
-        }
-
-        // Black pieces
-        Grid[7, 0] = new ChessPiece(PieceType.Black | PieceType.Rook);
-        Grid[7, 1] = new ChessPiece(PieceType.Black | PieceType.Knight);
-        Grid[7, 2] = new ChessPiece(PieceType.Black | PieceType.Bishop);
-        Grid[7, 3] = new ChessPiece(PieceType.Black | PieceType.Queen);
-        Grid[7, 4] = new ChessPiece(PieceType.Black | PieceType.King);
-        Grid[7, 5] = new ChessPiece(PieceType.Black | PieceType.Bishop);
-        Grid[7, 6] = new ChessPiece(PieceType.Black | PieceType.Knight);
-        Grid[7, 7] = new ChessPiece(PieceType.Black | PieceType.Rook);
-
-        for (int i = 0; i < 8; i++)
-        {
-            Grid[6, i] = new ChessPiece(PieceType.Black | PieceType.Pawn);
-        }
+        ReadFEN(DefaultFEN);
     }
 
     public void PrintBoardToTerminal()
@@ -71,11 +39,94 @@ public class ChessBoard : IChessBoard
         // Also this functions should be "public" not "protected"
     }
 
-    public bool ReadFEN(int[,] board, string fen)
+    public bool ReadFEN(string fen)
     {
-        // Also also, be a bit mindfull of your code format, like leaving one line empyty after every function.
-        // Makes the code neat, clean, and readable. Consistency is Key Here.
-        
-        return false; // Returns False till you actually implement this
+        // Split the FEN string by spaces
+        var parts = fen.Split(' ');
+
+        if (parts.Length == 0)
+            return false;
+
+        var boardLayout = parts[0];  // First part is the board layout
+
+        // Split the layout into rows (8 rows for an 8x8 board)
+        var rows = boardLayout.Split('/');
+        if (rows.Length != 8)
+            return false; // 8 rows must or invalid
+
+        // Iterate through each row and parse it
+        for (int i = 0; i < 8; i++)
+        {
+            var row = rows[i];
+            int currentCol = 0;
+
+            foreach (var c in row)
+            {
+                if (Char.IsDigit(c))
+                {
+                    // Character that are numbers show empty squares
+                    int emptySquares = int.Parse(c.ToString());
+
+                    // Add empty squares to the current row
+                    for (int j = 0; j < emptySquares; j++)
+                    {
+                        Grid[i, currentCol++] = new ChessPiece(PieceType.Empty);
+                    }
+                }
+                else
+                {
+                    PieceType pieceType = PieceType.Empty;
+
+                    // Switch statement to handle piece types
+                    switch (c)
+                    {
+                        case 'p':
+                            pieceType = PieceType.Pawn | PieceType.Black;
+                            break;
+                        case 'P':
+                            pieceType = PieceType.Pawn | PieceType.White;
+                            break;
+                        case 'r':
+                            pieceType = PieceType.Rook | PieceType.Black;
+                            break;
+                        case 'R':
+                            pieceType = PieceType.Rook | PieceType.White;
+                            break;
+                        case 'n':
+                            pieceType = PieceType.Knight | PieceType.Black;
+                            break;
+                        case 'N':
+                            pieceType = PieceType.Knight | PieceType.White;
+                            break;
+                        case 'b':
+                            pieceType = PieceType.Bishop | PieceType.Black;
+                            break;
+                        case 'B':
+                            pieceType = PieceType.Bishop | PieceType.White;
+                            break;
+                        case 'q':
+                            pieceType = PieceType.Queen | PieceType.Black;
+                            break;
+                        case 'Q':
+                            pieceType = PieceType.Queen | PieceType.White;
+                            break;
+                        case 'k':
+                            pieceType = PieceType.King | PieceType.Black;
+                            break;
+                        case 'K':
+                            pieceType = PieceType.King | PieceType.White;
+                            break;
+                        default:
+                            return false;  // Invalid piece character
+                    }
+
+                    // Create the chess piece with the correct color and type
+                    Grid[i, currentCol++] = new ChessPiece(pieceType);
+                }
+            }
+        }
+
+        // Return true when the board is successfully set up
+        return true;
     }
 }

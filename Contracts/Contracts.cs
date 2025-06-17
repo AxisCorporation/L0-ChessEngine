@@ -20,7 +20,7 @@ public interface IChessBoard
     public void ResetBoard();
     protected void PrintBoardToTerminal();
 
-    protected bool ReadFEN(int[,] board, string fen);
+    protected bool ReadFEN(string fen);
 }
 
 public interface IGameManager

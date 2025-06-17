@@ -19,5 +19,8 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="CommunityToolKit.MVVM" Version="8.4.0" />
+
+    <AvaloniaResource Include="Assets/Images/*.png"/>
   </ItemGroup>
 </Project>
+

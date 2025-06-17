@@ -10,20 +10,14 @@ namespace L_0_Chess_Engine.ViewModels;
 public partial class ChessBoardViewModel : ObservableObject
 {
     public ObservableCollection<ChessPieceViewModel> GridPieces { get; set; } = [];
-
-    [ObservableProperty]
-    private ChessPieceViewModel _test;
     SChessBoard SampleBoard = new();
 
     public ChessBoardViewModel()
     {
         foreach (var Piece in SampleBoard.Grid)
         {
-            if (Piece is not null)
-            {
-                GridPieces.Add(new ChessPieceViewModel((ChessPiece)Piece));
-            }
-            Test = GridPieces[0];
+            GridPieces.Add(new ChessPieceViewModel((ChessPiece)Piece));
+            
         }
     }
 

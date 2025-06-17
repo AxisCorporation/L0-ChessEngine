@@ -1,3 +1,4 @@
+using System;
 using CommunityToolkit.Mvvm.ComponentModel;
 using L_0_Chess_Engine.Contracts;
 using L_0_Chess_Engine.Models;
@@ -13,8 +14,15 @@ public class SChessBoard : IChessBoard
 
     public SChessBoard()
     {
-        Grid[0, 0] = new ChessPiece(PieceType.Pawn | PieceType.White);
+        for (int i = 0; i < Grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < Grid.GetLength(1); j++)
+            {
+                Grid[i, j] = new ChessPiece(PieceType.Pawn | PieceType.White);
+            }
+        }
     }
+
     public void MakeMove(IMove move)
     {
         throw new System.NotImplementedException();

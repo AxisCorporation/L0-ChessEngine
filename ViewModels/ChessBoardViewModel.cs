@@ -1,5 +1,4 @@
 using System.Collections.ObjectModel;
-using System.Linq;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using L_0_Chess_Engine.Models;
@@ -16,8 +15,7 @@ public partial class ChessBoardViewModel : ObservableObject
     {
         foreach (var Piece in SampleBoard.Grid)
         {
-            GridPieces.Add(new ChessPieceViewModel((ChessPiece)Piece));
-            
+            GridPieces.Add(new ChessPieceViewModel((ChessPiece)Piece));    
         }
     }
 

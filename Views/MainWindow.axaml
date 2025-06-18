@@ -6,11 +6,11 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="L_0_Chess_Engine.Views.MainWindow"
         x:DataType="vm:ChessBoardViewModel"
+        Icon="avares://L-0 Chess Engine/Assets/Images/W_Rook.png"
         Title="L_0_Chess_Engine">
 
 <Design.DataContext>
-    <!-- This only sets the DataContext for the previewer in an IDE,
-            to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+    <!-- This sets the DataContext for the previewer in an IDE -->
     <vm:ChessBoardViewModel/>
 </Design.DataContext>
 

@@ -20,7 +20,7 @@
     </PackageReference>
     <PackageReference Include="CommunityToolKit.MVVM" Version="8.4.0" />
 
-    <AvaloniaResource Include="Assets/Images/*.png"/>
+    <AvaloniaResource Include="Assets/**"/>
   </ItemGroup>
 </Project>
 

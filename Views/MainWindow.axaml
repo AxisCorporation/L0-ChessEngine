@@ -7,6 +7,8 @@
         x:DataType="vm:ChessBoardViewModel"
         x:Class="L_0_Chess_Engine.Views.MainWindow"
         Title="L_0_Chess_Engine">
+    
+    <!-- Example Test -->
 
     <StackPanel>
         <ItemsControl ItemsSource = "{Binding GridPieces}">

@@ -1,7 +1,9 @@
+using System;
 using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
 
+[Flags]
 public enum PieceType
 {
     Empty,

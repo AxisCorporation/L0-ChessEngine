@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using L_0_Chess_Engine.ViewModels;
 
 using L_0_Chess_Engine.Fake;
-using L_0_Chess_Engine.ViewModels;
 
 namespace L_0_Chess_Engine.Views;
 
@@ -13,6 +12,6 @@ public partial class MainWindow : Window
         InitializeComponent();
         
         ChessBoard myBoard = new ChessBoard();
-        DataContext = new ChessBoardViewModel(myBoard); // hi
+        DataContext = new ChessBoardViewModel(); // hi
     }
 }

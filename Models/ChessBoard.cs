@@ -14,8 +14,6 @@ public class ChessBoard : IChessBoard
 
     public ChessBoard() //constructer to initialize
     {
-        // I have already implemented the Chess Piece Class, so you didn't need to initialize it to the Interface anymore
-        // This Initializes every piece to a White Pawn but that won't be a problem with the Reset Board function
         Grid = new ChessPiece[8, 8];
         IsCheck = false;
         IsCheckMate = false;
@@ -25,8 +23,7 @@ public class ChessBoard : IChessBoard
 
     public void MakeMove(IMove move)
     {
-        // Zain here, it's better to leave functions that you haven't implemented yet empty rather than
-        // just leaving their function signature, I mean doesn't all the red error lines annoy you?
+
     }
 
     public void ResetBoard()
@@ -36,7 +33,7 @@ public class ChessBoard : IChessBoard
 
     public void PrintBoardToTerminal()
     {
-        // Also this functions should be "public" not "protected"
+    
     }
 
     public bool ReadFEN(string fen)

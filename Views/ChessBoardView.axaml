@@ -1,0 +1,31 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:vm="clr-namespace:L_0_Chess_Engine.ViewModels"
+             x:DataType="vm:ChessBoardViewModel"
+             x:Class="L_0_Chess_Engine.Views.ChessBoardView">
+    
+    <StackPanel>
+        <TextBlock Text="Don't Question it, We'll Fix This Later"></TextBlock>
+        <ItemsControl ItemsSource = "{Binding GridPieces}">
+
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="8" Columns="8"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType = "vm:ChessPieceViewModel">
+                    <Grid Background = "Aqua">
+                        <Image Source = "{Binding Image}" Stretch="UniformToFill"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+        </ItemsControl>
+    </StackPanel>
+    
+</UserControl>

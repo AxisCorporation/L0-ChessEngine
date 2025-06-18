@@ -25,21 +25,21 @@ public class SChessBoard : IChessBoard
 
     public void MakeMove(IMove move)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void PrintBoardToTerminal()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public bool ReadFEN(int[,] board, string fen)
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 
     public void ResetBoard()
     {
-        throw new System.NotImplementedException();
+        throw new NotImplementedException();
     }
 }

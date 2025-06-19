@@ -20,13 +20,13 @@ public class GameManager : IGameManager
         Board.ResetBoard();
         isWhiteTurn = true;
         GameRunning = true;
-        return GameRunning;
+        return true;
     }
 
     public bool EndGame()
     {
         GameRunning = false;
-        return GameRunning;
+        return true;
     }
 
     public void SwitchTurn()

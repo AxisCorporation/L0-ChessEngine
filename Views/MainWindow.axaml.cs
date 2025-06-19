@@ -13,10 +13,6 @@ public partial class MainWindow : Window
         SetMainContent(menuView);
     }
     
-    public void SetMainContent(UserControl control)
-    {
-       MainContent.Content = control;
-    }
-    
+    public void SetMainContent(UserControl control) => MainContent.Content = control;
     
 }

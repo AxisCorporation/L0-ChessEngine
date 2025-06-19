@@ -4,6 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="L_0_Chess_Engine.Views.MainWindow"
+        Icon="avares://L-0 Chess Engine/Assets/Images/W_Rook.png"
         Title="L_0_Chess_Engine">
         
         <ContentControl x:Name="MainContent"></ContentControl>

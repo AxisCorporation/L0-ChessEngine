@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="L_0_Chess_Engine.Views.MainMenuView">
+        
+        <StackPanel>
+                <!-- Main Menu -->
+                <!--<Menu>
+                        <MenuItem Header="_Play"/>
+                        <MenuItem Header="_File">
+                                <MenuItem Header="_New"/>
+                                <MenuItem Header="_Open"/>
+                                <MenuItem Header="_Save"/>
+                                <MenuItem Header="E_xit"/>
+                        </MenuItem>
+
+                        <MenuItem Header="_Edit">
+                                <MenuItem Header="_Cut"/>
+                                <MenuItem Header="_Copy"/>
+                                <MenuItem Header="_Paste"/>
+                        </MenuItem>
+
+                        <MenuItem Header="_Help">
+                                <MenuItem Header="_About"/>
+                        </MenuItem>
+                </Menu>-->
+                
+                <Button VerticalAlignment="Center" HorizontalAlignment="Center" Click="PlayGame">Play</Button>
+                
+        </StackPanel>
+        
+</UserControl>

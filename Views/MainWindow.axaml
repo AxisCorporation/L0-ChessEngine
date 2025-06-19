@@ -2,16 +2,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:vm="using:L_0_Chess_Engine.ViewModels"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="L_0_Chess_Engine.Views.MainWindow"
-        x:DataType="vm:ChessBoardViewModel"
         Icon="avares://L-0 Chess Engine/Assets/Images/W_Rook.png"
         Title="L_0_Chess_Engine">
-
-<Design.DataContext>
-    <!-- This sets the DataContext for the previewer in an IDE -->
-    <vm:ChessBoardViewModel/>
-</Design.DataContext>
-
+        
+        <ContentControl x:Name="MainContent"></ContentControl>
+    
 </Window>

@@ -36,9 +36,6 @@ public partial class ChessBoardView : UserControl
 
     private void CreateChessBoardUI()
     {
-        if (_chessBoardGrid == null) return;
-        _chessBoardGrid.Children.Clear();
-        
        
         for (int row = 0; row < 8; row++)
         {

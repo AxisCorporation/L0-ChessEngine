@@ -33,7 +33,7 @@ public class SChessBoard : IChessBoard
         throw new NotImplementedException();
     }
 
-    public bool ReadFEN(int[,] board, string fen)
+    public bool ReadFEN(string fen)
     {
         throw new NotImplementedException();
     }

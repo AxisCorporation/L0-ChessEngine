@@ -40,14 +40,21 @@ This is the middle layer between the View and the Model. It takes raw data from 
 The Development Cycles have been divided into various Stages.
 
 ### Stage 1
-- [ ] Main Menu - Ali
-- [ ] Backend
-  - [ ] Chess Board - Isaac
-  - [ ] Chess Pieces - Zain
-  - [ ] Moving Chess Pieces (No Move Validation) - [Reserved - Haya]: Daud
-- [ ] Frontend
-  - [ ] Displaying Chess Board - Kalsoom
-  - [ ] Displaying Chess Pieces - Daud
+**Deadline:** 19th June 25, 11:59 pm (PST)
+- [ ] ~~Main Menu - Ali~~
+- [x] Backend
+  - [x] Chess Board - Isaac
+  - [x] Chess Pieces - Zain
+  - [x] Moving Chess Pieces (No Move Validation) - [Reserved - Haya]: Daud
+- [x] Frontend
+  - [x] Displaying Chess Board - Kalsoom
+  - [x] Displaying Chess Pieces - Daud
+
+#### Stage 1.1
+- [x] Main Menu - Zain
+
+### Stage 2
+- [ ] TBA
 
 ### Stage ω
 - [ ] A Reinforced Trained Engine
@@ -55,7 +62,7 @@ The Development Cycles have been divided into various Stages.
 
 ## Guidelines
 
-Below are the guidelines for the code of conduct we recommend that you follow. Though these will not be strictly enforced, we **highly suggest** following them:
+Below are the guidelines for the code of conduct we recommend that you follow, these may be updated or changed throughout development. Though these will not be strictly enforced, we **highly suggest** following them:
 - Contributors must make all of their changes on branches.
 - We suggest you push your changes to the repository frequently.
 - We suggest you only work on **one** feature per branch.

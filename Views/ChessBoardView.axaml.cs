@@ -1,7 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Shapes;
 using Avalonia.Media;
-
+using Avalonia.Media.Imaging;
 using L_0_Chess_Engine.Models;
 using L_0_Chess_Engine.ViewModels;
 
@@ -45,35 +45,25 @@ public partial class ChessBoardView : UserControl
                 var background = isLightSquare ? Brushes.Wheat : Brushes.SaddleBrown;
                 
                 
-                var square = new Rectangle
+                var square = new Grid
                 {
-                    Fill = background
+                    Background = background
                 };
                 
                 // Add to grid
                 Grid.SetRow(square, row);
                 Grid.SetColumn(square, col);
                 _chessBoardGrid.Children.Add(square);
-                
-                var piece = _chessBoard.Grid[row, col];
-                
-               // If there's a piece, add it to the board
-                if (piece.Type != PieceType.Empty)
+
+                var Piece = new ChessPieceViewModel((ChessPiece) _chessBoard.Grid[row, col]);
+                var Image = new Image()
                 {
-                    var pieceColor = (piece.Type & PieceType.White) == PieceType.White ? Brushes.White : Brushes.Black;
-                    
-                    var textBlock = new TextBlock
-                    {
-                        Foreground = pieceColor,
-                        FontSize = 48,
-                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                        VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
-                    };
-                    
-                    Grid.SetRow(textBlock, row);
-                    Grid.SetColumn(textBlock, col);
-                    _chessBoardGrid.Children.Add(textBlock);
-                }
+                    Source = Piece.Image
+                };
+
+                Grid.SetRow(Image, row);
+                Grid.SetColumn(Image, col);
+                _chessBoardGrid.Children.Add(Image);
             }
         }
     }

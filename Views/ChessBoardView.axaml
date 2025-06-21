@@ -7,25 +7,40 @@
              x:DataType="vm:ChessBoardViewModel"
              x:Class="L_0_Chess_Engine.Views.ChessBoardView">
     
-    <StackPanel>
-        <TextBlock Text="Don't Question it, We'll Fix This Later"></TextBlock>
-        <ItemsControl ItemsSource = "{Binding GridPieces}">
-
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="8" Columns="8"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         
-            <ItemsControl.ItemTemplate>
-                <DataTemplate DataType = "vm:ChessPieceViewModel">
-                    <Grid Background = "Aqua">
-                        <Image Source = "{Binding Image}" Stretch="UniformToFill"/>
-                    </Grid>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-
-        </ItemsControl>
-    </StackPanel>
+        <TextBlock Grid.Row="0" Text="Chess Game" FontSize="24" HorizontalAlignment="Center" Margin="0,10,0,20"/>
+        
+        <!-- Chess Board Container with Aspect Ratio Preservation -->
+        <Viewbox Grid.Row="1" Stretch="Uniform" Margin="20">
+            <Grid Name="ChessBoardGrid" Width="400" Height="400">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                
+            </Grid>
+        </Viewbox>
+    </Grid>
     
 </UserControl>

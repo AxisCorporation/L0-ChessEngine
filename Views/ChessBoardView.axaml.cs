@@ -1,8 +1,5 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using L_0_Chess_Engine.Models;
 using L_0_Chess_Engine.ViewModels;
 
 namespace L_0_Chess_Engine.Views;
@@ -44,7 +41,6 @@ public partial class ChessBoardView : UserControl
             {
                 bool isLightSquare = (row + col) % 2 == 0;
                 var background = isLightSquare ? Brushes.Wheat : Brushes.SaddleBrown;
-
 
                 var square = new Grid
                 {

@@ -18,7 +18,6 @@ public interface IChessBoard
 
     public void MakeMove(IMove move);
     public void ResetBoard();
-    protected void PrintBoardToTerminal();
 
     protected bool ReadFEN(string fen);
 }

@@ -1,5 +1,4 @@
 ﻿using L_0_Chess_Engine.Contracts;
-using System;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -65,7 +64,7 @@ public class ChessBoard : IChessBoard
 
             foreach (var c in row)
             {
-                if (Char.IsDigit(c))
+                if (char.IsDigit(c))
                 {
                     // Character that are numbers show empty squares
                     int emptySquares = int.Parse(c.ToString());
@@ -78,53 +77,38 @@ public class ChessBoard : IChessBoard
                 }
                 else
                 {
-                    PieceType pieceType = PieceType.Empty;
-
                     // Switch statement to handle piece types
-                    switch (c)
+                    PieceType? pieceType = c switch
                     {
-                        case 'p':
-                            pieceType = PieceType.Pawn | PieceType.Black;
-                            break;
-                        case 'P':
-                            pieceType = PieceType.Pawn | PieceType.White;
-                            break;
-                        case 'r':
-                            pieceType = PieceType.Rook | PieceType.Black;
-                            break;
-                        case 'R':
-                            pieceType = PieceType.Rook | PieceType.White;
-                            break;
-                        case 'n':
-                            pieceType = PieceType.Knight | PieceType.Black;
-                            break;
-                        case 'N':
-                            pieceType = PieceType.Knight | PieceType.White;
-                            break;
-                        case 'b':
-                            pieceType = PieceType.Bishop | PieceType.Black;
-                            break;
-                        case 'B':
-                            pieceType = PieceType.Bishop | PieceType.White;
-                            break;
-                        case 'q':
-                            pieceType = PieceType.Queen | PieceType.Black;
-                            break;
-                        case 'Q':
-                            pieceType = PieceType.Queen | PieceType.White;
-                            break;
-                        case 'k':
-                            pieceType = PieceType.King | PieceType.Black;
-                            break;
-                        case 'K':
-                            pieceType = PieceType.King | PieceType.White;
-                            break;
-                        default:
-                            return false;  // Invalid piece character
+                        'p' => PieceType.Pawn | PieceType.Black,
+                        'P' => PieceType.Pawn | PieceType.White,
+
+                        'r' => PieceType.Rook | PieceType.Black,
+                        'R' => PieceType.Rook | PieceType.White,
+                        
+                        'n' => PieceType.Knight | PieceType.Black,
+                        'N' => PieceType.Knight | PieceType.White,
+
+                        'b' => PieceType.Bishop | PieceType.Black,
+                        'B' => PieceType.Bishop | PieceType.White,
+
+                        'q' => PieceType.Queen | PieceType.Black,
+                        'Q' => PieceType.Queen | PieceType.White,
+
+                        'k' => PieceType.King | PieceType.Black,
+                        'K' => PieceType.King | PieceType.White,
+
+                        // Invalid piece character
+                        _ => null
+                    };
+
+                    if (pieceType is null)
+                    {
+                        return false;
                     }
 
                     // Create the chess piece with the correct color and type
-                    Grid[i, currentCol++] = new ChessPiece(pieceType);
+                    Grid[i, currentCol++] = new ChessPiece(pieceType.Value);
                 }
             }
         }

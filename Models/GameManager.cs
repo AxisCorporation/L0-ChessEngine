@@ -5,20 +5,20 @@ namespace L_0_Chess_Engine.Models;
 public class GameManager : IGameManager
 {
     public IChessBoard Board { get; set; }
-    public bool isWhiteTurn { get; private set; }
+    public bool IsWhiteTurn { get; private set; }
     public bool GameRunning { get; private set; }
     
     public GameManager()
     {
         Board = new ChessBoard();
-        isWhiteTurn = true; // White always starts
+        IsWhiteTurn = true; // White always starts
         GameRunning = false;
     }
 
     public bool StartGame()
     {
         Board.ResetBoard();
-        isWhiteTurn = true;
+        IsWhiteTurn = true;
         GameRunning = true;
         return true;
     }
@@ -31,7 +31,7 @@ public class GameManager : IGameManager
 
     public void SwitchTurn()
     {
-        isWhiteTurn = !isWhiteTurn;
+        IsWhiteTurn = !IsWhiteTurn;
     }
 
 }

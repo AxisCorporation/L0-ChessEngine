@@ -1,15 +1,11 @@
 using Avalonia.Controls;
-using Avalonia.Controls.Shapes;
 using Avalonia.Media;
-using Avalonia.Media.Imaging;
-using L_0_Chess_Engine.Models;
 using L_0_Chess_Engine.ViewModels;
 
 namespace L_0_Chess_Engine.Views;
 
 public partial class ChessBoardView : UserControl
 {
-
     private ChessBoardViewModel _chessBoardVM;
     private Grid? _chessBoardGrid;
 
@@ -28,7 +24,6 @@ public partial class ChessBoardView : UserControl
         };
 
         _chessBoardVM.OnBoardChanged += CreateChessBoardUI;
-
     }
 
     private void CreateChessBoardUI()
@@ -45,7 +40,6 @@ public partial class ChessBoardView : UserControl
                 bool isLightSquare = (row + col) % 2 == 0;
                 var background = isLightSquare ? Brushes.Wheat : Brushes.SaddleBrown;
 
-
                 var square = new Grid
                 {
                     Background = background
@@ -54,6 +48,7 @@ public partial class ChessBoardView : UserControl
                 // Add to grid
                 Grid.SetRow(square, row);
                 Grid.SetColumn(square, col);
+                
                 _chessBoardGrid.Children.Add(square);
 
                 var Piece = _chessBoardVM.GridPieces[row * 8 + col];

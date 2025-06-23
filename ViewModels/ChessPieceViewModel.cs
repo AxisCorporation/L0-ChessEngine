@@ -25,17 +25,17 @@ public partial class ChessPieceViewModel : ObservableObject
         Image = new(AssetLoader.Open(new Uri(UriStr)));
     }
 
-    public ChessPieceViewModel(PieceType Type)
+    public ChessPieceViewModel(PieceType type)
     {
-        Piece = new ChessPiece(Type);
+        Piece = new ChessPiece(type);
 
         string UriStr = GetUriForPiece(Piece);
         Image = new(AssetLoader.Open(new Uri(UriStr)));
     }
 
-    public static string GetUriForPiece(ChessPiece Piece)
+    public static string GetUriForPiece(ChessPiece piece)
     {
-        string UriStr = "avares://L-0 Chess Engine/" + (Piece.Type switch
+        string UriStr = "avares://L-0 Chess Engine/" + (piece.Type switch
         {
             PieceType.Pawn | PieceType.White => "Assets/Images/W_Pawn.png",
             PieceType.Pawn | PieceType.Black => "Assets/Images/B_Pawn.png",

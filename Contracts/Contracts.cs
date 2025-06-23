@@ -18,7 +18,6 @@ public interface IChessBoard
 
     public void MakeMove(IMove move);
     public void ResetBoard();
-    protected void PrintBoardToTerminal();
 
     protected bool ReadFEN(string fen);
 }
@@ -35,7 +34,6 @@ public interface IMove
 {
     public bool IsValid { get => IsValidMove(); }
 
-    public IChessPiece Piece { get; set; }
     public Coordinate Initial { get; set; }
     public Coordinate Destination { get; set; }
 

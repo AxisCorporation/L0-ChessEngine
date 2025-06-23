@@ -6,7 +6,6 @@ namespace L_0_Chess_Engine.Views;
 
 public partial class ChessBoardView : UserControl
 {
-
     private ChessBoardViewModel _chessBoardVM;
     private Grid? _chessBoardGrid;
 
@@ -25,7 +24,6 @@ public partial class ChessBoardView : UserControl
         };
 
         _chessBoardVM.OnBoardChanged += CreateChessBoardUI;
-
     }
 
     private void CreateChessBoardUI()
@@ -50,6 +48,7 @@ public partial class ChessBoardView : UserControl
                 // Add to grid
                 Grid.SetRow(square, row);
                 Grid.SetColumn(square, col);
+                
                 _chessBoardGrid.Children.Add(square);
 
                 var Piece = _chessBoardVM.GridPieces[row * 8 + col];

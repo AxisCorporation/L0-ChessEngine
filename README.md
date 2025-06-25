@@ -50,6 +50,24 @@ The Development Cycles have been divided into various Stages.
   - [x] Displaying Chess Board - Kalsoom
   - [x] Displaying Chess Pieces - Daud
 
+### Stage 2
+**Deadline:** 2 July, 23 59 (PST)
+
+- [ ] Test Cases - Isaac
+- [ ] Interaction for Moves between Frontend and Backend - Daud
+- [ ] Backend
+  - [ ] Sliding Pieces (Rook, Bishop, Queen) (Excluding Special Moves like Castling) - Kalsoom
+  - [ ] Knight Moves - Zain
+  - [ ] All Pawn Moves - Daud
+  - [ ] Starting and running the Game State - Daud
+  - [ ] Check Logic (Not CheckMate, just Check) - Kalsoom
+
+- [ ] Frontend
+  - [ ] Point-and-Click Action (To Move Pieces) - Zain
+  - [ ] Addtional Main Menu Options - Isaac
+
+- Artwork: Main Menu Background - Haya
+
 #### Stage 1.1
 - [x] Main Menu - Zain
 
@@ -128,5 +146,5 @@ Chess:
 - Head Developer, Head Communications, Cult Leader: Daud Khawaja
 - Head Debt Collector: Haya Afareen
 - Head Zain Hater: Kalsoom Nawaz
-- Unpaid Intern: Isaac Ashar
+- Token Non LUMS Student: Isaac Ashar
 - Unpaid Intern: Ali Qaisar

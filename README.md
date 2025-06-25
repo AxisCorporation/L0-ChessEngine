@@ -50,6 +50,9 @@ The Development Cycles have been divided into various Stages.
   - [x] Displaying Chess Board - Kalsoom
   - [x] Displaying Chess Pieces - Daud
 
+#### Stage 1.1
+- [x] Main Menu - Zain
+
 ### Stage 2
 **Deadline:** 2 July, 23 59 (PST)
 
@@ -67,12 +70,6 @@ The Development Cycles have been divided into various Stages.
   - [ ] Addtional Main Menu Options - Isaac
 
 - Artwork: Main Menu Background - Haya
-
-#### Stage 1.1
-- [x] Main Menu - Zain
-
-### Stage 2
-- [ ] TBA
 
 ### Stage ω
 - [ ] A Reinforced Trained Engine

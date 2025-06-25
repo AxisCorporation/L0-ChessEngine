@@ -69,7 +69,7 @@ The Development Cycles have been divided into various Stages.
   - [ ] Point-and-Click Action (To Move Pieces) - Zain
   - [ ] Addtional Main Menu Options - Isaac
 
-- Artwork: Main Menu Background - Haya
+- [ ] Artwork: Main Menu Background - Haya
 
 ### Stage ω
 - [ ] A Reinforced Trained Engine

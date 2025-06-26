@@ -87,18 +87,21 @@ public class Move : IMove
             return false;
         }
 
-        bool IsValidHorizontal = move.Destination.X == move.Initial.X + 1 || move.Destination.X == move.Initial.X - 1;
-        bool IsValidForward = move.Destination.X == move.Initial.X;
+        (int InitX, int InitY) = move.Initial;
+        (int DestX, int DestY) = move.Destination;
+
+        bool IsValidHorizontal = DestX == InitX + 1 || DestX == InitX - 1;
+        bool IsValidForward = DestX == InitX;
 
         if (IsWhite)
         {
             if (move.InitPiece.AtStart)
             {
-                IsValidForward &= move.Destination.Y == move.Initial.Y + 1 || move.Destination.Y == move.Initial.Y + 2;
+                IsValidForward &= DestY == InitY + 1 || DestY == InitY + 2;
             }
             else
             {
-                IsValidForward &= move.Destination.Y == move.Initial.Y + 1;
+                IsValidForward &= DestY == InitY + 1;
             }
 
             if (move.DestPiece == PieceType.Empty)
@@ -107,18 +110,18 @@ public class Move : IMove
             }
             else
             {
-                IsValidHorizontal &= move.Destination.Y == move.Initial.Y + 1;
+                IsValidHorizontal &= DestY == InitY + 1;
             }
         }
         else
         {
             if (move.InitPiece.AtStart)
             {
-                IsValidForward &= move.Destination.Y == move.Initial.Y - 1 || move.Destination.Y == move.Initial.Y - 2;
+                IsValidForward &= DestY == InitY - 1 || DestY == InitY - 2;
             }
             else
             {
-                IsValidForward &= move.Destination.Y == move.Initial.Y - 1;
+                IsValidForward &= DestY == InitY - 1;
             }
 
             if (move.DestPiece == PieceType.Empty)
@@ -127,7 +130,7 @@ public class Move : IMove
             }
             else
             {
-                IsValidHorizontal &= move.Destination.Y == move.Initial.Y - 1;
+                IsValidHorizontal &= DestY == InitY - 1;
             }
         }
 

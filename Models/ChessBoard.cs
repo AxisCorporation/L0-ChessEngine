@@ -20,8 +20,9 @@ public class ChessBoard : IChessBoard
         ResetBoard(); // Initialize the board
     }
 
-    public void MakeMove(IMove move)
+    public void MakeMove(IMove moveInterface)
     {
+        Move move = (Move)moveInterface;
         if (!move.IsValid)
         {
             return;
@@ -31,7 +32,7 @@ public class ChessBoard : IChessBoard
         (int destX, int destY) = move.Destination;
 
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
-        PieceToMove.AtStart = false;
+        PieceToMove.HasMoved = true;
 
         if (move.InitPiece.EqualsUncolored(PieceType.Pawn) && (destY == 0 || destY == 8))
         {

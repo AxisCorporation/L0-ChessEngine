@@ -28,11 +28,16 @@ public class ChessBoard : IChessBoard
         }
         
         (int initX, int initY) = move.Initial;
+        (int destX, int destY) = move.Destination;
+
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
 
+        if (destY == 0 || destY == 8)
+        {
+            PieceToMove = PieceToMove.IsWhite ? 
+        }
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty);
 
-        (int destX, int destY) = move.Destination;
         Grid[destX - 1, destY - 1] = PieceToMove;
     }
 

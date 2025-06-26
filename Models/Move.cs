@@ -94,27 +94,43 @@ public class Move : IMove
         {
             if (move.InitPiece.AtStart)
             {
-                IsValidForward = IsValidForward && (move.Destination.Y == move.Initial.Y + 1 || move.Destination.Y == move.Initial.Y + 2);
+                IsValidForward &= move.Destination.Y == move.Initial.Y + 1 || move.Destination.Y == move.Initial.Y + 2;
             }
             else
             {
-                IsValidForward = IsValidForward && move.Destination.Y == move.Initial.Y + 1;
+                IsValidForward &= move.Destination.Y == move.Initial.Y + 1;
             }
 
             if (move.DestPiece == PieceType.Empty)
             {
                 IsValidHorizontal = false;
             }
+            else
+            {
+                IsValidHorizontal &= move.Destination.Y == move.Initial.Y + 1;
+            }
         }
         else
         {
+            if (move.InitPiece.AtStart)
+            {
+                IsValidForward &= move.Destination.Y == move.Initial.Y - 1 || move.Destination.Y == move.Initial.Y - 2;
+            }
+            else
+            {
+                IsValidForward &= move.Destination.Y == move.Initial.Y - 1;
+            }
 
+            if (move.DestPiece == PieceType.Empty)
+            {
+                IsValidHorizontal = false;
+            }
+            else
+            {
+                IsValidHorizontal &= move.Destination.Y == move.Initial.Y - 1;
+            }
         }
-        
-        if (!IsValidHorizontal && !IsValidForward)
-        {
-            return false;
-        }
-        return true;
+
+        return IsValidForward || IsValidHorizontal;
     }
 }

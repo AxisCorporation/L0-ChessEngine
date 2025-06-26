@@ -15,7 +15,7 @@ public class Move : IMove
     public ChessPiece DestPiece { get; set; }
 
     /// <summary>
-    /// Takes in an uncolored piecetype, and returns a function that takes in a Move object and a boolean parameter "IsWhite" as its parameters,
+    /// Takes in an uncolored piecetype, and returns a function that takes in a Move object,
     /// and returns true if the move is valid
     /// </summary>
     private static Dictionary<PieceType, Func<Move, bool>> ValidationMap = [];

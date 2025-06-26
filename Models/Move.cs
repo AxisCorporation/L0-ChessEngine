@@ -14,6 +14,8 @@ public class Move : IMove
     public ChessPiece InitPiece { get; set; }
     public ChessPiece DestPiece { get; set; }
 
+    public bool IsEnPassant { get; set; }
+
     /// <summary>
     /// Takes in an uncolored piecetype, and returns a function that takes in a Move object,
     /// and returns true if the move is valid
@@ -90,7 +92,7 @@ public class Move : IMove
         (int InitX, int InitY) = move.Initial;
         (int DestX, int DestY) = move.Destination;
 
-        bool IsValidDiagonal = DestX == InitX + 1 || DestX == InitX - 1;
+        bool IsValidDiagonal = Math.Abs(DestX - InitX) == 1;
         bool IsValidForward = DestX == InitX;
 
         if (move.InitPiece.IsWhite)
@@ -104,14 +106,7 @@ public class Move : IMove
                 IsValidForward &= DestY == InitY + 1;
             }
 
-            if (move.DestPiece == PieceType.Empty)
-            {
-                IsValidDiagonal = false;
-            }
-            else
-            {
-                IsValidDiagonal &= DestY == InitY + 1;
-            }
+            IsValidDiagonal &= DestY == InitY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
         }
         else
         {
@@ -124,14 +119,7 @@ public class Move : IMove
                 IsValidForward &= DestY == InitY - 1;
             }
 
-            if (move.DestPiece == PieceType.Empty)
-            {
-                IsValidDiagonal = false;
-            }
-            else
-            {
-                IsValidDiagonal &= DestY == InitY - 1;
-            }
+            IsValidDiagonal &= DestY == InitY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
         }
 
         return IsValidForward || IsValidDiagonal;

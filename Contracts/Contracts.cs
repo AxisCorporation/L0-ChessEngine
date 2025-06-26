@@ -8,6 +8,8 @@ public interface IChessPiece
 {
     public PieceType Type { get; set; }
     public bool IsWhite { get; }
+    public bool HasMoved { get; set; }
+    public bool IsValidPassantPlacement { get; set; }
 }
 
 public interface IChessBoard

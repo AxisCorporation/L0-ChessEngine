@@ -24,10 +24,8 @@ public class ChessPiece : IChessPiece
 {
     public PieceType Type { get; set; }
     public bool HasMoved { get; set; }
-    public bool IsWhite
-    {
-        get => (Type & PieceType.White) == PieceType.White;
-    }
+    public bool IsValidPassantPlacement { get; set; }
+    public bool IsWhite { get => (Type & PieceType.White) == PieceType.White; }
 
     // Constructors
 
@@ -35,6 +33,7 @@ public class ChessPiece : IChessPiece
     {
         Type = PieceType.White | PieceType.Pawn;
         HasMoved = false;
+        IsValidPassantPlacement = false;
     }
 
     public ChessPiece(PieceType type)

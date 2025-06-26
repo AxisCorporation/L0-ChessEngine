@@ -1,4 +1,5 @@
-﻿using L_0_Chess_Engine.Contracts;
+﻿using System;
+using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -28,6 +29,15 @@ public class ChessBoard : IChessBoard
             return;
         }
 
+        // Reset all valid En Passant moves
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Grid[i, j].IsValidPassantPlacement = false;
+            }
+        }
+
         (int initX, int initY) = move.Initial;
         (int destX, int destY) = move.Destination;
 
@@ -37,6 +47,10 @@ public class ChessBoard : IChessBoard
         if (move.InitPiece.EqualsUncolored(PieceType.Pawn) && (destY == 0 || destY == 8))
         {
             PieceToMove = GameManager.GetPieceFromPromotion();
+        }
+        else if (move.InitPiece.EqualsUncolored(PieceType.Pawn) && Math.Abs(move.Destination.Y - move.Initial.Y) == 2)
+        {
+            Grid[move.Destination.Y - 2, move.Destination.X - 1].IsValidPassantPlacement = true;
         }
         
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty);

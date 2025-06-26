@@ -23,7 +23,7 @@ public enum PieceType
 public class ChessPiece : IChessPiece
 {
     public PieceType Type { get; set; }
-
+    public bool HasMoved { get; set; }
     public bool IsWhite
     {
         get => (Type & PieceType.White) == PieceType.White;
@@ -34,6 +34,7 @@ public class ChessPiece : IChessPiece
     public ChessPiece()
     {
         Type = PieceType.White | PieceType.Pawn;
+        HasMoved = false;
     }
 
     public ChessPiece(PieceType type)
@@ -41,4 +42,13 @@ public class ChessPiece : IChessPiece
         Type = type;
     }
 
+    public static bool operator ==(ChessPiece A, PieceType B) => A.Type == B;
+    
+    public static bool operator !=(ChessPiece A, PieceType B) => A.Type != B;
+    
+
+    public static bool operator ==(PieceType A, ChessPiece B) => B == A;
+    
+    public static bool operator !=(PieceType A, ChessPiece B) => B != A;
+    
 }

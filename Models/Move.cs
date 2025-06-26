@@ -15,10 +15,10 @@ public class Move : IMove
     public ChessPiece DestPiece { get; set; }
 
     /// <summary>
-    /// Takes in an uncolored piecetype, and returns a function that takes in a Move object and a boolean parameter "IsWhite" as its parameters,
+    /// Takes in an uncolored piecetype, and returns a function that takes in a Move object,
     /// and returns true if the move is valid
     /// </summary>
-    private static Dictionary<PieceType, Func<Move, bool, bool>> ValidationMap = [];
+    private static Dictionary<PieceType, Func<Move, bool>> ValidationMap = [];
     static Move()
     {
         ValidationMap[PieceType.Pawn] = IsValidPawnMove;
@@ -42,14 +42,98 @@ public class Move : IMove
 
     public bool IsValidMove()
     {
-        // We can take out the color to make the mapping simpler, and pass in the color as a bool if needed
-        PieceType Type = InitPiece.IsWhite ? (InitPiece.Type | PieceType.White) : (InitPiece.Type | PieceType.Black);
+        // We can take out the color to make the mapping simpler
+        PieceType Type = InitPiece.IsWhite ? (InitPiece.Type ^ PieceType.White) : (InitPiece.Type ^ PieceType.Black);
         
-        return ValidationMap[Type](this, InitPiece.IsWhite);
+        return ValidationMap[Type](this);
     }
 
-    private static bool IsValidPawnMove(Move move, bool IsWhite)
+    /// <summary> Helper function for checking the bare minimum requirements of a valid move. </summary>
+    /// <returns>False if
+    /// <list type="bullet">
+    /// <item> 
+    /// <description> Initial coordinates are equal to destination </description> 
+    /// </item>
+    /// <item>
+    /// <description> Destination grid piece is not empty, and is the same color as the initial piece </description>
+    /// </item>
+    /// </list>
+    /// </returns>
+    private static bool IsValidGenericMove(Move move)
     {
-        return false;
+        // False if the player just sets the piece back down in order to avoid turn skipping
+        if (move.Initial == move.Destination)
+        {
+            return false;
+        }
+
+        if (move.DestPiece.IsWhite && move.InitPiece.IsWhite)
+        {
+            return false;
+        }
+
+        if (!move.DestPiece.IsWhite && !move.InitPiece.IsWhite)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool IsValidPawnMove(Move move)
+    {
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
+
+        (int InitX, int InitY) = move.Initial;
+        (int DestX, int DestY) = move.Destination;
+
+        bool IsValidDiagonal = DestX == InitX + 1 || DestX == InitX - 1;
+        bool IsValidForward = DestX == InitX;
+
+        if (move.InitPiece.IsWhite)
+        {
+            if (move.InitPiece.HasMoved)
+            {
+                IsValidForward &= DestY == InitY + 1 || DestY == InitY + 2;
+            }
+            else
+            {
+                IsValidForward &= DestY == InitY + 1;
+            }
+
+            if (move.DestPiece == PieceType.Empty)
+            {
+                IsValidDiagonal = false;
+            }
+            else
+            {
+                IsValidDiagonal &= DestY == InitY + 1;
+            }
+        }
+        else
+        {
+            if (move.InitPiece.HasMoved)
+            {
+                IsValidForward &= DestY == InitY - 1 || DestY == InitY - 2;
+            }
+            else
+            {
+                IsValidForward &= DestY == InitY - 1;
+            }
+
+            if (move.DestPiece == PieceType.Empty)
+            {
+                IsValidDiagonal = false;
+            }
+            else
+            {
+                IsValidDiagonal &= DestY == InitY - 1;
+            }
+        }
+
+        return IsValidForward || IsValidDiagonal;
     }
 }

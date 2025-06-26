@@ -20,19 +20,28 @@ public class ChessBoard : IChessBoard
         ResetBoard(); // Initialize the board
     }
 
-    public void MakeMove(IMove move)
+    public void MakeMove(IMove moveInterface)
     {
+        Move move = (Move)moveInterface;
         if (!move.IsValid)
         {
             return;
         }
-        
-        (int initX, int initY) = move.Initial;
-        ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
 
+        (int initX, int initY) = move.Initial;
+        (int destX, int destY) = move.Destination;
+
+        ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
+        PieceToMove.HasMoved = true;
+
+        if ((move.InitPiece == (PieceType.Pawn | PieceType.White) || move.InitPiece == (PieceType.Pawn | PieceType.Black))
+            && (destY == 0 || destY == 8))
+        {
+            PieceToMove = GameManager.GetPieceFromPromotion();
+        }
+        
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty);
 
-        (int destX, int destY) = move.Destination;
         Grid[destX - 1, destY - 1] = PieceToMove;
     }
 

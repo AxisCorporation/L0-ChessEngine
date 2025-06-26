@@ -18,7 +18,7 @@ public class Move : IMove
     /// Takes in an uncolored piecetype, and returns a function that takes in a Move object and a boolean parameter "IsWhite" as its parameters,
     /// and returns true if the move is valid
     /// </summary>
-    private static Dictionary<PieceType, Func<Move, bool, bool>> ValidationMap = [];
+    private static Dictionary<PieceType, Func<Move, bool>> ValidationMap = [];
     static Move()
     {
         ValidationMap[PieceType.Pawn] = IsValidPawnMove;
@@ -42,10 +42,10 @@ public class Move : IMove
 
     public bool IsValidMove()
     {
-        // We can take out the color to make the mapping simpler, and pass in the color as a bool if needed
+        // We can take out the color to make the mapping simpler
         PieceType Type = InitPiece.IsWhite ? (InitPiece.Type ^ PieceType.White) : (InitPiece.Type ^ PieceType.Black);
         
-        return ValidationMap[Type](this, InitPiece.IsWhite);
+        return ValidationMap[Type](this);
     }
 
     /// <summary> Helper function for checking the bare minimum requirements of a valid move. </summary>
@@ -80,7 +80,7 @@ public class Move : IMove
         return true;
     }
 
-    private static bool IsValidPawnMove(Move move, bool IsWhite)
+    private static bool IsValidPawnMove(Move move)
     {
         if (!IsValidGenericMove(move))
         {
@@ -93,7 +93,7 @@ public class Move : IMove
         bool IsValidDiagonal = DestX == InitX + 1 || DestX == InitX - 1;
         bool IsValidForward = DestX == InitX;
 
-        if (IsWhite)
+        if (move.InitPiece.IsWhite)
         {
             if (move.InitPiece.HasMoved)
             {

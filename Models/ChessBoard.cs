@@ -22,6 +22,11 @@ public class ChessBoard : IChessBoard
 
     public void MakeMove(IMove move)
     {
+        if (!move.IsValid)
+        {
+            return;
+        }
+        
         (int initX, int initY) = move.Initial;
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
 

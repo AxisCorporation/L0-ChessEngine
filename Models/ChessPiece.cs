@@ -42,4 +42,14 @@ public class ChessPiece : IChessPiece
         Type = type;
     }
 
+    public static bool operator ==(ChessPiece A, PieceType B) => A.Type == B;
+    
+
+    public static bool operator !=(ChessPiece A, PieceType B) => A.Type != B;
+    
+
+    public static bool operator ==(PieceType A, ChessPiece B) => B == A;
+    
+    public static bool operator !=(PieceType A, ChessPiece B) => B != A;
+    
 }

@@ -35,7 +35,7 @@ public class ChessBoard : IChessBoard
 
         if (destY == 0 || destY == 8)
         {
-            PieceToMove = GetPieceFromPromotion();
+            PieceToMove = GameManager.GetPieceFromPromotion();
         }
         
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty);

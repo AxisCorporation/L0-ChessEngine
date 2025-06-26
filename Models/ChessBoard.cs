@@ -44,17 +44,12 @@ public class ChessBoard : IChessBoard
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
         PieceToMove.HasMoved = true;
 
-        if (move.InitPiece.EqualsUncolored(PieceType.Pawn) && (destY == 0 || destY == 8))
+        if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
-            PieceToMove = GameManager.GetPieceFromPromotion();
-        }
-        else if (move.InitPiece.EqualsUncolored(PieceType.Pawn) && Math.Abs(move.Destination.Y - move.Initial.Y) == 2)
-        {
-            Grid[move.Destination.Y - 2, move.Destination.X - 1].IsValidPassantPlacement = true;
+            CheckSpecialPawnConditions(move, ref PieceToMove);
         }
         
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty);
-
         Grid[destX - 1, destY - 1] = PieceToMove;
     }
 
@@ -63,9 +58,29 @@ public class ChessBoard : IChessBoard
         ReadFEN(DefaultFEN);
     }
 
+    private void CheckSpecialPawnConditions(Move move, ref ChessPiece PieceToMove)
+    {
+        (int destX, int destY) = move.Destination;
+        if (destY == 1 || destY == 8)
+        {
+            PieceToMove = GameManager.GetPieceFromPromotion();
+        }
+
+        if (Math.Abs(move.Destination.Y - move.Initial.Y) == 2)
+        {
+            Grid[move.Destination.Y - 2, move.Destination.X - 1].IsValidPassantPlacement = true;
+        }
+        else if (move.IsEnPassant)
+        {
+            int CapturedPawnY = PieceToMove.IsWhite ? destY - 2 : destY + 1;
+
+            Grid[CapturedPawnY, destX - 1] = new ChessPiece(PieceType.Empty);
+        }
+    }
+
     public void PrintBoardToTerminal()
     {
-    
+
     }
 
     public bool ReadFEN(string fen)

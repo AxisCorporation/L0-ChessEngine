@@ -34,8 +34,9 @@ public class ChessBoard : IChessBoard
 
         if (destY == 0 || destY == 8)
         {
-            PieceToMove = PieceToMove.IsWhite ? 
+            PieceToMove = GetPieceFromPromotion();
         }
+        
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty);
 
         Grid[destX - 1, destY - 1] = PieceToMove;

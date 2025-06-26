@@ -26,9 +26,10 @@ public class ChessBoard : IChessBoard
         {
             return;
         }
-        
+
         (int initX, int initY) = move.Initial;
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
+        PieceToMove.AtStart = false;
 
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty);
 

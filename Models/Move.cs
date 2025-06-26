@@ -43,13 +43,65 @@ public class Move : IMove
     public bool IsValidMove()
     {
         // We can take out the color to make the mapping simpler, and pass in the color as a bool if needed
-        PieceType Type = InitPiece.IsWhite ? (InitPiece.Type | PieceType.White) : (InitPiece.Type | PieceType.Black);
+        PieceType Type = InitPiece.IsWhite ? (InitPiece.Type ^ PieceType.White) : (InitPiece.Type ^ PieceType.Black);
         
         return ValidationMap[Type](this, InitPiece.IsWhite);
     }
 
+    /// <summary> Helper function for checking the bare minimum requirements of a valid move. </summary>
+    /// <returns>False if
+    /// <list type="bullet">
+    /// <item> 
+    /// <description> Initial coordinates are equal to destination </description> 
+    /// </item>
+    /// <item>
+    /// <description> Destination grid piece is not empty, and is the same color as the initial piece </description>
+    /// </item>
+    /// </list>
+    /// </returns>
+    private static bool IsValidGenericMove(Move move)
+    {
+        // False if the player just sets the piece back down in order to avoid turn skipping
+        if (move.Initial == move.Destination)
+        {
+            return false;
+        }
+
+        if (move.DestPiece.IsWhite && move.InitPiece.IsWhite)
+        {
+            return false;
+        }
+
+        if (!move.DestPiece.IsWhite && !move.InitPiece.IsWhite)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     private static bool IsValidPawnMove(Move move, bool IsWhite)
     {
-        return false;
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
+
+        bool IsHorizontal = move.Destination.X == move.Initial.X + 1 || move.Destination.X == move.Initial.X - 1;
+        bool IsForward = move.Destination.X == move.Initial.X;
+
+        if (IsWhite)
+        {
+            if (move.InitPiece.AtStart)
+            {
+                IsForward = IsForward && (move.Destination.Y == move.Initial.Y + 1 || move.Destination.Y == move.Initial.Y + 2);
+            }
+            else
+            {
+                IsForward = IsForward && move.Destination.Y == move.Initial.Y + 1;
+            }
+        }
+
+        return true;
     }
 }

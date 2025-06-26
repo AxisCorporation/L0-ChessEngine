@@ -33,7 +33,7 @@ public class ChessBoard : IChessBoard
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
         PieceToMove.AtStart = false;
 
-        if (destY == 0 || destY == 8)
+        if (move.InitPiece.EqualsUncolored(PieceType.Pawn) && (destY == 0 || destY == 8))
         {
             PieceToMove = GameManager.GetPieceFromPromotion();
         }

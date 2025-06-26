@@ -11,7 +11,7 @@ public class ChessBoard : IChessBoard
     //Constant FEN for the starting position
     private const string DefaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
-    public ChessBoard() //constructer to initialize
+    public ChessBoard() // Constructor to initialize
     {
         Grid = new ChessPiece[8, 8];
         IsCheck = false;
@@ -22,6 +22,11 @@ public class ChessBoard : IChessBoard
 
     public void MakeMove(IMove move)
     {
+        if (!move.IsValid)
+        {
+            return;
+        }
+        
         (int initX, int initY) = move.Initial;
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
 

@@ -90,7 +90,7 @@ public class Move : IMove
         (int InitX, int InitY) = move.Initial;
         (int DestX, int DestY) = move.Destination;
 
-        bool IsValidHorizontal = DestX == InitX + 1 || DestX == InitX - 1;
+        bool IsValidDiagonal = DestX == InitX + 1 || DestX == InitX - 1;
         bool IsValidForward = DestX == InitX;
 
         if (IsWhite)
@@ -106,11 +106,11 @@ public class Move : IMove
 
             if (move.DestPiece == PieceType.Empty)
             {
-                IsValidHorizontal = false;
+                IsValidDiagonal = false;
             }
             else
             {
-                IsValidHorizontal &= DestY == InitY + 1;
+                IsValidDiagonal &= DestY == InitY + 1;
             }
         }
         else
@@ -126,14 +126,14 @@ public class Move : IMove
 
             if (move.DestPiece == PieceType.Empty)
             {
-                IsValidHorizontal = false;
+                IsValidDiagonal = false;
             }
             else
             {
-                IsValidHorizontal &= DestY == InitY - 1;
+                IsValidDiagonal &= DestY == InitY - 1;
             }
         }
 
-        return IsValidForward || IsValidHorizontal;
+        return IsValidForward || IsValidDiagonal;
     }
 }

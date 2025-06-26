@@ -44,7 +44,6 @@ public class ChessPiece : IChessPiece
 
     public static bool operator ==(ChessPiece A, PieceType B) => A.Type == B;
     
-
     public static bool operator !=(ChessPiece A, PieceType B) => A.Type != B;
     
 

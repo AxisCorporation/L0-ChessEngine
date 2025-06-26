@@ -42,6 +42,8 @@ public class ChessPiece : IChessPiece
         Type = type;
     }
 
+    public bool EqualsUncolored(PieceType type) => IsWhite ? (Type ^ PieceType.White) == type : (Type ^ PieceType.Black) == type; 
+
     public static bool operator ==(ChessPiece A, PieceType B) => A.Type == B;
     
 

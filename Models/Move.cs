@@ -95,7 +95,7 @@ public class Move : IMove
 
         if (IsWhite)
         {
-            if (move.InitPiece.AtStart)
+            if (move.InitPiece.HasMoved)
             {
                 IsValidForward &= DestY == InitY + 1 || DestY == InitY + 2;
             }
@@ -115,7 +115,7 @@ public class Move : IMove
         }
         else
         {
-            if (move.InitPiece.AtStart)
+            if (move.InitPiece.HasMoved)
             {
                 IsValidForward &= DestY == InitY - 1 || DestY == InitY - 2;
             }

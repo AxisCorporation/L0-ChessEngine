@@ -26,11 +26,12 @@ public class ChessBoard : IChessBoard
         {
             return;
         }
-        
+
         (int initX, int initY) = move.Initial;
         (int destX, int destY) = move.Destination;
 
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
+        PieceToMove.AtStart = false;
 
         if (destY == 0 || destY == 8)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using Avalonia;
 using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
@@ -60,15 +61,16 @@ public class ChessBoard : IChessBoard
 
     private void CheckSpecialPawnConditions(Move move, ref ChessPiece PieceToMove)
     {
+        (int initX, int initY) = move.Initial;
         (int destX, int destY) = move.Destination;
         if (destY == 1 || destY == 8)
         {
             PieceToMove = GameManager.GetPieceFromPromotion();
         }
 
-        if (Math.Abs(move.Destination.Y - move.Initial.Y) == 2)
+        if (Math.Abs(destY - initY) == 2)
         {
-            Grid[move.Destination.Y - 2, move.Destination.X - 1].IsValidPassantPlacement = true;
+            Grid[destY - 2, destX - 1].IsValidPassantPlacement = true;
         }
         else if (move.IsEnPassant)
         {

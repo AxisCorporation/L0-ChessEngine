@@ -18,7 +18,7 @@ public class SChessBoard : IChessBoard
         {
             for (int j = 0; j < Grid.GetLength(1); j++)
             {
-                Grid[i, j] = new ChessPiece(PieceType.Pawn | PieceType.White);
+                Grid[i, j] = new ChessPiece(PieceType.Pawn | PieceType.White, new(i + 1, j + 1));
             }
         }
     }

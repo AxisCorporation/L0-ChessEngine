@@ -13,6 +13,9 @@ public class ChessBoard : IChessBoard
     //Constant FEN for the starting position
     private const string DefaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
+    // Invoked every time grid updates
+    public event Action? GridUpdated; 
+
     public ChessBoard() // Constructor to initialize
     {
         Grid = new ChessPiece[8, 8];
@@ -49,9 +52,11 @@ public class ChessBoard : IChessBoard
         {
             CheckSpecialPawnConditions(move, ref PieceToMove);
         }
-        
+
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX - 1, destY - 1] = PieceToMove;
+
+        GridUpdated?.Invoke();
     }
 
     public void ResetBoard()

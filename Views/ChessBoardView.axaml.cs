@@ -23,7 +23,7 @@ public partial class ChessBoardView : UserControl
             CreateChessBoardUI();
         };
 
-        _chessBoardVM.OnBoardChanged += CreateChessBoardUI;
+        _chessBoardVM.BoardChanged += CreateChessBoardUI;
     }
 
     private void CreateChessBoardUI()

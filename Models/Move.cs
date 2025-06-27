@@ -6,8 +6,7 @@ namespace L_0_Chess_Engine.Models;
 public class Move : IMove
 {
     public bool IsValid { get => IsValidMove(); }
-    public Coordinate Initial { get; set; }
-    public Coordinate Destination { get; set; }
+
 
     // Rather than have two separate chesspieces AND coordinate objects here, it might also be better to 
     // just store the coordinates inside the chesspieces, but this would require refactoring
@@ -34,10 +33,8 @@ public class Move : IMove
     /// <param name="destination">Destination Coordinate</param>
     /// <param name="initPiece">Piece that belongs at the starting coordinate</param>
     /// <param name="destPiece">Piece that belongs at the end coordinate</param>
-    public Move(Coordinate initial, Coordinate destination, ChessPiece initPiece, ChessPiece destPiece)
+    public Move(ChessPiece initPiece, ChessPiece destPiece)
     {
-        Initial = initial;
-        Destination = destination;
         InitPiece = initPiece;
         DestPiece = destPiece;
     }
@@ -64,17 +61,12 @@ public class Move : IMove
     private static bool IsValidGenericMove(Move move)
     {
         // False if the player just sets the piece back down in order to avoid turn skipping
-        if (move.Initial == move.Destination)
+        if (move.InitPiece.Coordinates == move.DestPiece.Coordinates)
         {
             return false;
         }
 
-        if (move.DestPiece.IsWhite && move.InitPiece.IsWhite)
-        {
-            return false;
-        }
-
-        if (!move.DestPiece.IsWhite && !move.InitPiece.IsWhite)
+        if (move.DestPiece.IsWhite == move.InitPiece.IsWhite)
         {
             return false;
         }
@@ -89,8 +81,8 @@ public class Move : IMove
             return false;
         }
 
-        (int InitX, int InitY) = move.Initial;
-        (int DestX, int DestY) = move.Destination;
+        (int InitX, int InitY) = move.InitPiece.Coordinates;
+        (int DestX, int DestY) = move.DestPiece.Coordinates;
 
         bool IsValidDiagonal = Math.Abs(DestX - InitX) == 1;
         bool IsValidForward = DestX == InitX;

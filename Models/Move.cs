@@ -107,6 +107,7 @@ public class Move : IMove
             }
 
             IsValidDiagonal &= DestY == InitY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
+
         }
         else
         {
@@ -122,6 +123,10 @@ public class Move : IMove
             IsValidDiagonal &= DestY == InitY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
         }
 
+        if (IsValidDiagonal && move.DestPiece.IsValidPassantPlacement)
+        {
+            move.IsEnPassant = true;
+        }
         return IsValidForward || IsValidDiagonal;
     }
 }

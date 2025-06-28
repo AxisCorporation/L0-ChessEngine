@@ -6,7 +6,17 @@ namespace L_0_Chess_Engine.Models;
 
 public class ChessBoard : IChessBoard
 {
-    public IChessPiece[,] Grid { get; set; }
+    private IChessPiece[,] _grid;
+
+    public IChessPiece[,] Grid
+    {
+        get => _grid;
+        set
+        {
+            _grid = value;
+            GridUpdated?.Invoke();
+        }
+    }
     public bool IsCheck { get; set; }
     public bool IsCheckMate { get; set; }
 

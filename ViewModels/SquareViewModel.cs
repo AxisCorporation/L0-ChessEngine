@@ -1,7 +1,9 @@
 using System;
+using System.Windows.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using L_0_Chess_Engine.Contracts;
 using L_0_Chess_Engine.Models;
 
@@ -17,33 +19,39 @@ public partial class SquareViewModel : ObservableObject
     
     [ObservableProperty]
     private bool _isLightSquare;
+    
+    [ObservableProperty]
+    private bool _isSelected;
+    
+    public ICommand ClickCommand { get; set; } = null!;
 
 
     public SquareViewModel(ChessPiece piece)
     {
         Piece = piece;
 
-        string UriStr = GetUriForPiece(Piece);
-        Image = new (AssetLoader.Open(new Uri(UriStr)));
+        string uriStr = GetUriForPiece(Piece);
+        Image = new (AssetLoader.Open(new Uri(uriStr)));
+        
     }
 
     public SquareViewModel(PieceType type, Coordinate coordinate)
     {
         Piece = new ChessPiece(type, coordinate);
 
-        string UriStr = GetUriForPiece(Piece);
-        Image = new (AssetLoader.Open(new Uri(UriStr)));
+        string uriStr = GetUriForPiece(Piece);
+        Image = new (AssetLoader.Open(new Uri(uriStr)));
     }
 
     public void UpdateImage()
     {
-        string UriStr = GetUriForPiece(Piece);
-        Image = new (AssetLoader.Open(new Uri(UriStr)));   
+        string uriStr = GetUriForPiece(Piece);
+        Image = new (AssetLoader.Open(new Uri(uriStr)));   
     }
 
     private static string GetUriForPiece(ChessPiece piece)
     {
-        string UriStr = "avares://L-0 Chess Engine/" + (piece.Type switch
+        string uriStr = "avares://L-0 Chess Engine/" + (piece.Type switch
         {
             PieceType.Pawn | PieceType.White => "Assets/Images/W_Pawn.png",
             PieceType.Pawn | PieceType.Black => "Assets/Images/B_Pawn.png",
@@ -66,6 +74,7 @@ public partial class SquareViewModel : ObservableObject
             _ => @"Assets\Images\Empty.png"
         });
 
-        return UriStr;
+        return uriStr;
     }
+    
 }

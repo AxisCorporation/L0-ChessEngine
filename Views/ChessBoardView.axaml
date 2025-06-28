@@ -25,14 +25,21 @@
             
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="{Binding IsLightSquare, Converter={StaticResource BoolToSquareColorConverter}}"
-                            BorderBrush="Black" BorderThickness="1" Width="50" Height="50">
+                    <Button Command="{Binding ClickCommand}"
+                            Padding="0"
+                            Background="Transparent"
+                            BorderThickness="0">
                         
-                        <Image Source="{Binding Image}" 
-                               Stretch="Uniform"
-                               HorizontalAlignment="Center"
-                               VerticalAlignment="Center"/>
-                    </Border>
+                        <Border Background="{Binding IsLightSquare, Converter={StaticResource BoolToSquareColorConverter}}"
+                                BorderBrush="Black" BorderThickness="1" Width="50" Height="50">
+                            
+                            <Image Source="{Binding Image}" 
+                                   Stretch="Uniform"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                        </Border>
+                        
+                    </Button>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             

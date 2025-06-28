@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using L_0_Chess_Engine.Contracts;
 using L_0_Chess_Engine.Models;
 using L_0_Chess_Engine.SampleModels;
 
@@ -12,6 +13,9 @@ public partial class ChessBoardViewModel : ObservableObject
 {
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
     private ChessBoard Board { get; set; } = new();
+    
+    private SquareViewModel? _selectedSquare;
+    
     public event Action? BoardChanged;
 
     public ChessBoardViewModel()
@@ -21,11 +25,15 @@ public partial class ChessBoardViewModel : ObservableObject
             for (int col = 0; col < 8; col++)
             {
                 var piece = Board.Grid[row, col]; // or however your grid is structured
-
-                GridPieces.Add(new SquareViewModel((ChessPiece)piece)
+                
+                SquareViewModel square = new((ChessPiece) piece)
                 {
                     IsLightSquare = (row + col) % 2 == 0
-                });
+                };
+
+                square.ClickCommand = new RelayCommand(() => OnSquareClick(square));
+
+                GridPieces.Add(square);
             }
         }
 
@@ -47,6 +55,45 @@ public partial class ChessBoardViewModel : ObservableObject
         }
     }
 
+    
+    private void OnSquareClick(SquareViewModel squareClicked)
+    {
+        if (_selectedSquare is null)
+        {
+            // First selection
+            if (squareClicked.Piece.Type != PieceType.Empty)
+            {
+                _selectedSquare = squareClicked;
+                // _selectedSquare.IsSelected = true;
+            }
+        }
+        else
+        {
+            if (squareClicked == _selectedSquare)
+            {
+                // Clicked same square → unselect
+                // _selectedSquare.IsSelected = false;
+                _selectedSquare = null;
+                return;
+            }
+            
+            Console.WriteLine(_selectedSquare.Piece.Type + " " + (_selectedSquare.Piece.Coordinates.Y, _selectedSquare.Piece.Coordinates.X));
+            Console.WriteLine(squareClicked.Piece.Type + " " + (squareClicked.Piece.Coordinates.Y, squareClicked.Piece.Coordinates.X));
+            
+            MovePiece(_selectedSquare.Piece.Coordinates.Y - 1, _selectedSquare.Piece.Coordinates.X - 1,
+                squareClicked.Piece.Coordinates.Y - 1, squareClicked.Piece.Coordinates.X - 1);
+            
+            
+            // Move thisMove = new Move(_selectedSquare.Piece, squareClicked.Piece);
+            //
+            // Board.MakeMove(thisMove);
+            
+            // _selectedSquare.IsSelected = false;
+            _selectedSquare = null;
+        }
+        
+    }
+
 
     public void MovePiece(int fromRow, int fromCol, int toRow, int toCol)
     {
@@ -55,9 +102,16 @@ public partial class ChessBoardViewModel : ObservableObject
             return;
         }
         
-        GridPieces[toRow * 8 + toCol] = GridPieces[fromRow * 8 + fromCol];
-
-        GridPieces[fromRow * 8 + fromCol] = new SquareViewModel(PieceType.Empty, new(fromRow, fromCol));
+        Board.Grid[toCol, toRow].Type = Board.Grid[fromCol, fromRow].Type;
+        Board.Grid[fromCol, fromRow].Type = PieceType.Empty;
+        
+        UpdateGrid();
+        
+        // GridPieces[toRow * 8 + toCol].Piece = GridPieces[fromRow * 8 + fromCol].Piece;
+        //
+        // Coordinate corr = new Coordinate(fromCol, fromRow);
+        //
+        // GridPieces[fromRow * 8 + fromCol].Piece = new ChessPiece(PieceType.Empty, corr);
 
     }
 

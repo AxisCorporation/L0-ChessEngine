@@ -85,7 +85,7 @@ public class Move : IMove
         (int DestX, int DestY) = move.DestPiece.Coordinates;
 
         bool IsValidDiagonal = Math.Abs(DestX - InitX) == 1;
-        bool IsValidForward = DestX == InitX;
+        bool IsValidForward = (DestX == InitX) && (move.DestPiece == PieceType.Empty);
 
         if (move.InitPiece.IsWhite)
         {

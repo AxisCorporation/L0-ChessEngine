@@ -19,8 +19,17 @@ public class GameManager : IGameManager
     public bool StartGame()
     {
         Board.ResetBoard();
-        IsWhiteTurn = true;
         GameRunning = true;
+
+        while (!Board.IsCheckMate)
+        {
+            /*
+                TODO:
+                1. Check who's turn it is, and make a new Move Object based on initial and destination coordinates 
+                2. If move is valid, call Board.MakeMove() and switch turn 
+                3. Do checks to see if Checkmate/Check has been achieved
+            */
+        }
         return true;
     }
 
@@ -30,10 +39,8 @@ public class GameManager : IGameManager
         return true;
     }
 
-    public void SwitchTurn()
-    {
-        IsWhiteTurn = !IsWhiteTurn;
-    }
+    public void SwitchTurn() => IsWhiteTurn = !IsWhiteTurn;
+    
 
     public static ChessPiece GetPieceFromPromotion()
     {

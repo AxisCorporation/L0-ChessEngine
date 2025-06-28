@@ -1,4 +1,6 @@
-﻿using L_0_Chess_Engine.Contracts;
+﻿using System;
+using Avalonia;
+using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -28,20 +30,27 @@ public class ChessBoard : IChessBoard
             return;
         }
 
+        // Reset all valid En Passant moves
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Grid[i, j].IsValidPassantPlacement = false;
+            }
+        }
+
         (int initX, int initY) = move.Initial;
         (int destX, int destY) = move.Destination;
 
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
         PieceToMove.HasMoved = true;
 
-        if ((move.InitPiece == (PieceType.Pawn | PieceType.White) || move.InitPiece == (PieceType.Pawn | PieceType.Black))
-            && (destY == 0 || destY == 8))
+        if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
-            PieceToMove = GameManager.GetPieceFromPromotion();
+            CheckSpecialPawnConditions(move, ref PieceToMove);
         }
         
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty);
-
         Grid[destX - 1, destY - 1] = PieceToMove;
     }
 
@@ -50,9 +59,30 @@ public class ChessBoard : IChessBoard
         ReadFEN(DefaultFEN);
     }
 
+    private void CheckSpecialPawnConditions(Move move, ref ChessPiece PieceToMove)
+    {
+        (int initX, int initY) = move.Initial;
+        (int destX, int destY) = move.Destination;
+        if (destY == 1 || destY == 8)
+        {
+            PieceToMove = GameManager.GetPieceFromPromotion();
+        }
+
+        if (Math.Abs(destY - initY) == 2)
+        {
+            Grid[destY - 2, destX - 1].IsValidPassantPlacement = true;
+        }
+        else if (move.IsEnPassant)
+        {
+            int CapturedPawnY = PieceToMove.IsWhite ? destY - 2 : destY + 1;
+
+            Grid[CapturedPawnY, destX - 1] = new ChessPiece(PieceType.Empty);
+        }
+    }
+
     public void PrintBoardToTerminal()
     {
-    
+
     }
 
     public bool ReadFEN(string fen)

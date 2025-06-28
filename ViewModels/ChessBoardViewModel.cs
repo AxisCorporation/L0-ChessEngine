@@ -11,10 +11,20 @@ public partial class ChessBoardViewModel : ObservableObject
 {
     public ObservableCollection<ChessPieceViewModel> GridPieces { get; set; } = [];
     private ChessBoard Board { get; set; } = new ChessBoard();
-    public event Action? OnBoardChanged; 
-    
+    public event Action? BoardChanged;
+
     public ChessBoardViewModel()
     {
+        foreach (var Piece in Board.Grid)
+        {
+            GridPieces.Add(new ChessPieceViewModel((ChessPiece)Piece));
+        }
+        Board.GridUpdated += UpdateGrid;
+    }
+
+    public void UpdateGrid()
+    {
+        GridPieces = [];
         foreach (var Piece in Board.Grid)
         {
             GridPieces.Add(new ChessPieceViewModel((ChessPiece)Piece));
@@ -25,11 +35,14 @@ public partial class ChessBoardViewModel : ObservableObject
     [RelayCommand]
     public void ClickMe()
     {
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < 8; i++)
         {
-            GridPieces[i] = new ChessPieceViewModel(PieceType.Rook | PieceType.White);
+            for (int j = 0; j < 8; j++)
+            {
+                GridPieces[i * 8 + j] = new ChessPieceViewModel(PieceType.Rook | PieceType.White, new(i + 1, j + 1));
+            }
         }
 
-        OnBoardChanged?.Invoke();
+        BoardChanged?.Invoke();
     }
 }

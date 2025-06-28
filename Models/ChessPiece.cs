@@ -23,6 +23,7 @@ public enum PieceType
 public class ChessPiece : IChessPiece
 {
     public PieceType Type { get; set; }
+    public Coordinate Coordinates { get; set; }
     public bool HasMoved { get; set; }
     public bool IsValidPassantPlacement { get; set; }
     public bool IsWhite { get => (Type & PieceType.White) == PieceType.White; }
@@ -32,13 +33,19 @@ public class ChessPiece : IChessPiece
     public ChessPiece()
     {
         Type = PieceType.White | PieceType.Pawn;
+        Coordinates = new(1, 1);
+        
         HasMoved = false;
         IsValidPassantPlacement = false;
     }
 
-    public ChessPiece(PieceType type)
+    public ChessPiece(PieceType type, Coordinate coordinates)
     {
         Type = type;
+        Coordinates = coordinates;
+
+        HasMoved = false;
+        IsValidPassantPlacement = false;
     }
 
     public bool EqualsUncolored(PieceType type) => IsWhite ? (Type ^ PieceType.White) == type : (Type ^ PieceType.Black) == type; 

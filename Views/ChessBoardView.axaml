@@ -41,6 +41,7 @@
                 
             </Grid>
         </Viewbox>
+        <Button Command="{Binding ClickMeCommand}" Grid.Row="2"/>
     </Grid>
     
 </UserControl>

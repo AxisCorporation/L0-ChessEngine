@@ -36,8 +36,6 @@ public interface IMove
 {
     public bool IsValid { get => IsValidMove(); }
 
-    public Coordinate Initial { get; set; }
-    public Coordinate Destination { get; set; }
 
     protected bool IsValidMove();
 }

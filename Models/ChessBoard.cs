@@ -13,6 +13,9 @@ public class ChessBoard : IChessBoard
     //Constant FEN for the starting position
     private const string DefaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
+    // Invoked every time grid updates
+    public event Action? GridUpdated; 
+
     public ChessBoard() // Constructor to initialize
     {
         Grid = new ChessPiece[8, 8];
@@ -39,8 +42,8 @@ public class ChessBoard : IChessBoard
             }
         }
 
-        (int initX, int initY) = move.Initial;
-        (int destX, int destY) = move.Destination;
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
 
         ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
         PieceToMove.HasMoved = true;
@@ -49,9 +52,11 @@ public class ChessBoard : IChessBoard
         {
             CheckSpecialPawnConditions(move, ref PieceToMove);
         }
-        
-        Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty);
+
+        Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX - 1, destY - 1] = PieceToMove;
+
+        GridUpdated?.Invoke();
     }
 
     public void ResetBoard()
@@ -61,14 +66,14 @@ public class ChessBoard : IChessBoard
 
     private void CheckSpecialPawnConditions(Move move, ref ChessPiece PieceToMove)
     {
-        (int initX, int initY) = move.Initial;
-        (int destX, int destY) = move.Destination;
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
+
         if (destY == 1 || destY == 8)
         {
             PieceToMove = GameManager.GetPieceFromPromotion();
         }
-
-        if (Math.Abs(destY - initY) == 2)
+        else if (Math.Abs(destY - initY) == 2)
         {
             Grid[destY - 2, destX - 1].IsValidPassantPlacement = true;
         }
@@ -76,7 +81,7 @@ public class ChessBoard : IChessBoard
         {
             int CapturedPawnY = PieceToMove.IsWhite ? destY - 2 : destY + 1;
 
-            Grid[CapturedPawnY, destX - 1] = new ChessPiece(PieceType.Empty);
+            Grid[CapturedPawnY, destX - 1] = new ChessPiece(PieceType.Empty, new(CapturedPawnY + 1, destX));
         }
     }
 
@@ -116,7 +121,7 @@ public class ChessBoard : IChessBoard
                     // Add empty squares to the current row
                     for (int j = 0; j < emptySquares; j++)
                     {
-                        Grid[i, currentCol++] = new ChessPiece(PieceType.Empty);
+                        Grid[i, currentCol] = new ChessPiece(PieceType.Empty, new(i + 1, ++currentCol));
                     }
                 }
                 else
@@ -129,7 +134,7 @@ public class ChessBoard : IChessBoard
 
                         'r' => PieceType.Rook | PieceType.Black,
                         'R' => PieceType.Rook | PieceType.White,
-                        
+
                         'n' => PieceType.Knight | PieceType.Black,
                         'N' => PieceType.Knight | PieceType.White,
 
@@ -152,7 +157,7 @@ public class ChessBoard : IChessBoard
                     }
 
                     // Create the chess piece with the correct color and type
-                    Grid[i, currentCol++] = new ChessPiece(pieceType.Value);
+                    Grid[i, currentCol] = new ChessPiece(pieceType.Value, new(i + 1, ++currentCol));
                 }
             }
         }

@@ -35,6 +35,11 @@ public partial class ChessBoardViewModel : ObservableObject
 
     public void MovePiece(int fromRow, int fromCol, int toRow, int toCol)
     {
+        if (fromRow == toRow && fromCol == toCol)
+        {
+            return;
+        }
+        
         GridPieces[toRow * 8 + toCol] = GridPieces[fromRow * 8 + fromCol];
 
         GridPieces[fromRow * 8 + fromCol] = new ChessPieceViewModel(PieceType.Empty, new(fromRow, fromCol));

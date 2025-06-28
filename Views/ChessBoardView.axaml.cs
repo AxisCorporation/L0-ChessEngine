@@ -2,6 +2,7 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
+using Avalonia.Controls.Shapes;
 
 using L_0_Chess_Engine.ViewModels;
 
@@ -75,33 +76,47 @@ public partial class ChessBoardView : UserControl
             }
         }
     }
-    
+
     private void OnSquareClicked(object? sender, PointerPressedEventArgs e)
+    {
+        if (sender is Grid square && square.Tag is ValueTuple<int, int> position)
         {
-            if (sender is Grid square && square.Tag is ValueTuple<int, int> position)
+            HighlightSquare(square);
+            
+            var (row, col) = position;
+
+            if (_selectedSquare == null)
             {
-                var (row, col) = position;
-
-                if (_selectedSquare == null)
+                // First click - select source square
+                if (_chessBoardVM.GridPieces[row * 8 + col].Image != null)
                 {
-                    // First click - select source square
-                    if (_chessBoardVM.GridPieces[row * 8 + col].Image != null)
-                    {
-                        _selectedSquare = (row, col);
-                        // HighlightSquare(row, col);
-                    }
-                }
-                else
-                {
-                    var (fromRow, fromCol) = _selectedSquare.Value;
-
-                    // Perform move
-                    _chessBoardVM.MovePiece(fromRow, fromCol, row, col);
-                    _selectedSquare = null;
-
-                    // Redraw board
-                    CreateChessBoardUI();
+                    _selectedSquare = (row, col);
+                    // HighlightSquare(row, col);
                 }
             }
+            else
+            {
+                var (fromRow, fromCol) = _selectedSquare.Value;
+
+                // Perform move
+                _chessBoardVM.MovePiece(fromRow, fromCol, row, col);
+                _selectedSquare = null;
+
+                // Redraw board
+                CreateChessBoardUI();
+            }
         }
+    }
+
+    private void HighlightSquare(Grid square)
+    {
+        var overlay = new Rectangle
+        {
+            Fill = new SolidColorBrush(Color.FromArgb(100, 255, 0, 0)), // light red overlay
+            IsHitTestVisible = false // so it doesn’t block clicks
+        };
+
+        square.Children.Add(overlay); // if square is a Grid
+
+    }
 }

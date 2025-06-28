@@ -8,6 +8,7 @@
              x:Class="L_0_Chess_Engine.Views.ChessBoardView">
     
     <Grid Margin="10">
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -38,9 +39,9 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                
             </Grid>
         </Viewbox>
+
         <Button Command="{Binding ClickMeCommand}" Grid.Row="2"/>
     </Grid>
     

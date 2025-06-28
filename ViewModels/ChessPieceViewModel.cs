@@ -1,6 +1,4 @@
 using System;
-using System.Reflection;
-using Avalonia.Controls;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -23,7 +21,7 @@ public partial class ChessPieceViewModel : ObservableObject
         Piece = piece;
 
         string UriStr = GetUriForPiece(Piece);
-        Image = new(AssetLoader.Open(new Uri(UriStr)));
+        Image = new (AssetLoader.Open(new Uri(UriStr)));
     }
 
     public ChessPieceViewModel(PieceType type, Coordinate coordinate)
@@ -31,7 +29,7 @@ public partial class ChessPieceViewModel : ObservableObject
         Piece = new ChessPiece(type, coordinate);
 
         string UriStr = GetUriForPiece(Piece);
-        Image = new(AssetLoader.Open(new Uri(UriStr)));
+        Image = new (AssetLoader.Open(new Uri(UriStr)));
     }
 
     public static string GetUriForPiece(ChessPiece piece)

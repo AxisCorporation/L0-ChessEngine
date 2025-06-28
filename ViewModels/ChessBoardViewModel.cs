@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using L_0_Chess_Engine.Models;
@@ -30,6 +31,16 @@ public partial class ChessBoardViewModel : ObservableObject
             GridPieces.Add(new ChessPieceViewModel((ChessPiece)Piece));
         }
     }
+
+
+    public void MovePiece(int fromRow, int fromCol, int toRow, int toCol)
+    {
+        GridPieces[toRow * 8 + toCol] = GridPieces[fromRow * 8 + fromCol];
+
+        GridPieces[fromRow * 8 + fromCol] = new ChessPieceViewModel(PieceType.Empty, new(fromRow, fromCol));
+
+    }
+
 
     // For testing
     [RelayCommand]

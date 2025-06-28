@@ -1,5 +1,8 @@
+using System;
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
+
 using L_0_Chess_Engine.ViewModels;
 
 namespace L_0_Chess_Engine.Views;
@@ -8,6 +11,9 @@ public partial class ChessBoardView : UserControl
 {
     private ChessBoardViewModel _chessBoardVM;
     private Grid? _chessBoardGrid;
+
+    private (int row, int col)? _selectedSquare = null;
+
 
     public ChessBoardView()
     {
@@ -32,7 +38,7 @@ public partial class ChessBoardView : UserControl
         {
             return;
         }
-        
+
         for (int row = 0; row < 8; row++)
         {
             for (int col = 0; col < 8; col++)
@@ -42,14 +48,9 @@ public partial class ChessBoardView : UserControl
 
                 var square = new Grid
                 {
-                    Background = background
+                    Background = background,
+                    Tag = (row, col) // Store position
                 };
-
-                // Add to grid
-                Grid.SetRow(square, row);
-                Grid.SetColumn(square, col);
-                
-                _chessBoardGrid.Children.Add(square);
 
                 var Piece = _chessBoardVM.GridPieces[row * 8 + col];
                 var Image = new Image
@@ -57,10 +58,50 @@ public partial class ChessBoardView : UserControl
                     Source = Piece.Image
                 };
 
-                Grid.SetRow(Image, row);
-                Grid.SetColumn(Image, col);
-                _chessBoardGrid.Children.Add(Image);
+                square.PointerPressed += OnSquareClicked;
+
+                square.Children.Add(Image);
+
+                // Add to grid
+                Grid.SetRow(square, row);
+                Grid.SetColumn(square, col);
+
+                _chessBoardGrid.Children.Add(square);
+
+
+                // Grid.SetRow(Image, row);
+                // Grid.SetColumn(Image, col);
+                // _chessBoardGrid.Children.Add(Image);
             }
         }
     }
+    
+    private void OnSquareClicked(object? sender, PointerPressedEventArgs e)
+        {
+            if (sender is Grid square && square.Tag is ValueTuple<int, int> position)
+            {
+                var (row, col) = position;
+
+                if (_selectedSquare == null)
+                {
+                    // First click - select source square
+                    if (_chessBoardVM.GridPieces[row * 8 + col].Image != null)
+                    {
+                        _selectedSquare = (row, col);
+                        // HighlightSquare(row, col);
+                    }
+                }
+                else
+                {
+                    var (fromRow, fromCol) = _selectedSquare.Value;
+
+                    // Perform move
+                    _chessBoardVM.MovePiece(fromRow, fromCol, row, col);
+                    _selectedSquare = null;
+
+                    // Redraw board
+                    CreateChessBoardUI();
+                }
+            }
+        }
 }

@@ -7,16 +7,19 @@ using L_0_Chess_Engine.Models;
 
 namespace L_0_Chess_Engine.ViewModels;
 
-public partial class ChessPieceViewModel : ObservableObject
+public partial class SquareViewModel : ObservableObject
 {
     [ObservableProperty]
     private ChessPiece _piece;
 
     [ObservableProperty]
     private Bitmap _image;
+    
+    [ObservableProperty]
+    private bool _isLightSquare;
 
 
-    public ChessPieceViewModel(ChessPiece piece)
+    public SquareViewModel(ChessPiece piece)
     {
         Piece = piece;
 
@@ -24,7 +27,7 @@ public partial class ChessPieceViewModel : ObservableObject
         Image = new (AssetLoader.Open(new Uri(UriStr)));
     }
 
-    public ChessPieceViewModel(PieceType type, Coordinate coordinate)
+    public SquareViewModel(PieceType type, Coordinate coordinate)
     {
         Piece = new ChessPiece(type, coordinate);
 
@@ -32,7 +35,13 @@ public partial class ChessPieceViewModel : ObservableObject
         Image = new (AssetLoader.Open(new Uri(UriStr)));
     }
 
-    public static string GetUriForPiece(ChessPiece piece)
+    public void UpdateImage()
+    {
+        string UriStr = GetUriForPiece(Piece);
+        Image = new (AssetLoader.Open(new Uri(UriStr)));   
+    }
+
+    private static string GetUriForPiece(ChessPiece piece)
     {
         string UriStr = "avares://L-0 Chess Engine/" + (piece.Type switch
         {

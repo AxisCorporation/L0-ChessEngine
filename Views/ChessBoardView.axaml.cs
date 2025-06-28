@@ -24,13 +24,13 @@ public partial class ChessBoardView : UserControl
 
         DataContext = _chessBoardVM;
 
-        Loaded += (s, e) =>
-        {
-            _chessBoardGrid = this.FindControl<Grid>("ChessBoardGrid");
-            CreateChessBoardUI();
-        };
-
-        _chessBoardVM.BoardChanged += CreateChessBoardUI;
+        // Loaded += (s, e) =>
+        // {
+        //     _chessBoardGrid = this.FindControl<Grid>("ChessBoardGrid");
+        //     CreateChessBoardUI();
+        // };
+        //
+        // _chessBoardVM.BoardChanged += CreateChessBoardUI;
     }
 
     private void CreateChessBoardUI()

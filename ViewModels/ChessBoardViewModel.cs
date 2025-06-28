@@ -10,25 +10,40 @@ namespace L_0_Chess_Engine.ViewModels;
 
 public partial class ChessBoardViewModel : ObservableObject
 {
-    public ObservableCollection<ChessPieceViewModel> GridPieces { get; set; } = [];
-    private ChessBoard Board { get; set; } = new ChessBoard();
+    public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
+    private ChessBoard Board { get; set; } = new();
     public event Action? BoardChanged;
 
     public ChessBoardViewModel()
     {
-        foreach (var Piece in Board.Grid)
+        for (int row = 0; row < 8; row++)
         {
-            GridPieces.Add(new ChessPieceViewModel((ChessPiece)Piece));
+            for (int col = 0; col < 8; col++)
+            {
+                var piece = Board.Grid[row, col]; // or however your grid is structured
+
+                GridPieces.Add(new SquareViewModel((ChessPiece)piece)
+                {
+                    IsLightSquare = (row + col) % 2 == 0
+                });
+            }
         }
+
         Board.GridUpdated += UpdateGrid;
     }
 
-    public void UpdateGrid()
+    private void UpdateGrid()
     {
-        GridPieces = [];
-        foreach (var Piece in Board.Grid)
+        for (int i = 0; i < 64; i++)
         {
-            GridPieces.Add(new ChessPieceViewModel((ChessPiece)Piece));
+            int row = i / 8;
+            int col = i % 8;
+
+            var updatedPiece = Board.Grid[row, col];
+            var existingSquare = GridPieces[i];
+
+            existingSquare.Piece = (ChessPiece) updatedPiece;
+            existingSquare.UpdateImage();
         }
     }
 
@@ -42,7 +57,7 @@ public partial class ChessBoardViewModel : ObservableObject
         
         GridPieces[toRow * 8 + toCol] = GridPieces[fromRow * 8 + fromCol];
 
-        GridPieces[fromRow * 8 + fromCol] = new ChessPieceViewModel(PieceType.Empty, new(fromRow, fromCol));
+        GridPieces[fromRow * 8 + fromCol] = new SquareViewModel(PieceType.Empty, new(fromRow, fromCol));
 
     }
 
@@ -55,7 +70,7 @@ public partial class ChessBoardViewModel : ObservableObject
         {
             for (int j = 0; j < 8; j++)
             {
-                GridPieces[i * 8 + j] = new ChessPieceViewModel(PieceType.Rook | PieceType.White, new(i + 1, j + 1));
+                GridPieces[i * 8 + j] = new SquareViewModel(PieceType.Rook | PieceType.White, new(i + 1, j + 1));
             }
         }
 

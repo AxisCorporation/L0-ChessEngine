@@ -44,6 +44,8 @@ public class Move : IMove
         // We can take out the color to make the mapping simpler
         PieceType type = InitPiece.IsWhite ? (InitPiece.Type ^ PieceType.White) : (InitPiece.Type ^ PieceType.Black);
         
+        Console.WriteLine(ValidationMap[type](this));
+        
         return ValidationMap[type](this);
     }
 
@@ -86,7 +88,10 @@ public class Move : IMove
 
         bool IsValidDiagonal = Math.Abs(DestX - InitX) == 1;
         bool IsValidForward = DestX == InitX;
-
+        
+        Console.WriteLine(move.InitPiece.Coordinates + " : " + move.DestPiece.Coordinates);
+        Console.WriteLine("Here: " + IsValidForward);
+        
         if (move.InitPiece.IsWhite)
         {
             if (move.InitPiece.HasMoved)

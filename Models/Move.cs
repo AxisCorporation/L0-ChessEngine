@@ -42,9 +42,9 @@ public class Move : IMove
     public bool IsValidMove()
     {
         // We can take out the color to make the mapping simpler
-        PieceType Type = InitPiece.IsWhite ? (InitPiece.Type ^ PieceType.White) : (InitPiece.Type ^ PieceType.Black);
+        PieceType type = InitPiece.IsWhite ? (InitPiece.Type ^ PieceType.White) : (InitPiece.Type ^ PieceType.Black);
         
-        return ValidationMap[Type](this);
+        return ValidationMap[type](this);
     }
 
     /// <summary> Helper function for checking the bare minimum requirements of a valid move. </summary>
@@ -86,7 +86,7 @@ public class Move : IMove
 
         bool IsValidDiagonal = Math.Abs(DestX - InitX) == 1;
         bool IsValidForward = DestX == InitX;
-
+        
         if (move.InitPiece.IsWhite)
         {
             if (move.InitPiece.HasMoved)

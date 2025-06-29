@@ -1,5 +1,4 @@
 ﻿using System;
-using Avalonia;
 using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
@@ -27,7 +26,7 @@ public class ChessBoard : IChessBoard
 
     public void MakeMove(IMove moveInterface)
     {
-        Move move = (Move)moveInterface;
+        Move move = (Move) moveInterface;
         if (!move.IsValid)
         {
             return;
@@ -45,16 +44,16 @@ public class ChessBoard : IChessBoard
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
-        ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
-        PieceToMove.HasMoved = true;
+        ChessPiece pieceToMove = (ChessPiece) Grid[initX - 1, initY - 1];
+        pieceToMove.HasMoved = true;
 
         if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
-            CheckSpecialPawnConditions(move, ref PieceToMove);
+            CheckSpecialPawnConditions(move, ref pieceToMove);
         }
 
         Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty, new(initX, initY));
-        Grid[destX - 1, destY - 1] = PieceToMove;
+        Grid[destX - 1, destY - 1] = pieceToMove;
 
         GridUpdated?.Invoke();
     }

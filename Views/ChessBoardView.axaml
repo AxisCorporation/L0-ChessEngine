@@ -9,7 +9,8 @@
              x:Class="L_0_Chess_Engine.Views.ChessBoardView">
     
     <UserControl.Resources>
-        <local:BoolToSquareColourConverter x:Key="BoolToSquareColorConverter" />
+        <local:BoolToSquareColourConverter x:Key="LightSquareConverter"/>
+        <local:BoolToBorderBrushConverter x:Key="HighlightSquareConverter"></local:BoolToBorderBrushConverter>
     </UserControl.Resources>
     
     <StackPanel>
@@ -30,13 +31,16 @@
                             Background="Transparent"
                             BorderThickness="0">
                         
-                        <Border Background="{Binding IsLightSquare, Converter={StaticResource BoolToSquareColorConverter}}"
-                                BorderBrush="Black" BorderThickness="1" Width="50" Height="50">
-                            
-                            <Image Source="{Binding Image}" 
-                                   Stretch="Uniform"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"/>
+                        <Border BorderBrush="Black"
+                                BorderThickness="1" Width="50" Height="50">
+                            <Grid>
+                                <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
+                                <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsSelected}"></Rectangle>
+                                <Image Source="{Binding Image}" 
+                                       Stretch="Uniform"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"/>
+                            </Grid>
                         </Border>
                         
                     </Button>

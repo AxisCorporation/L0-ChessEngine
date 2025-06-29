@@ -60,41 +60,35 @@ public partial class ChessBoardViewModel : ObservableObject
     {
         if (_selectedSquare is null)
         {
-            // First selection
             if (squareClicked.Piece.Type != PieceType.Empty)
             {
                 _selectedSquare = squareClicked;
-                // _selectedSquare.IsSelected = true;
+                _selectedSquare.IsSelected = true;
             }
         }
         else
         {
             if (squareClicked == _selectedSquare)
             {
-                // Clicked same square → unselect
-                // _selectedSquare.IsSelected = false;
+                _selectedSquare.IsSelected = false;
                 _selectedSquare = null;
                 return;
             }
             
-            Console.WriteLine(_selectedSquare.Piece.Type + " " + (_selectedSquare.Piece.Coordinates.Y, _selectedSquare.Piece.Coordinates.X));
-            Console.WriteLine(squareClicked.Piece.Type + " " + (squareClicked.Piece.Coordinates.Y, squareClicked.Piece.Coordinates.X));
-            
             MovePiece(_selectedSquare.Piece.Coordinates.Y - 1, _selectedSquare.Piece.Coordinates.X - 1,
                 squareClicked.Piece.Coordinates.Y - 1, squareClicked.Piece.Coordinates.X - 1);
             
-            
+            // How I imagine the function will Work after all is well and done
             // Move thisMove = new Move(_selectedSquare.Piece, squareClicked.Piece);
-            //
             // Board.MakeMove(thisMove);
             
-            // _selectedSquare.IsSelected = false;
+            _selectedSquare.IsSelected = false;
             _selectedSquare = null;
         }
         
     }
 
-
+    // This Function is for testing purposes anyways, delete it later anyways
     public void MovePiece(int fromRow, int fromCol, int toRow, int toCol)
     {
         if (fromRow == toRow && fromCol == toCol)
@@ -108,9 +102,7 @@ public partial class ChessBoardViewModel : ObservableObject
         UpdateGrid();
         
         // GridPieces[toRow * 8 + toCol].Piece = GridPieces[fromRow * 8 + fromCol].Piece;
-        //
         // Coordinate corr = new Coordinate(fromCol, fromRow);
-        //
         // GridPieces[fromRow * 8 + fromCol].Piece = new ChessPiece(PieceType.Empty, corr);
 
     }

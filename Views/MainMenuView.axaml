@@ -1,34 +1,110 @@
-<UserControl xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="L_0_Chess_Engine.Views.MainMenuView">
-        
-        <StackPanel>
-                <!-- Main Menu -->
-                <!--<Menu>
-                        <MenuItem Header="_Play"/>
-                        <MenuItem Header="_File">
-                                <MenuItem Header="_New"/>
-                                <MenuItem Header="_Open"/>
-                                <MenuItem Header="_Save"/>
-                                <MenuItem Header="E_xit"/>
-                        </MenuItem>
+<UserControl
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignWidth="800"
+    d:DesignHeight="450"
+    x:Class="L_0_Chess_Engine.Views.MainMenuView">
 
-                        <MenuItem Header="_Edit">
-                                <MenuItem Header="_Cut"/>
-                                <MenuItem Header="_Copy"/>
-                                <MenuItem Header="_Paste"/>
-                        </MenuItem>
+	<Border Background="#FF7D29" CornerRadius="20" Padding="30">
+		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15">
 
-                        <MenuItem Header="_Help">
-                                <MenuItem Header="_About"/>
-                        </MenuItem>
-                </Menu>-->
-                
-                <Button VerticalAlignment="Center" HorizontalAlignment="Center" Click="PlayGame">Play</Button>
-                
-        </StackPanel>
-        
+			<TextBlock Text="♔L-0 Chess♚"
+                       FontSize="32"
+                       FontWeight="Bold"
+                       Foreground="#ECF0F1"
+                       HorizontalAlignment="Center"/>
+
+			<StackPanel Spacing="10">
+
+				<!-- Play toggle button -->
+				<ToggleButton x:Name="PlayToggle"
+                              Content="Play"
+                              Width="200"
+                              Background="#3498DB"
+                              Foreground="White"
+                              CornerRadius="10"/>
+
+				<!-- PlayMainOptions: Local + AI -->
+				<StackPanel x:Name="PlayMainOptions"
+                            IsVisible="False"
+                            Opacity="0"
+                            Spacing="5">
+					<StackPanel.Transitions>
+						<Transitions>
+							<DoubleTransition Property="Opacity"
+                                              Duration="0:0:0.3"
+                                              Easing="QuadraticEaseInOut"/>
+						</Transitions>
+					</StackPanel.Transitions>
+					<Button x:Name="LocalButton"
+                            Content="Local"
+                            Width="200"
+                            Background="#2980B9"
+                            Foreground="White"
+                            CornerRadius="8"/>
+
+					<Button x:Name="AIButton"
+                            Content="AI"
+                            Width="200"
+                            Background="#2980B9"
+                            Foreground="White"
+                            CornerRadius="8"/>
+				</StackPanel>
+
+				<!-- Local time options -->
+				<StackPanel x:Name="LocalTimeOptions"
+                            IsVisible="False"
+                            Opacity="0"
+                            Spacing="5">
+					<StackPanel.Transitions>
+						<Transitions>
+							<DoubleTransition Property="Opacity"
+                                              Duration="0:0:0.3"
+                                              Easing="QuadraticEaseInOut"/>
+						</Transitions>
+					</StackPanel.Transitions>
+					<Button Content="5 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
+					<Button Content="10 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
+					<Button Content="15 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
+				</StackPanel>
+
+				<!-- AI time options -->
+				<StackPanel x:Name="AITimeOptions"
+                            IsVisible="False"
+                            Opacity="0"
+                            Spacing="5">
+					<StackPanel.Transitions>
+						<Transitions>
+							<DoubleTransition Property="Opacity"
+                                              Duration="0:0:0.3"
+                                              Easing="QuadraticEaseInOut"/>
+						</Transitions>
+					</StackPanel.Transitions>
+					<Button Content="5 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
+					<Button Content="10 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
+					<Button Content="15 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
+				</StackPanel>
+
+				<!-- Other options -->
+				<StackPanel x:Name="OtherOptions" Spacing="10">
+					<Button x:Name="CreditsButton"
+                            Content="Credits"
+                            Width="200"
+                            Background="#2ECC71"
+                            Foreground="White"
+                            CornerRadius="10"/>
+
+					<Button x:Name="QuitButton"
+                            Content="Quit"
+                            Width="200"
+                            Background="#E74C3C"
+                            Foreground="White"
+                            CornerRadius="10"/>
+				</StackPanel>
+			</StackPanel>
+		</StackPanel>
+	</Border>
 </UserControl>

@@ -22,7 +22,7 @@ public partial class SquareViewModel : ObservableObject
     [ObservableProperty]
     private bool _isSelected;
     
-    public ICommand ClickCommand { get; set; } = null!;
+    public ICommand? ClickCommand { get; set; }
 
 
     public SquareViewModel(ChessPiece piece)

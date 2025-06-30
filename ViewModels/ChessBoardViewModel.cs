@@ -15,8 +15,6 @@ public partial class ChessBoardViewModel : ObservableObject
     private ChessBoard Board { get; set; } = new();
     
     private SquareViewModel? _selectedSquare;
-    
-    public event Action? BoardChanged;
 
     public ChessBoardViewModel()
     {
@@ -58,30 +56,22 @@ public partial class ChessBoardViewModel : ObservableObject
     
     private void OnSquareClick(SquareViewModel squareClicked)
     {
-        if (_selectedSquare is null)
+        if (_selectedSquare is null && squareClicked.Piece.Type != PieceType.Empty)
         {
-            if (squareClicked.Piece.Type != PieceType.Empty)
-            {
-                _selectedSquare = squareClicked;
-                _selectedSquare.IsSelected = true;
-            }
+            _selectedSquare = squareClicked;
+            _selectedSquare.IsSelected = true;
         }
         else
         {
-            if (squareClicked == _selectedSquare)
+            if (squareClicked != _selectedSquare)
             {
-                _selectedSquare.IsSelected = false;
-                _selectedSquare = null;
-                return;
+                MovePiece(_selectedSquare.Piece.Coordinates.Y - 1, _selectedSquare.Piece.Coordinates.X - 1,
+                    squareClicked.Piece.Coordinates.Y - 1, squareClicked.Piece.Coordinates.X - 1);
+                
+                // How I imagine the function will Work after all is well and done
+                // Move move = new Move(_selectedSquare.Piece, squareClicked.Piece);
+                // Board.MakeMove(thisMove);
             }
-            
-            MovePiece(_selectedSquare.Piece.Coordinates.Y - 1, _selectedSquare.Piece.Coordinates.X - 1,
-                squareClicked.Piece.Coordinates.Y - 1, squareClicked.Piece.Coordinates.X - 1);
-            
-            // How I imagine the function will Work after all is well and done
-            // Move thisMove = new Move(_selectedSquare.Piece, squareClicked.Piece);
-            // Board.MakeMove(thisMove);
-            
             _selectedSquare.IsSelected = false;
             _selectedSquare = null;
         }
@@ -119,7 +109,6 @@ public partial class ChessBoardViewModel : ObservableObject
                 GridPieces[i * 8 + j] = new SquareViewModel(PieceType.Rook | PieceType.White, new(i + 1, j + 1));
             }
         }
-
-        BoardChanged?.Invoke();
+        
     }
 }

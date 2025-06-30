@@ -25,7 +25,9 @@
 							  Width="200"
 							  Background="#FEEBC8"
 							  Foreground="Black"
-							  CornerRadius="10">
+							  CornerRadius="10"
+					          HorizontalContentAlignment="Center"
+					          VerticalContentAlignment="Center">
 					<ToggleButton.Styles>
 						<Style Selector="ToggleButton:pointerover">
 							<Setter Property="Background" Value="#E6B07C"/>
@@ -54,7 +56,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="8">
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -70,7 +74,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="8">
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -99,7 +105,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="8">
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -113,7 +121,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="8">
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -127,7 +137,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="8">
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -156,7 +168,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="8">
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -170,7 +184,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="8">
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -184,7 +200,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="8">
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -203,7 +221,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="10">
+							CornerRadius="10"
+							HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -218,7 +238,9 @@
 							Width="200"
 							Background="#FEEBC8"
 							Foreground="Black"
-							CornerRadius="10">
+							CornerRadius="10"
+							HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>

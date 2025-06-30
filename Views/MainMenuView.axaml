@@ -1,108 +1,233 @@
 <UserControl
-    xmlns="https://github.com/avaloniaui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    d:DesignWidth="800"
-    d:DesignHeight="450"
-    x:Class="L_0_Chess_Engine.Views.MainMenuView">
+  xmlns="https://github.com/avaloniaui"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d"
+  d:DesignWidth="800"
+  d:DesignHeight="450"
+  x:Class="L_0_Chess_Engine.Views.MainMenuView">
 
 	<Border Background="#FF7D29" CornerRadius="20" Padding="30">
 		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15">
 
-			<TextBlock Text="♔L-0 Chess♚"
-                       FontSize="32"
-                       FontWeight="Bold"
-                       Foreground="#ECF0F1"
-                       HorizontalAlignment="Center"/>
+			<TextBlock Text="♔L-0 Chess Engine♚"
+					   FontSize="32"
+					   FontWeight="Bold"
+					   Foreground="#ECF0F1"
+					   HorizontalAlignment="Center"/>
 
 			<StackPanel Spacing="10">
 
 				<!-- Play toggle button -->
 				<ToggleButton x:Name="PlayToggle"
-                              Content="Play"
-                              Width="200"
-                              Background="#3498DB"
-                              Foreground="White"
-                              CornerRadius="10"/>
+							  Content="Play"
+							  Width="200"
+							  Background="#FEEBC8"
+							  Foreground="Black"
+							  CornerRadius="10">
+					<ToggleButton.Styles>
+						<Style Selector="ToggleButton:pointerover">
+							<Setter Property="Background" Value="#E6B07C"/>
+						</Style>
+						<Style Selector="ToggleButton:pressed">
+							<Setter Property="Background" Value="#CC7A33"/>
+						</Style>
+					</ToggleButton.Styles>
+				</ToggleButton>
 
-				<!-- PlayMainOptions: Local + AI -->
+				<!-- Local + AI -->
 				<StackPanel x:Name="PlayMainOptions"
-                            IsVisible="False"
-                            Opacity="0"
-                            Spacing="5">
+							IsVisible="False"
+							Opacity="0"
+							Spacing="5">
 					<StackPanel.Transitions>
 						<Transitions>
 							<DoubleTransition Property="Opacity"
-                                              Duration="0:0:0.3"
-                                              Easing="QuadraticEaseInOut"/>
+											  Duration="0:0:0.3"
+											  Easing="QuadraticEaseInOut"/>
 						</Transitions>
 					</StackPanel.Transitions>
+
 					<Button x:Name="LocalButton"
-                            Content="Local"
-                            Width="200"
-                            Background="#2980B9"
-                            Foreground="White"
-                            CornerRadius="8"/>
+							Content="Local"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
 
 					<Button x:Name="AIButton"
-                            Content="AI"
-                            Width="200"
-                            Background="#2980B9"
-                            Foreground="White"
-                            CornerRadius="8"/>
+							Content="AI"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
 				</StackPanel>
 
-				<!-- Local time options -->
+				<!-- Local further options -->
 				<StackPanel x:Name="LocalTimeOptions"
-                            IsVisible="False"
-                            Opacity="0"
-                            Spacing="5">
+							IsVisible="False"
+							Opacity="0"
+							Spacing="5">
 					<StackPanel.Transitions>
 						<Transitions>
 							<DoubleTransition Property="Opacity"
-                                              Duration="0:0:0.3"
-                                              Easing="QuadraticEaseInOut"/>
+											  Duration="0:0:0.3"
+											  Easing="QuadraticEaseInOut"/>
 						</Transitions>
 					</StackPanel.Transitions>
-					<Button Content="5 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
-					<Button Content="10 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
-					<Button Content="15 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
+
+					<Button Content="5 min"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
+					<Button Content="10 min"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
+					<Button Content="15 min"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
 				</StackPanel>
 
-				<!-- AI time options -->
+				<!-- AI further options -->
 				<StackPanel x:Name="AITimeOptions"
-                            IsVisible="False"
-                            Opacity="0"
-                            Spacing="5">
+							IsVisible="False"
+							Opacity="0"
+							Spacing="5">
 					<StackPanel.Transitions>
 						<Transitions>
 							<DoubleTransition Property="Opacity"
-                                              Duration="0:0:0.3"
-                                              Easing="QuadraticEaseInOut"/>
+											  Duration="0:0:0.3"
+											  Easing="QuadraticEaseInOut"/>
 						</Transitions>
 					</StackPanel.Transitions>
-					<Button Content="5 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
-					<Button Content="10 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
-					<Button Content="15 min" Width="200" Background="#1F618D" Foreground="White" CornerRadius="8"/>
+
+					<Button Content="5 min"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
+					<Button Content="10 min"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
+					<Button Content="15 min"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
 				</StackPanel>
 
 				<!-- Other options -->
 				<StackPanel x:Name="OtherOptions" Spacing="10">
 					<Button x:Name="CreditsButton"
-                            Content="Credits"
-                            Width="200"
-                            Background="#2ECC71"
-                            Foreground="White"
-                            CornerRadius="10"/>
-
+							Content="Credits"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="10">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
 					<Button x:Name="QuitButton"
-                            Content="Quit"
-                            Width="200"
-                            Background="#E74C3C"
-                            Foreground="White"
-                            CornerRadius="10"/>
+							Content="Quit"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="10">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
 				</StackPanel>
 			</StackPanel>
 		</StackPanel>

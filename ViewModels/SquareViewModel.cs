@@ -1,6 +1,5 @@
 using System;
-using System.Reflection;
-using Avalonia.Controls;
+using System.Windows.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -9,34 +8,49 @@ using L_0_Chess_Engine.Models;
 
 namespace L_0_Chess_Engine.ViewModels;
 
-public partial class ChessPieceViewModel : ObservableObject
+public partial class SquareViewModel : ObservableObject
 {
     [ObservableProperty]
     private ChessPiece _piece;
 
     [ObservableProperty]
     private Bitmap _image;
+    
+    [ObservableProperty]
+    private bool _isLightSquare;
+    
+    [ObservableProperty]
+    private bool _isSelected;
+    
+    public ICommand? ClickCommand { get; set; }
 
 
-    public ChessPieceViewModel(ChessPiece piece)
+    public SquareViewModel(ChessPiece piece)
     {
         Piece = piece;
 
-        string UriStr = GetUriForPiece(Piece);
-        Image = new(AssetLoader.Open(new Uri(UriStr)));
+        string uriStr = GetUriForPiece(Piece);
+        Image = new (AssetLoader.Open(new Uri(uriStr)));
+        
     }
 
-    public ChessPieceViewModel(PieceType type, Coordinate coordinate)
+    public SquareViewModel(PieceType type, Coordinate coordinate)
     {
         Piece = new ChessPiece(type, coordinate);
 
-        string UriStr = GetUriForPiece(Piece);
-        Image = new(AssetLoader.Open(new Uri(UriStr)));
+        string uriStr = GetUriForPiece(Piece);
+        Image = new (AssetLoader.Open(new Uri(uriStr)));
     }
 
-    public static string GetUriForPiece(ChessPiece piece)
+    public void UpdateImage()
     {
-        string UriStr = "avares://L-0 Chess Engine/" + (piece.Type switch
+        string uriStr = GetUriForPiece(Piece);
+        Image = new (AssetLoader.Open(new Uri(uriStr)));   
+    }
+
+    private static string GetUriForPiece(ChessPiece piece)
+    {
+        string uriStr = "avares://L-0 Chess Engine/" + (piece.Type switch
         {
             PieceType.Pawn | PieceType.White => "Assets/Images/W_Pawn.png",
             PieceType.Pawn | PieceType.Black => "Assets/Images/B_Pawn.png",
@@ -59,6 +73,7 @@ public partial class ChessPieceViewModel : ObservableObject
             _ => @"Assets\Images\Empty.png"
         });
 
-        return UriStr;
+        return uriStr;
     }
+    
 }

@@ -1,8 +1,5 @@
-using System;
 using Avalonia.Controls;
-using Avalonia.Input;
-using Avalonia.Media;
-using Avalonia.Controls.Shapes;
+
 
 using L_0_Chess_Engine.ViewModels;
 

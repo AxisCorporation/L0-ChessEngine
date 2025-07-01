@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using L_0_Chess_Engine.Contracts;
+
 namespace L_0_Chess_Engine.Models;
 
 public class Move : IMove
@@ -25,9 +26,10 @@ public class Move : IMove
         ValidationMap[PieceType.Pawn] = IsValidPawnMove;
         ValidationMap[PieceType.Knight] = IsValidKnightMove;
 
-        // Add rest of the validation checks here
-        // Ex: 
-        // ValidationMap[PieceType.Rook] = IsValidRookMove;
+        // Always false types
+        ValidationMap[PieceType.Empty] = (m) => false;
+        ValidationMap[PieceType.Black] = (m) => false;
+        ValidationMap[PieceType.White] = (m) => false;
     }
 
     /// <param name="initial">Starting coordinate</param>
@@ -62,12 +64,17 @@ public class Move : IMove
     private static bool IsValidGenericMove(Move move)
     {
         // False if the player just sets the piece back down in order to avoid turn skipping
+        if (move.InitPiece.Type == PieceType.Empty)
+        {
+            return false;
+        }
+        
         if (move.InitPiece.Coordinates == move.DestPiece.Coordinates)
         {
             return false;
         }
 
-        if (move.DestPiece.IsWhite == move.InitPiece.IsWhite)
+        if (move.DestPiece != PieceType.Empty && (move.DestPiece.IsWhite == move.InitPiece.IsWhite))
         {
             return false;
         }
@@ -82,44 +89,52 @@ public class Move : IMove
             return false;
         }
 
-        (int InitX, int InitY) = move.InitPiece.Coordinates;
-        (int DestX, int DestY) = move.DestPiece.Coordinates;
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
 
-        bool IsValidDiagonal = Math.Abs(DestX - InitX) == 1;
-        bool IsValidForward = DestX == InitX;
+        bool IsValidDiagonal = Math.Abs(destX - initX) == 1;
+        bool IsValidForward = destX == initX && move.DestPiece == PieceType.Empty;
 
         if (move.InitPiece.IsWhite)
         {
-            if (move.InitPiece.HasMoved)
+            if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= DestY == InitY + 1 || DestY == InitY + 2;
+                IsValidForward &= destY == initY + 1 || destY == initY + 2;
             }
             else
             {
-                IsValidForward &= DestY == InitY + 1;
+                IsValidForward &= destY == initY + 1;
             }
 
-            IsValidDiagonal &= DestY == InitY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
-
+            IsValidDiagonal &= destY == initY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
         }
         else
         {
-            if (move.InitPiece.HasMoved)
+            if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= DestY == InitY - 1 || DestY == InitY - 2;
+                IsValidForward &= destY == initY - 1 || destY == initY - 2;
             }
             else
             {
-                IsValidForward &= DestY == InitY - 1;
+                IsValidForward &= destY == initY - 1;
             }
 
-            IsValidDiagonal &= DestY == InitY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
+            IsValidDiagonal &= destY == initY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
         }
 
         if (IsValidDiagonal && move.DestPiece.IsValidPassantPlacement)
         {
+            int PieceAbove = move.InitPiece.IsWhite ? destY + 1 : destY - 1;
+            
+            // This ugly, line of code is to make sure a pawn doesnt capture a pawn on its own team after attempting an en passant on its own team
+            if (ChessBoard.Instance.Grid[PieceAbove, destX].IsWhite == move.InitPiece.IsWhite)
+            {
+                return false;
+            }
+
             move.IsEnPassant = true;
         }
+
         return IsValidForward || IsValidDiagonal;
     }
 

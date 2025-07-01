@@ -11,7 +11,7 @@ public class GameManager : IGameManager
 
     public GameManager()
     {
-        Board = new ChessBoard();
+        Board = ChessBoard.Instance;
         IsWhiteTurn = true; // White always starts
         GameRunning = false;
     }

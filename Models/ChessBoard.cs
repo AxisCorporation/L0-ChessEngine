@@ -10,12 +10,19 @@ public class ChessBoard : IChessBoard
     public bool IsCheckMate { get; set; }
 
     //Constant FEN for the starting position
-    private const string DefaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+    private const string DefaultFEN = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr";
+
 
     // Invoked every time grid updates
-    public event Action? GridUpdated; 
+    public event Action? GridUpdated;
 
-    public ChessBoard() // Constructor to initialize
+    private static ChessBoard _instance;
+    public static ChessBoard Instance
+    {
+        get => _instance ??= new ChessBoard();
+    }
+
+    private ChessBoard() // Constructor to initialize
     {
         Grid = new ChessPiece[8, 8];
         IsCheck = false;
@@ -44,7 +51,7 @@ public class ChessBoard : IChessBoard
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
-        ChessPiece pieceToMove = (ChessPiece) Grid[initX - 1, initY - 1];
+        ChessPiece pieceToMove = move.InitPiece;
         pieceToMove.HasMoved = true;
         
         if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
@@ -52,8 +59,9 @@ public class ChessBoard : IChessBoard
             CheckSpecialPawnConditions(move, ref pieceToMove);
         }
 
-        Grid[initX - 1, initY - 1] = new ChessPiece(PieceType.Empty, new(initX, initY));
-        Grid[destX - 1, destY - 1] = pieceToMove;
+        Grid[initY, initX] = new ChessPiece(PieceType.Empty, new(initX, initY));
+        Grid[destY, destX] = pieceToMove;
+        pieceToMove.Coordinates = move.DestPiece.Coordinates;
 
         GridUpdated?.Invoke();
     }
@@ -68,19 +76,19 @@ public class ChessBoard : IChessBoard
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
-        if (destY == 1 || destY == 8)
+        if (destY == 0 || destY == 7)
         {
             PieceToMove = GameManager.GetPieceFromPromotion();
         }
         else if (Math.Abs(destY - initY) == 2)
         {
-            Grid[destY - 2, destX - 1].IsValidPassantPlacement = true;
+            int PassantY = move.InitPiece.IsWhite ? destY - 1 : destY + 1;
+            Grid[PassantY, destX].IsValidPassantPlacement = true;
         }
         else if (move.IsEnPassant)
         {
-            int CapturedPawnY = PieceToMove.IsWhite ? destY - 2 : destY + 1;
-
-            Grid[CapturedPawnY, destX - 1] = new ChessPiece(PieceType.Empty, new(CapturedPawnY + 1, destX));
+            int CapturedPawnY = PieceToMove.IsWhite ? destY - 1 : destY + 1;
+            Grid[CapturedPawnY, destX] = new ChessPiece(PieceType.Empty, new(CapturedPawnY + 1, destX));
         }
     }
 
@@ -120,7 +128,8 @@ public class ChessBoard : IChessBoard
                     // Add empty squares to the current row
                     for (int j = 0; j < emptySquares; j++)
                     {
-                        Grid[i, currentCol] = new ChessPiece(PieceType.Empty, new(i + 1, ++currentCol));
+                        Grid[i, currentCol] = new ChessPiece(PieceType.Empty, new(currentCol, i));
+                        currentCol++;
                     }
                 }
                 else
@@ -156,7 +165,8 @@ public class ChessBoard : IChessBoard
                     }
 
                     // Create the chess piece with the correct color and type
-                    Grid[i, currentCol] = new ChessPiece(pieceType.Value, new(i + 1, ++currentCol));
+                    Grid[i, currentCol] = new ChessPiece(pieceType.Value, new(currentCol, i));
+                    currentCol++;
                 }
             }
         }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata.Ecma335;
 using L_0_Chess_Engine.Contracts;
 namespace L_0_Chess_Engine.Models;
 
@@ -25,9 +26,10 @@ public class Move : IMove
         ValidationMap[PieceType.Pawn] = IsValidPawnMove;
         ValidationMap[PieceType.Knight] = IsValidKnightMove;
 
-        // Add rest of the validation checks here
-        // Ex: 
-        // ValidationMap[PieceType.Rook] = IsValidRookMove;
+        // Always false types
+        ValidationMap[PieceType.Empty] = (m) => false;
+        ValidationMap[PieceType.Black] = (m) => false;
+        ValidationMap[PieceType.White] = (m) => false;
     }
 
     /// <param name="initial">Starting coordinate</param>
@@ -62,13 +64,19 @@ public class Move : IMove
     private static bool IsValidGenericMove(Move move)
     {
         // False if the player just sets the piece back down in order to avoid turn skipping
+        if (move.InitPiece.Type == PieceType.Empty)
+        {
+            return false;
+        }
+        
         if (move.InitPiece.Coordinates == move.DestPiece.Coordinates)
         {
             return false;
         }
 
-        if (move.DestPiece.IsWhite == move.InitPiece.IsWhite)
+        if (move.DestPiece != PieceType.Empty && move.DestPiece.IsWhite == move.InitPiece.IsWhite)
         {
+            Console.WriteLine("Issue here");
             return false;
         }
 
@@ -90,7 +98,7 @@ public class Move : IMove
 
         if (move.InitPiece.IsWhite)
         {
-            if (move.InitPiece.HasMoved)
+            if (!move.InitPiece.HasMoved)
             {
                 IsValidForward &= DestY == InitY + 1 || DestY == InitY + 2;
             }
@@ -98,13 +106,14 @@ public class Move : IMove
             {
                 IsValidForward &= DestY == InitY + 1;
             }
+            Console.WriteLine($"Step 2: {IsValidForward} | Dest Y : {DestY} | InitY : {InitY}");
 
             IsValidDiagonal &= DestY == InitY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
 
         }
         else
         {
-            if (move.InitPiece.HasMoved)
+            if (!move.InitPiece.HasMoved)
             {
                 IsValidForward &= DestY == InitY - 1 || DestY == InitY - 2;
             }

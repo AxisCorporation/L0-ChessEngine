@@ -33,7 +33,7 @@ public class ChessPiece : IChessPiece
     public ChessPiece()
     {
         Type = PieceType.White | PieceType.Pawn;
-        Coordinates = new(1, 1);
+        Coordinates = new(0, 0);
         
         HasMoved = false;
         IsValidPassantPlacement = false;

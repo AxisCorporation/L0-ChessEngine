@@ -23,6 +23,7 @@ public class Move : IMove
     static Move()
     {
         ValidationMap[PieceType.Pawn] = IsValidPawnMove;
+        ValidationMap[PieceType.Knight] = IsValidKnightMove;
 
         // Add rest of the validation checks here
         // Ex: 
@@ -43,7 +44,7 @@ public class Move : IMove
     {
         // We can take out the color to make the mapping simpler
         PieceType type = InitPiece.IsWhite ? (InitPiece.Type ^ PieceType.White) : (InitPiece.Type ^ PieceType.Black);
-        
+
         return ValidationMap[type](this);
     }
 
@@ -86,7 +87,7 @@ public class Move : IMove
 
         bool IsValidDiagonal = Math.Abs(DestX - InitX) == 1;
         bool IsValidForward = DestX == InitX;
-        
+
         if (move.InitPiece.IsWhite)
         {
             if (move.InitPiece.HasMoved)
@@ -120,5 +121,29 @@ public class Move : IMove
             move.IsEnPassant = true;
         }
         return IsValidForward || IsValidDiagonal;
+    }
+
+    private static bool IsValidKnightMove(Move move)
+    {
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
+        
+        // Not necessary but it makes writing code easier and more readable
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
+
+        if (Math.Abs(destX - initX) == 2 && Math.Abs(destY - initY) == 1)
+        {
+            return true;
+
+        }
+        if (Math.Abs(destX - initX) == 1 && Math.Abs(destY - initY) == 2)
+        {
+            return true;
+        }
+        
+        return false;
     }
 }

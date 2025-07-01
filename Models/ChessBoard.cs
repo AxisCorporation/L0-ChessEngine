@@ -46,7 +46,7 @@ public class ChessBoard : IChessBoard
 
         ChessPiece pieceToMove = (ChessPiece) Grid[initX - 1, initY - 1];
         pieceToMove.HasMoved = true;
-
+        
         if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
             CheckSpecialPawnConditions(move, ref pieceToMove);

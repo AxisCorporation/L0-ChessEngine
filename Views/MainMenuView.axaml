@@ -26,8 +26,8 @@
 							  Background="#FEEBC8"
 							  Foreground="Black"
 							  CornerRadius="10"
-					          HorizontalContentAlignment="Center"
-					          VerticalContentAlignment="Center">
+							  HorizontalContentAlignment="Center"
+							  VerticalContentAlignment="Center">
 					<ToggleButton.Styles>
 						<Style Selector="ToggleButton:pointerover">
 							<Setter Property="Background" Value="#E6B07C"/>
@@ -58,7 +58,7 @@
 							Foreground="Black"
 							CornerRadius="8"
 							HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
+							VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -76,7 +76,7 @@
 							Foreground="Black"
 							CornerRadius="8"
 							HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
+							VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -88,7 +88,7 @@
 					</Button>
 				</StackPanel>
 
-				<!-- Local further options -->
+				<!-- Local time options -->
 				<StackPanel x:Name="LocalTimeOptions"
 							IsVisible="False"
 							Opacity="0"
@@ -107,70 +107,7 @@
 							Foreground="Black"
 							CornerRadius="8"
 							HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
-						<Button.Styles>
-							<Style Selector="Button:pointerover">
-								<Setter Property="Background" Value="#E6B07C"/>
-							</Style>
-							<Style Selector="Button:pressed">
-								<Setter Property="Background" Value="#CC7A33"/>
-							</Style>
-						</Button.Styles>
-					</Button>
-					<Button Content="10 min"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="8"
-							HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
-						<Button.Styles>
-							<Style Selector="Button:pointerover">
-								<Setter Property="Background" Value="#E6B07C"/>
-							</Style>
-							<Style Selector="Button:pressed">
-								<Setter Property="Background" Value="#CC7A33"/>
-							</Style>
-						</Button.Styles>
-					</Button>
-					<Button Content="15 min"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="8"
-							HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
-						<Button.Styles>
-							<Style Selector="Button:pointerover">
-								<Setter Property="Background" Value="#E6B07C"/>
-							</Style>
-							<Style Selector="Button:pressed">
-								<Setter Property="Background" Value="#CC7A33"/>
-							</Style>
-						</Button.Styles>
-					</Button>
-				</StackPanel>
-
-				<!-- AI further options -->
-				<StackPanel x:Name="AITimeOptions"
-							IsVisible="False"
-							Opacity="0"
-							Spacing="5">
-					<StackPanel.Transitions>
-						<Transitions>
-							<DoubleTransition Property="Opacity"
-											  Duration="0:0:0.3"
-											  Easing="QuadraticEaseInOut"/>
-						</Transitions>
-					</StackPanel.Transitions>
-
-					<Button Content="5 min"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="8"
-							HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
+							VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -202,7 +139,70 @@
 							Foreground="Black"
 							CornerRadius="8"
 							HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
+							VerticalContentAlignment="Center">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
+				</StackPanel>
+
+				<!-- AI time options -->
+				<StackPanel x:Name="AITimeOptions"
+							IsVisible="False"
+							Opacity="0"
+							Spacing="5">
+					<StackPanel.Transitions>
+						<Transitions>
+							<DoubleTransition Property="Opacity"
+											  Duration="0:0:0.3"
+											  Easing="QuadraticEaseInOut"/>
+						</Transitions>
+					</StackPanel.Transitions>
+
+					<Button Content="5 min"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
+					<Button Content="10 min"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center">
+						<Button.Styles>
+							<Style Selector="Button:pointerover">
+								<Setter Property="Background" Value="#E6B07C"/>
+							</Style>
+							<Style Selector="Button:pressed">
+								<Setter Property="Background" Value="#CC7A33"/>
+							</Style>
+						</Button.Styles>
+					</Button>
+					<Button Content="15 min"
+							Width="200"
+							Background="#FEEBC8"
+							Foreground="Black"
+							CornerRadius="8"
+							HorizontalContentAlignment="Center"
+							VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -223,7 +223,7 @@
 							Foreground="Black"
 							CornerRadius="10"
 							HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
+							VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
@@ -240,7 +240,7 @@
 							Foreground="Black"
 							CornerRadius="10"
 							HorizontalContentAlignment="Center"
-					        VerticalContentAlignment="Center">
+							VerticalContentAlignment="Center">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>

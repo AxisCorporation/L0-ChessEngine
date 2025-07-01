@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
@@ -11,15 +12,18 @@ public class ChessBoard : IChessBoard
 
     //Constant FEN for the starting position
     private const string DefaultFEN = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr";
-    //PPPPPPPP
-    //pppppppp
-    //rnbqkbnr
-    //RNBQKBNR
+
 
     // Invoked every time grid updates
-    public event Action? GridUpdated; 
+    public event Action? GridUpdated;
 
-    public ChessBoard() // Constructor to initialize
+    private static ChessBoard _instance;
+    public static ChessBoard Instance
+    {
+        get => _instance ??= new ChessBoard();
+    }
+
+    private ChessBoard() // Constructor to initialize
     {
         Grid = new ChessPiece[8, 8];
         IsCheck = false;
@@ -59,7 +63,6 @@ public class ChessBoard : IChessBoard
         Grid[initY, initX] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destY, destX] = pieceToMove;
         pieceToMove.Coordinates = move.DestPiece.Coordinates;
-        Console.WriteLine("Made move!");
 
         GridUpdated?.Invoke();
     }

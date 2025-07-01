@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection.Metadata.Ecma335;
+using Avalonia.Controls;
 using L_0_Chess_Engine.Contracts;
 namespace L_0_Chess_Engine.Models;
 
@@ -74,9 +75,8 @@ public class Move : IMove
             return false;
         }
 
-        if (move.DestPiece != PieceType.Empty && move.DestPiece.IsWhite == move.InitPiece.IsWhite)
+        if (move.DestPiece != PieceType.Empty && (move.DestPiece.IsWhite == move.InitPiece.IsWhite))
         {
-            Console.WriteLine("Issue here");
             return false;
         }
 
@@ -90,45 +90,52 @@ public class Move : IMove
             return false;
         }
 
-        (int InitX, int InitY) = move.InitPiece.Coordinates;
-        (int DestX, int DestY) = move.DestPiece.Coordinates;
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
 
-        bool IsValidDiagonal = Math.Abs(DestX - InitX) == 1;
-        bool IsValidForward = DestX == InitX;
+        bool IsValidDiagonal = Math.Abs(destX - initX) == 1;
+        bool IsValidForward = destX == initX && move.DestPiece == PieceType.Empty;
 
         if (move.InitPiece.IsWhite)
         {
             if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= DestY == InitY + 1 || DestY == InitY + 2;
+                IsValidForward &= destY == initY + 1 || destY == initY + 2;
             }
             else
             {
-                IsValidForward &= DestY == InitY + 1;
+                IsValidForward &= destY == initY + 1;
             }
-            Console.WriteLine($"Step 2: {IsValidForward} | Dest Y : {DestY} | InitY : {InitY}");
 
-            IsValidDiagonal &= DestY == InitY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
-
+            IsValidDiagonal &= destY == initY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
         }
         else
         {
             if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= DestY == InitY - 1 || DestY == InitY - 2;
+                IsValidForward &= destY == initY - 1 || destY == initY - 2;
             }
             else
             {
-                IsValidForward &= DestY == InitY - 1;
+                IsValidForward &= destY == initY - 1;
             }
 
-            IsValidDiagonal &= DestY == InitY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
+            IsValidDiagonal &= destY == initY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
         }
 
         if (IsValidDiagonal && move.DestPiece.IsValidPassantPlacement)
         {
+            int PieceAbove = move.InitPiece.IsWhite ? destY + 1 : destY - 1;
+            
+            // This ugly, line of code is to make sure a pawn doesnt capture a pawn on its own team after attempting an en passant on its own team
+            if (ChessBoard.Instance.Grid[PieceAbove, destX].IsWhite == move.InitPiece.IsWhite)
+            {
+                return false;
+            }
+
             move.IsEnPassant = true;
         }
+        
         return IsValidForward || IsValidDiagonal;
     }
 

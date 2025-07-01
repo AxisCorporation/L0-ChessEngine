@@ -13,7 +13,7 @@ namespace L_0_Chess_Engine.ViewModels;
 public partial class ChessBoardViewModel : ObservableObject
 {
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
-    private ChessBoard Board { get; set; } = new();
+    private ChessBoard Board { get; set; } = ChessBoard.Instance;
     
     private SquareViewModel? _selectedSquare;
 

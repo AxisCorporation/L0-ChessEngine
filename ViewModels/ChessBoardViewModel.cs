@@ -1,12 +1,7 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
-using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using L_0_Chess_Engine.Contracts;
 using L_0_Chess_Engine.Models;
-using L_0_Chess_Engine.SampleModels;
 
 namespace L_0_Chess_Engine.ViewModels;
 

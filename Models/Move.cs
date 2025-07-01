@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
-using Avalonia.Controls;
 using L_0_Chess_Engine.Contracts;
+
 namespace L_0_Chess_Engine.Models;
 
 public class Move : IMove
@@ -135,7 +134,7 @@ public class Move : IMove
 
             move.IsEnPassant = true;
         }
-        
+
         return IsValidForward || IsValidDiagonal;
     }
 

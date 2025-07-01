@@ -65,12 +65,12 @@ public partial class ChessBoardViewModel : ObservableObject
         {
             if (squareClicked != _selectedSquare)
             {
+                Move move = new Move(_selectedSquare!.Piece, squareClicked.Piece);
                 MovePiece(_selectedSquare.Piece.Coordinates.Y - 1, _selectedSquare.Piece.Coordinates.X - 1,
-                    squareClicked.Piece.Coordinates.Y - 1, squareClicked.Piece.Coordinates.X - 1);
+                    squareClicked.Piece.Coordinates.Y - 1, squareClicked.Piece.Coordinates.X - 1, move);
                 
                 // How I imagine the function will Work after all is well and done
-                // Move move = new Move(_selectedSquare.Piece, squareClicked.Piece);
-                // Board.MakeMove(thisMove);
+                // Board.MakeMove(move);
             }
             _selectedSquare.IsSelected = false;
             _selectedSquare = null;
@@ -79,8 +79,13 @@ public partial class ChessBoardViewModel : ObservableObject
     }
 
     // This Function is for testing purposes anyways, delete it later anyways
-    public void MovePiece(int fromRow, int fromCol, int toRow, int toCol)
+    public void MovePiece(int fromRow, int fromCol, int toRow, int toCol, Move move)
     {
+        if (!move.IsValid)
+        {
+            return;
+        }
+        
         if (fromRow == toRow && fromCol == toCol)
         {
             return;

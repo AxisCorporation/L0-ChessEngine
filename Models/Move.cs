@@ -124,22 +124,8 @@ public class Move : IMove
 
         }
 
-        if (IsValidDiagonal && move.DestPiece.IsValidPassantPlacement)
-        {
-            int PieceAbove = move.InitPiece.IsWhite ? destY - 1 : destY + 1;
-            
-            // This ugly, line of code is to make sure a pawn doesnt capture a pawn on its own team after attempting an en passant on its own team
-            if (ChessBoard.Instance.Grid[PieceAbove, destX].IsWhite == move.InitPiece.IsWhite)
-            {
-                Console.WriteLine($"Piece above: {ChessBoard.Instance.Grid[PieceAbove, destX].Type} | ({ ((ChessPiece) ChessBoard.Instance.Grid[PieceAbove, destX]).Coordinates})" );
-                return false;
-            }
-            Console.WriteLine($"Piece above: {ChessBoard.Instance.Grid[PieceAbove, destX].Type} | ({ ((ChessPiece) ChessBoard.Instance.Grid[PieceAbove, destX]).Coordinates})" );
-
-            move.IsEnPassant = true;
-        }
-
-        Console.WriteLine(IsValidForward || IsValidDiagonal);
+        move.IsEnPassant = IsValidDiagonal && move.DestPiece.IsValidPassantPlacement;
+        
         return IsValidForward || IsValidDiagonal;
     }
 

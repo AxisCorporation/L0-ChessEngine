@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -21,11 +22,12 @@ public partial class GameViewModel : ObservableObject
         IsWhiteTurn = true;
         UpdateTurnString();
 
-        for (int row = 7; row >= 0; row--)
+        for (int row = 0; row < 8; row++)
         {
-            for (int col = 7; col >= 0; col--)
+            int y = 7 - row;
+            for (int col = 0; col < 8; col++)
             {
-                var piece = Board.Grid[row, col]; // or however your grid is structured
+                var piece = Board.Grid[y, col]; // or however your grid is structured
 
                 SquareViewModel square = new((ChessPiece)piece)
                 {
@@ -47,7 +49,7 @@ public partial class GameViewModel : ObservableObject
         for (int i = 0; i < 64; i++)
         {
             int row = 7 - (i / 8);
-            int col = 7 - (i % 8);
+            int col = i % 8;
 
             var updatedPiece = Board.Grid[row, col];
             var existingSquare = GridPieces[i];
@@ -60,6 +62,7 @@ public partial class GameViewModel : ObservableObject
 
     private void OnSquareClick(SquareViewModel squareClicked)
     {
+        Console.WriteLine($"{squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
         if (_selectedSquare is null)
         {
             _selectedSquare = squareClicked;

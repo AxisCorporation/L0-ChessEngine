@@ -15,7 +15,7 @@ public partial class MainMenuView : UserControl
 
     public void PlayGame(object? sender, RoutedEventArgs e)
     {
-        var chessBoard = new ChessBoardView();
+        var chessBoard = new GameView();
         MainWindow?.SetMainContent(chessBoard);
     }
 }

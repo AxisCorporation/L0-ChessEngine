@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Avalonia.Controls;
 using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
@@ -120,21 +121,11 @@ public class Move : IMove
             }
 
             IsValidDiagonal &= destY == initY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
+
         }
 
-        if (IsValidDiagonal && move.DestPiece.IsValidPassantPlacement)
-        {
-            int PieceAbove = move.InitPiece.IsWhite ? destY + 1 : destY - 1;
-            
-            // This ugly, line of code is to make sure a pawn doesnt capture a pawn on its own team after attempting an en passant on its own team
-            if (ChessBoard.Instance.Grid[PieceAbove, destX].IsWhite == move.InitPiece.IsWhite)
-            {
-                return false;
-            }
-
-            move.IsEnPassant = true;
-        }
-
+        move.IsEnPassant = IsValidDiagonal && move.DestPiece.IsValidPassantPlacement;
+        
         return IsValidForward || IsValidDiagonal;
     }
 

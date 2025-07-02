@@ -34,10 +34,6 @@ public class ChessBoard : IChessBoard
     public void MakeMove(IMove moveInterface)
     {
         Move move = (Move) moveInterface;
-        if (!move.IsValid)
-        {
-            return;
-        }
 
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
@@ -88,7 +84,7 @@ public class ChessBoard : IChessBoard
         else if (move.IsEnPassant)
         {
             int CapturedPawnY = PieceToMove.IsWhite ? destY - 1 : destY + 1;
-            Grid[CapturedPawnY, destX] = new ChessPiece(PieceType.Empty, new(CapturedPawnY + 1, destX));
+            Grid[CapturedPawnY, destX] = new ChessPiece(PieceType.Empty, new(CapturedPawnY, destX));
         }
     }
 
@@ -115,6 +111,7 @@ public class ChessBoard : IChessBoard
         // Iterate through each row and parse it
         for (int i = 0; i < 8; i++)
         {
+
             var row = rows[i];
             int currentCol = 0;
 

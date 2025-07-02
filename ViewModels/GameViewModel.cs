@@ -7,14 +7,14 @@ namespace L_0_Chess_Engine.ViewModels;
 
 public partial class GameViewModel : ObservableObject
 {
-    public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
-    private ChessBoard Board { get; set; } = ChessBoard.Instance;
-    private SquareViewModel? _selectedSquare;
-
     [ObservableProperty]
     private string _turnText;
 
+    private ChessBoard Board { get; set; } = ChessBoard.Instance;
+
+    public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
     public bool IsWhiteTurn { get; set; }
+    private SquareViewModel? _selectedSquare;
 
     public GameViewModel()
     {

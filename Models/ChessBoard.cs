@@ -34,10 +34,6 @@ public class ChessBoard : IChessBoard
     public void MakeMove(IMove moveInterface)
     {
         Move move = (Move) moveInterface;
-        if (!move.IsValid)
-        {
-            return;
-        }
 
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)

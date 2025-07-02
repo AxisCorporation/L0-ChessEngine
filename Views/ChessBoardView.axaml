@@ -14,7 +14,7 @@
     </UserControl.Resources>
     
     <StackPanel>
-        <TextBlock>Game View</TextBlock>
+        <TextBlock Text="{Binding TurnText}" HorizontalAlignment="Center"></TextBlock>
         
         <ItemsControl ItemsSource="{Binding GridPieces}">
             

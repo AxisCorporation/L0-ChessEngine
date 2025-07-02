@@ -5,15 +5,13 @@ using L_0_Chess_Engine.ViewModels;
 
 namespace L_0_Chess_Engine.Views;
 
-public partial class ChessBoardView : UserControl
+public partial class GameView : UserControl
 {
 
-    public ChessBoardView()
+    public GameView()
     {
         InitializeComponent();
 
-        DataContext = new ChessBoardViewModel();
-
-        
+        DataContext = new GameViewModel();
     }
 }

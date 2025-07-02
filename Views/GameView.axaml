@@ -5,8 +5,8 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              xmlns:vm="clr-namespace:L_0_Chess_Engine.ViewModels"
              xmlns:local="clr-namespace:L_0_Chess_Engine.Converters"
-             x:DataType="vm:ChessBoardViewModel"
-             x:Class="L_0_Chess_Engine.Views.ChessBoardView">
+             x:DataType="vm:GameViewModel"
+             x:Class="L_0_Chess_Engine.Views.GameView">
     
     <UserControl.Resources>
         <local:BoolToSquareColourConverter x:Key="LightSquareConverter"/>

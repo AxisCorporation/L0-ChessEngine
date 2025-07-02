@@ -5,7 +5,7 @@ using L_0_Chess_Engine.Models;
 
 namespace L_0_Chess_Engine.ViewModels;
 
-public partial class ChessBoardViewModel : ObservableObject
+public partial class GameViewModel : ObservableObject
 {
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
     private ChessBoard Board { get; set; } = ChessBoard.Instance;
@@ -16,7 +16,7 @@ public partial class ChessBoardViewModel : ObservableObject
 
     public bool IsWhiteTurn { get; set; }
 
-    public ChessBoardViewModel()
+    public GameViewModel()
     {
         IsWhiteTurn = true;
         UpdateTurnString();

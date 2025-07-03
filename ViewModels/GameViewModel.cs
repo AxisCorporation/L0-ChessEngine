@@ -9,7 +9,7 @@ namespace L_0_Chess_Engine.ViewModels;
 public partial class GameViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string _turnText;
+    private string? _turnText;
 
     private ChessBoard Board { get; set; } = ChessBoard.Instance;
 
@@ -63,7 +63,7 @@ public partial class GameViewModel : ObservableObject
     private void OnSquareClick(SquareViewModel squareClicked)
     {
         Console.WriteLine($"{squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
-        
+
         if (_selectedSquare is null)
         {
             _selectedSquare = squareClicked;

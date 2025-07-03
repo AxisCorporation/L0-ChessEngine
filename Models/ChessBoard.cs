@@ -16,7 +16,7 @@ public class ChessBoard : IChessBoard
     // Invoked every time grid updates
     public event Action? GridUpdated;
 
-    private static ChessBoard _instance;
+    private static ChessBoard? _instance;
     public static ChessBoard Instance
     {
         get => _instance ??= new ChessBoard();

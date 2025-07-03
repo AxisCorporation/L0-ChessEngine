@@ -8,10 +8,10 @@ class AllTests
 
     static void TestReadFENValid()
     {
-        var board = new ChessBoard();
+        var board = ChessBoard.Instance;
         bool result = board.ReadFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 
-        if (result==false)
+        if (!result)
             throw new Exception("TestReadFENValid failed since ReadFEN returned false");
 
         if (board.Grid[0, 0].Type != (PieceType.Rook | PieceType.Black))
@@ -22,10 +22,10 @@ class AllTests
 
     static void TestReadFENInvalidRow()
     {
-        var board = new ChessBoard();
+        var board = ChessBoard.Instance;
         bool result = board.ReadFEN("8/8/8/8/8/8/8"); // only 7 rows
 
-        if (result==true)
+        if (result)
             throw new Exception("TestReadFENInvalidRow failed since should return false");
 
         Console.WriteLine("TestReadFENInvalidRow passed.");
@@ -33,10 +33,11 @@ class AllTests
 
     static void TestReadFENInvalidCharacter()
     {
-        var board = new ChessBoard();
+        var board = ChessBoard.Instance;
+        
         bool result = board.ReadFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBXR"); // X is invalid
 
-        if (result==true)
+        if (result)
             throw new Exception("TestReadFENInvalidCharacter failed since should return false");
 
         Console.WriteLine("TestReadFENInvalidCharacter passed.");

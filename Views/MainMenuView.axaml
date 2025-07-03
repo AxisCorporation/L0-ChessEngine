@@ -107,7 +107,8 @@
 							Foreground="Black"
 							CornerRadius="8"
 							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center">
+							VerticalContentAlignment="Center"
+							Click = "PlayGame">
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>

@@ -47,9 +47,13 @@ public class ChessBoard : IChessBoard
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
+
         ChessPiece pieceToMove = move.InitPiece;
         pieceToMove.HasMoved = true;
-        
+
+        ChessPiece PieceToMove = (ChessPiece)Grid[initX - 1, initY - 1];
+        PieceToMove.HasMoved = true;
+
         if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
             CheckSpecialPawnConditions(move, ref pieceToMove);

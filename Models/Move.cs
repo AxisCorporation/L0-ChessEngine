@@ -26,11 +26,15 @@ public class Move : IMove
     {
         ValidationMap[PieceType.Pawn] = IsValidPawnMove;
         ValidationMap[PieceType.Knight] = IsValidKnightMove;
+        ValidationMap[PieceType.Rook] = IsValidRookMove;
+        ValidationMap[PieceType.Bishop] = IsValidBishopMove;
+        ValidationMap[PieceType.Queen] = IsValidQueenMove;
 
         // Always false types
         ValidationMap[PieceType.Empty] = (m) => false;
         ValidationMap[PieceType.Black] = (m) => false;
         ValidationMap[PieceType.White] = (m) => false;
+        
     }
 
     /// <param name="initial">Starting coordinate</param>
@@ -129,6 +133,7 @@ public class Move : IMove
         return IsValidForward || IsValidDiagonal;
     }
 
+
     private static bool IsValidKnightMove(Move move)
     {
         if (!IsValidGenericMove(move))
@@ -152,4 +157,155 @@ public class Move : IMove
         
         return false;
     }
+
+ private static bool IsValidRookMove(Move move)
+ {
+    if (!IsValidGenericMove(move))
+    {
+        return false;
+    }
+
+    (int InitX, int InitY) = move.InitPiece.Coordinates;
+    (int DestX, int DestY) = move.DestPiece.Coordinates;
+
+    bool IsValidHorizontal = InitX == DestX;
+    bool IsValidVertical = InitY == DestY;
+
+    if (IsValidHorizontal)
+    {
+        int start = Math.Min(InitY, DestY) + 1;
+        int end = Math.Max(InitY, DestY);
+        
+        for (int y = start; y < end; y++)
+        {
+            if (ChessBoard.Instance.Grid[InitX, y].Type != PieceType.Empty)
+            {
+                return false; 
+            }
+        }
+    }
+    else if (IsValidVertical)
+    {
+        int start = Math.Min(InitX, DestX) + 1;
+        int end = Math.Max(InitX, DestX);
+        
+        for (int x = start; x < end; x++)
+        {
+            if (ChessBoard.Instance.Grid[x, InitY].Type != PieceType.Empty)
+            {
+                return false; 
+            }
+        }
+    }
+    else
+    {
+        return false;
+    }
+    
+    return true;
+}
+
+private static bool IsValidBishopMove(Move move)
+{
+    if(!IsValidGenericMove(move))
+    {
+        return false;
+    }
+
+    (int InitX, int InitY) = move.InitPiece.Coordinates;
+    (int DestX, int DestY) = move.DestPiece.Coordinates;
+
+    bool IsValidDiagonal = Math.Abs(DestX - InitX) == Math.Abs(DestY - InitY);
+
+    if(!IsValidDiagonal)
+    {
+        return false;
+    }
+
+    int xDirection = DestX > InitX ? 1 : -1;
+    int yDirection = DestY > InitY ? 1 : -1;
+
+    int x = InitX + xDirection;
+    int y = InitY + yDirection;
+
+    while (x != DestX && y != DestY)
+    {
+        if (ChessBoard.Instance.Grid[x, y].Type != PieceType.Empty)
+        {
+            return false;
+        }
+
+        x += xDirection;
+        y += yDirection;
+    }
+
+    return true;
+}   
+
+private static bool IsValidQueenMove(Move move)
+{
+    if(!IsValidGenericMove(move))
+    {
+        return false;
+    }
+
+    (int InitX, int InitY) = move.InitPiece.Coordinates;
+    (int DestX, int DestY) = move.DestPiece.Coordinates;
+
+    bool IsValidHorizontal = InitX == DestX;
+    bool IsValidVertical = InitY == DestY;
+    bool IsValidDiagonal = Math.Abs(DestX - InitX) == Math.Abs(DestY - InitY);
+
+    if(!IsValidHorizontal && !IsValidVertical && !IsValidDiagonal)  
+    {
+        return false;
+    }
+    if (IsValidHorizontal)
+    {
+        int start = Math.Min(InitY, DestY) + 1;
+        int end = Math.Max(InitY, DestY);
+        
+        for (int y = start; y < end; y++)
+        {
+            if (ChessBoard.Instance.Grid[InitX, y].Type != PieceType.Empty)
+            {
+                return false; 
+            }
+        }
+    }
+    else if (IsValidVertical)
+    {
+        int start = Math.Min(InitX, DestX) + 1;
+        int end = Math.Max(InitX, DestX);
+        
+        for (int x = start; x < end; x++)
+        {
+            if (ChessBoard.Instance.Grid[x, InitY].Type != PieceType.Empty)
+            {
+                return false; 
+            }
+        }
+    }
+    else if(IsValidDiagonal)
+    {
+        int xDirection = DestX > InitX ? 1 : -1;
+        int yDirection = DestY > InitY ? 1 : -1;
+
+        int x = InitX + xDirection;
+        int y = InitY + yDirection;
+
+        while (x != DestX && y != DestY)
+        {
+            if (ChessBoard.Instance.Grid[x, y].Type != PieceType.Empty)
+            {
+                return false;
+            }
+
+            x += xDirection;
+            y += yDirection;
+        }
+    }
+    return true;
+}
+
 }

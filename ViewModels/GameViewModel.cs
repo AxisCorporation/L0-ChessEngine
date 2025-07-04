@@ -22,20 +22,18 @@ public partial class GameViewModel : ObservableObject
         IsWhiteTurn = true;
         UpdateTurnString();
 
-        for (int row = 0; row < 8; row++)
+        for (int row = 7; row >= 0; row--)
         {
-            int y = 7 - row;
             for (int col = 0; col < 8; col++)
             {
-                var piece = Board.Grid[y, col]; // or however your grid is structured
+                var piece = Board.Grid[col, row]; // or however your grid is structured
 
                 SquareViewModel square = new((ChessPiece)piece)
                 {
-                    IsLightSquare = (row + col) % 2 == 0
+                    IsLightSquare = (row + col + 1) % 2 == 0
                 };
 
-                square.ClickCommand = new RelayCommand(() => OnSquareClick(square),
-                                                       () => CanClickSquare(square));
+                square.ClickCommand = new RelayCommand(() => OnSquareClick(square), () => CanClickSquare(square));
 
                 GridPieces.Add(square);
             }
@@ -44,15 +42,16 @@ public partial class GameViewModel : ObservableObject
         Board.GridUpdated += UpdateGrid;
     }
 
+
     private void UpdateGrid()
     {
         for (int i = 0; i < 64; i++)
         {
-            int row = 7 - (i / 8);
-            int col = i % 8;
+            int row = i / 8;
+            int col = 7 - (i % 8);
 
-            var updatedPiece = Board.Grid[row, col];
-            var existingSquare = GridPieces[i];
+            var updatedPiece = Board.Grid[col, row];
+            var existingSquare = GridPieces[63 - i];
 
             existingSquare.Piece = (ChessPiece)updatedPiece;
             existingSquare.UpdateImage();
@@ -96,7 +95,7 @@ public partial class GameViewModel : ObservableObject
     {
         foreach (var piece in GridPieces)
         {
-            ((RelayCommand)piece.ClickCommand!).NotifyCanExecuteChanged();
+            ((RelayCommand) piece.ClickCommand!).NotifyCanExecuteChanged();
         }
     }
 
@@ -113,7 +112,6 @@ public partial class GameViewModel : ObservableObject
 
         return false;
     }
-
 
     private void UpdateTurnString() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
     

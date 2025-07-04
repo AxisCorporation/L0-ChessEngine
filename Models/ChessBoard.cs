@@ -10,11 +10,11 @@ public class ChessBoard : IChessBoard
     public bool IsCheckMate { get; set; }
 
     //Constant FEN for the starting position
-    private const string DefaultFEN = "RNBQKBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbqkbnr";
-
+    private const string DefaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
     // Invoked every time grid updates
     public event Action? GridUpdated;
+
 
     private static ChessBoard? _instance;
     public static ChessBoard Instance
@@ -51,7 +51,7 @@ public class ChessBoard : IChessBoard
         ChessPiece pieceToMove = move.InitPiece;
         pieceToMove.HasMoved = true;
 
-        ChessPiece PieceToMove = (ChessPiece) Grid[initY, initX];
+        ChessPiece PieceToMove = (ChessPiece) Grid[initX, initY];
         PieceToMove.HasMoved = true;
 
         if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
@@ -59,8 +59,9 @@ public class ChessBoard : IChessBoard
             CheckSpecialPawnConditions(move, ref pieceToMove);
         }
 
-        Grid[initY, initX] = new ChessPiece(PieceType.Empty, new(initX, initY));
-        Grid[destY, destX] = pieceToMove;
+        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+        Grid[destX, destY] = pieceToMove;
+
         pieceToMove.Coordinates = move.DestPiece.Coordinates;
 
         GridUpdated?.Invoke();
@@ -83,12 +84,12 @@ public class ChessBoard : IChessBoard
         else if (Math.Abs(destY - initY) == 2)
         {
             int PassantY = move.InitPiece.IsWhite ? destY - 1 : destY + 1;
-            Grid[PassantY, destX].IsValidPassantPlacement = true;
+            Grid[destX, PassantY].IsValidPassantPlacement = true;
         }
         else if (move.IsEnPassant)
         {
             int CapturedPawnY = PieceToMove.IsWhite ? destY - 1 : destY + 1;
-            Grid[CapturedPawnY, destX] = new ChessPiece(PieceType.Empty, new(CapturedPawnY, destX));
+            Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(CapturedPawnY, destX));
         }
     }
 
@@ -99,24 +100,17 @@ public class ChessBoard : IChessBoard
 
     public bool ReadFEN(string fen)
     {
-        // Split the FEN string by spaces
-        var parts = fen.Split(' ');
-
-        if (parts.Length == 0)
-            return false;
-
-        var boardLayout = parts[0];  // First part is the board layout
 
         // Split the layout into rows (8 rows for an 8x8 board)
-        var rows = boardLayout.Split('/');
+        var rows = fen.Split('/');
         if (rows.Length != 8)
             return false; // 8 rows must or invalid
 
         // Iterate through each row and parse it
-        for (int i = 0; i < 8; i++)
+        for (int y = 7; y >= 0; y--)
         {
 
-            var row = rows[i];
+            var row = rows[7 - y];
             int currentCol = 0;
 
             foreach (var c in row)
@@ -129,7 +123,7 @@ public class ChessBoard : IChessBoard
                     // Add empty squares to the current row
                     for (int j = 0; j < emptySquares; j++)
                     {
-                        Grid[i, currentCol] = new ChessPiece(PieceType.Empty, new(currentCol, i));
+                        Grid[currentCol, y] = new ChessPiece(PieceType.Empty, new(currentCol, y));
                         currentCol++;
                     }
                 }
@@ -166,7 +160,7 @@ public class ChessBoard : IChessBoard
                     }
 
                     // Create the chess piece with the correct color and type
-                    Grid[i, currentCol] = new ChessPiece(pieceType.Value, new(currentCol, i));
+                    Grid[currentCol, y] = new ChessPiece(pieceType.Value, new(currentCol, y));
                     currentCol++;
                 }
             }

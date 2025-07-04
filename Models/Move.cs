@@ -181,7 +181,7 @@ public class Move : IMove
 
             for (int x = start; x < end; x++)
             {
-                if (ChessBoard.Instance.Grid[InitY, x].Type != PieceType.Empty)
+                if (ChessBoard.Instance.Grid[x, InitY].Type != PieceType.Empty)
                 {
                     return false;
                 }
@@ -193,11 +193,9 @@ public class Move : IMove
             int start = Math.Min(InitY, DestY) + 1;
             int end = Math.Max(InitY, DestY);
 
-            Console.WriteLine($"start: {start}, end: {end}, InitX: {InitX}");
             for (int y = start; y < end; y++)
             {
-                Console.WriteLine($"Here! Y = {y}");
-                if (ChessBoard.Instance.Grid[y, InitX].Type != PieceType.Empty)
+                if (ChessBoard.Instance.Grid[InitX, y].Type != PieceType.Empty)
                 {
                     return false;
                 }
@@ -234,7 +232,7 @@ public class Move : IMove
 
         while (x != DestX && y != DestY)
         {
-            if (ChessBoard.Instance.Grid[y, x].Type != PieceType.Empty)
+            if (ChessBoard.Instance.Grid[x, y].Type != PieceType.Empty)
             {
                 return false;
             }

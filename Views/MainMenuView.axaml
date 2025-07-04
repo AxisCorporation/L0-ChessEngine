@@ -1,15 +1,16 @@
 <UserControl
-  xmlns="https://github.com/avaloniaui"
-  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-  mc:Ignorable="d"
-  d:DesignWidth="800"
-  d:DesignHeight="450"
-  x:Class="L_0_Chess_Engine.Views.MainMenuView">
-
+	xmlns="https://github.com/avaloniaui"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	d:DesignWidth="800"
+	d:DesignHeight="450"
+	x:Class="L_0_Chess_Engine.Views.MainMenuView">
+	
 	<Border Background="#FF7D29" CornerRadius="20" Padding="30">
-		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="15">
+		
+		<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
 
 			<TextBlock Text="♔L-0 Chess♚"
 					   FontSize="32"
@@ -17,32 +18,32 @@
 					   Foreground="#ECF0F1"
 					   HorizontalAlignment="Center"/>
 
-			<StackPanel Spacing="10">
-
-				<!-- Play toggle button -->
-				<ToggleButton x:Name="PlayToggle"
-							  Content="Play"
-							  Width="200"
-							  Background="#FEEBC8"
-							  Foreground="Black"
-							  CornerRadius="10"
-							  HorizontalContentAlignment="Center"
-							  VerticalContentAlignment="Center">
-					<ToggleButton.Styles>
-						<Style Selector="ToggleButton:pointerover">
-							<Setter Property="Background" Value="#E6B07C"/>
-						</Style>
-						<Style Selector="ToggleButton:pressed">
-							<Setter Property="Background" Value="#CC7A33"/>
-						</Style>
-					</ToggleButton.Styles>
-				</ToggleButton>
-
+			<!-- Play Toggle Button -->
+			<ToggleButton x:Name="PlayToggle"
+						  Content="Play"
+						  Width="200"
+						  Background="#FEEBC8"
+						  Foreground="Black"
+						  CornerRadius="10"
+						  HorizontalContentAlignment="Center"
+						  VerticalContentAlignment="Center">
+				
+				<ToggleButton.Styles>
+					<Style Selector="ToggleButton:pointerover">
+						<Setter Property="Background" Value="#E6B07C"/>
+					</Style>
+					
+					<Style Selector="ToggleButton:pressed">
+						<Setter Property="Background" Value="#CC7A33"/>
+					</Style>
+				</ToggleButton.Styles>
+				
+			</ToggleButton>
+			
+			<StackPanel x:Name="GameModeOptions" IsVisible="False" Opacity="0" Spacing="5">
+				
 				<!-- Local + AI -->
-				<StackPanel x:Name="PlayMainOptions"
-							IsVisible="False"
-							Opacity="0"
-							Spacing="5">
+				<StackPanel HorizontalAlignment="Center" Spacing="10">
 					<StackPanel.Transitions>
 						<Transitions>
 							<DoubleTransition Property="Opacity"
@@ -50,8 +51,14 @@
 											  Easing="QuadraticEaseInOut"/>
 						</Transitions>
 					</StackPanel.Transitions>
+					
+					<TextBlock Text="Game Mode"
+					           FontSize="28"
+					           FontWeight="Bold"
+					           Foreground="#ECF0F1"
+					           HorizontalAlignment="Center"/>
 
-					<Button x:Name="LocalButton"
+					<Button x:Name="LocalGame"
 							Content="Local"
 							Width="200"
 							Background="#FEEBC8"
@@ -59,17 +66,20 @@
 							CornerRadius="8"
 							HorizontalContentAlignment="Center"
 							VerticalContentAlignment="Center">
+						
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
 							</Style>
+							
 							<Style Selector="Button:pressed">
 								<Setter Property="Background" Value="#CC7A33"/>
 							</Style>
 						</Button.Styles>
+						
 					</Button>
 
-					<Button x:Name="AIButton"
+					<Button x:Name="AiGame"
 							Content="AI"
 							Width="200"
 							Background="#FEEBC8"
@@ -77,182 +87,147 @@
 							CornerRadius="8"
 							HorizontalContentAlignment="Center"
 							VerticalContentAlignment="Center">
+						
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
 							</Style>
+							
 							<Style Selector="Button:pressed">
 								<Setter Property="Background" Value="#CC7A33"/>
 							</Style>
 						</Button.Styles>
+						
 					</Button>
+					
 				</StackPanel>
-
-				<!-- Local time options -->
-				<StackPanel x:Name="LocalTimeOptions"
-							IsVisible="False"
-							Opacity="0"
-							Spacing="5">
+				
+				<TextBlock Text="Time Control" FontSize="28"
+				           FontWeight="Bold"
+				           Foreground="#ECF0F1"
+				           HorizontalAlignment="Center"/>
+				
+				<!-- Time Options -->
+				<StackPanel x:Name="TimeOptions" Orientation="Horizontal" Spacing="5">
 					<StackPanel.Transitions>
 						<Transitions>
 							<DoubleTransition Property="Opacity"
-											  Duration="0:0:0.3"
-											  Easing="QuadraticEaseInOut"/>
+							                  Duration="0:0:0.3"
+							                  Easing="QuadraticEaseInOut"/>
 						</Transitions>
 					</StackPanel.Transitions>
 
 					<Button Content="5 min"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="8"
-							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center"
-							Click = "PlayGame">
+					        Width="150"
+					        Background="#FEEBC8"
+					        Foreground="Black"
+					        CornerRadius="8"
+					        HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
+					
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
 							</Style>
+						
 							<Style Selector="Button:pressed">
 								<Setter Property="Background" Value="#CC7A33"/>
 							</Style>
 						</Button.Styles>
+					
 					</Button>
+				
 					<Button Content="10 min"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="8"
-							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center">
+					        Width="150"
+					        Background="#FEEBC8"
+					        Foreground="Black"
+					        CornerRadius="8"
+					        HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
+					
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
 							</Style>
+						
 							<Style Selector="Button:pressed">
 								<Setter Property="Background" Value="#CC7A33"/>
 							</Style>
 						</Button.Styles>
+					
 					</Button>
+				
 					<Button Content="15 min"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="8"
-							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center">
+					        Width="150"
+					        Background="#FEEBC8"
+					        Foreground="Black"
+					        CornerRadius="8"
+					        HorizontalContentAlignment="Center"
+					        VerticalContentAlignment="Center">
+					
 						<Button.Styles>
 							<Style Selector="Button:pointerover">
 								<Setter Property="Background" Value="#E6B07C"/>
 							</Style>
+						
 							<Style Selector="Button:pressed">
 								<Setter Property="Background" Value="#CC7A33"/>
 							</Style>
 						</Button.Styles>
 					</Button>
 				</StackPanel>
-
-				<!-- AI time options -->
-				<StackPanel x:Name="AITimeOptions"
-							IsVisible="False"
-							Opacity="0"
-							Spacing="5">
-					<StackPanel.Transitions>
-						<Transitions>
-							<DoubleTransition Property="Opacity"
-											  Duration="0:0:0.3"
-											  Easing="QuadraticEaseInOut"/>
-						</Transitions>
-					</StackPanel.Transitions>
-
-					<Button Content="5 min"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="8"
-							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center">
-						<Button.Styles>
-							<Style Selector="Button:pointerover">
-								<Setter Property="Background" Value="#E6B07C"/>
-							</Style>
-							<Style Selector="Button:pressed">
-								<Setter Property="Background" Value="#CC7A33"/>
-							</Style>
-						</Button.Styles>
-					</Button>
-					<Button Content="10 min"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="8"
-							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center">
-						<Button.Styles>
-							<Style Selector="Button:pointerover">
-								<Setter Property="Background" Value="#E6B07C"/>
-							</Style>
-							<Style Selector="Button:pressed">
-								<Setter Property="Background" Value="#CC7A33"/>
-							</Style>
-						</Button.Styles>
-					</Button>
-					<Button Content="15 min"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="8"
-							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center">
-						<Button.Styles>
-							<Style Selector="Button:pointerover">
-								<Setter Property="Background" Value="#E6B07C"/>
-							</Style>
-							<Style Selector="Button:pressed">
-								<Setter Property="Background" Value="#CC7A33"/>
-							</Style>
-						</Button.Styles>
-					</Button>
-				</StackPanel>
-
-				<!-- Other options -->
-				<StackPanel x:Name="OtherOptions" Spacing="10">
-					<Button x:Name="CreditsButton"
-							Content="Credits"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="10"
-							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center">
-						<Button.Styles>
-							<Style Selector="Button:pointerover">
-								<Setter Property="Background" Value="#E6B07C"/>
-							</Style>
-							<Style Selector="Button:pressed">
-								<Setter Property="Background" Value="#CC7A33"/>
-							</Style>
-						</Button.Styles>
-					</Button>
-					<Button x:Name="QuitButton"
-							Content="Quit"
-							Width="200"
-							Background="#FEEBC8"
-							Foreground="Black"
-							CornerRadius="10"
-							HorizontalContentAlignment="Center"
-							VerticalContentAlignment="Center">
-						<Button.Styles>
-							<Style Selector="Button:pointerover">
-								<Setter Property="Background" Value="#E6B07C"/>
-							</Style>
-							<Style Selector="Button:pressed">
-								<Setter Property="Background" Value="#CC7A33"/>
-							</Style>
-						</Button.Styles>
-					</Button>
-				</StackPanel>
+				
 			</StackPanel>
+			
+			<!-- Other options -->
+			<StackPanel x:Name="OtherOptions" Spacing="10">
+				
+				<Button x:Name="CreditsButton"
+				        Content="Credits"
+				        Width="200"
+				        Background="#FEEBC8"
+				        Foreground="Black"
+				        CornerRadius="10"
+				        HorizontalContentAlignment="Center"
+				        VerticalContentAlignment="Center">
+					
+					<Button.Styles>
+						<Style Selector="Button:pointerover">
+							<Setter Property="Background" Value="#E6B07C"/>
+						</Style>
+						
+						<Style Selector="Button:pressed">
+							<Setter Property="Background" Value="#CC7A33"/>
+						</Style>
+					</Button.Styles>
+					
+				</Button>
+				
+				<Button x:Name="QuitButton"
+						Content="Quit"
+						Width="200"
+						Background="#FEEBC8"
+						Foreground="Black"
+						CornerRadius="10"
+						HorizontalContentAlignment="Center"
+						VerticalContentAlignment="Center">
+					
+					<Button.Styles>
+						<Style Selector="Button:pointerover">
+							<Setter Property="Background" Value="#E6B07C"/>
+						</Style>
+						
+						<Style Selector="Button:pressed">
+							<Setter Property="Background" Value="#CC7A33"/>
+						</Style>
+					</Button.Styles>
+					
+				</Button>
+				
+			</StackPanel>
+			
 		</StackPanel>
+		
 	</Border>
+	
 </UserControl>

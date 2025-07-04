@@ -5,7 +5,7 @@ namespace L_0_Chess_Engine.Views;
 
 public partial class MainMenuView : UserControl
 {
-    public MainWindow? MainWindow { get; set; }
+    private MainWindow? MainWindow { get; }
 
     public MainMenuView(MainWindow? mainWindow)
     {
@@ -15,38 +15,25 @@ public partial class MainMenuView : UserControl
         PlayToggle.Checked += (_, _) =>
         {
             PlayToggle.IsVisible = false; // Play itself gone
-            PlayMainOptions.IsVisible = true;
-            PlayMainOptions.Opacity = 1;
+            
+            GameModeOptions.IsVisible = true;
+            GameModeOptions.Opacity = 1;
+            
+            // show Local time options
+            // TimeOptions.IsVisible = true;
+            // TimeOptions.Opacity = 1;
 
             OtherOptions.IsVisible = false; // hide credits/quit
         };
 
-        LocalButton.Click += (_, _) =>
-        {
-            // hide Local/AI choices
-            PlayMainOptions.IsVisible = false;
-            PlayMainOptions.Opacity = 0;
+        LocalGame.Click += PlayGame;
 
-            // show Local time options
-            LocalTimeOptions.IsVisible = true;
-            LocalTimeOptions.Opacity = 1;
-        };
-
-        AIButton.Click += (_, _) =>
-        {
-            // hide Local/AI choices
-            PlayMainOptions.IsVisible = false;
-            PlayMainOptions.Opacity = 0;
-
-            // show AI time options
-            AITimeOptions.IsVisible = true;
-            AITimeOptions.Opacity = 1;
-        };
+        AiGame.Click += PlayGame;
     }
 
     public void PlayGame(object? sender, RoutedEventArgs e)
     {
-        var chessBoard = new GameView();
-        MainWindow?.SetMainContent(chessBoard);
+        var game = new GameView();
+        MainWindow?.SetMainContent(game);
     }
 }

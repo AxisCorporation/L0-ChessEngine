@@ -13,41 +13,48 @@
         <local:BoolToBorderBrushConverter x:Key="HighlightSquareConverter"></local:BoolToBorderBrushConverter>
     </UserControl.Resources>
     
-    <StackPanel>
-        <TextBlock Text="{Binding TurnText}" HorizontalAlignment="Center"></TextBlock>
+    <Border Background="#FF7D29" CornerRadius="20" Padding="30">
         
-        <ItemsControl ItemsSource="{Binding GridPieces}">
+        <StackPanel x:Name="Board" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="{Binding TurnText}"
+                       FontSize="32"
+                       FontWeight="Bold"
+                       Foreground="#ECF0F1"
+                       HorizontalAlignment="Center"/>
+        
+            <ItemsControl ItemsSource="{Binding GridPieces}">
             
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="8" Columns="8" Width="400" Height="400"/>
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="8" Columns="8" Width="400" Height="400"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
             
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Button Command="{Binding ClickCommand}"
-                            Padding="0"
-                            Background="Transparent"
-                            BorderThickness="0">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding ClickCommand}"
+                                Padding="0"
+                                Background="Transparent"
+                                BorderThickness="0">
                         
-                        <Border BorderBrush="Black"
-                                BorderThickness="1" Width="50" Height="50">
-                            <Grid>
-                                <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
-                                <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsSelected}"></Rectangle>
-                                <Image Source="{Binding Image}" 
-                                       Stretch="Uniform"
-                                       HorizontalAlignment="Center"
-                                       VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
+                            <Border BorderBrush="Black"
+                                    BorderThickness="1" Width="50" Height="50">
+                                <Grid>
+                                    <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
+                                    <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsSelected}"></Rectangle>
+                                    <Image Source="{Binding Image}" 
+                                           Stretch="Uniform"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
                         
-                    </Button>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            
-        </ItemsControl>
-    </StackPanel>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+        
+    </Border>
     
 </UserControl>

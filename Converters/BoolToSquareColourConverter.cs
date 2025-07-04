@@ -8,8 +8,8 @@ namespace L_0_Chess_Engine.Converters;
 
 public class BoolToSquareColourConverter : IValueConverter
 {
-    private static readonly IBrush LightSquareBrush = Brushes.Beige;
-    private static readonly IBrush DarkSquareBrush = Brushes.SaddleBrown;
+    private static readonly SolidColorBrush LightSquareBrush = new (Color.Parse("#F0D9B5"));
+    private static readonly SolidColorBrush DarkSquareBrush = new (Color.Parse("#B58863"));
     
     public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {

@@ -10,8 +10,6 @@ public class Move : IMove
     public bool IsValid { get => IsValidMove(); }
 
 
-    // Rather than have two separate chesspieces AND coordinate objects here, it might also be better to 
-    // just store the coordinates inside the chesspieces, but this would require refactoring
     public ChessPiece InitPiece { get; set; }
     public ChessPiece DestPiece { get; set; }
 
@@ -168,17 +166,17 @@ public class Move : IMove
     (int InitX, int InitY) = move.InitPiece.Coordinates;
     (int DestX, int DestY) = move.DestPiece.Coordinates;
 
-    bool IsValidHorizontal = InitX == DestX;
-    bool IsValidVertical = InitY == DestY;
+    bool IsValidHorizontal = InitY == DestY;
+    bool IsValidVertical = InitX == DestX;
 
     if (IsValidHorizontal)
     {
-        int start = Math.Min(InitY, DestY) + 1;
-        int end = Math.Max(InitY, DestY);
+        int start = Math.Min(InitX, DestX) + 1;
+        int end = Math.Max(InitX, DestX);
         
         for (int y = start; y < end; y++)
         {
-            if (ChessBoard.Instance.Grid[InitX, y].Type != PieceType.Empty)
+            if (ChessBoard.Instance.Grid[y, InitX].Type != PieceType.Empty)
             {
                 return false; 
             }
@@ -186,12 +184,12 @@ public class Move : IMove
     }
     else if (IsValidVertical)
     {
-        int start = Math.Min(InitX, DestX) + 1;
-        int end = Math.Max(InitX, DestX);
+        int start = Math.Min(InitY, DestY) + 1;
+        int end = Math.Max(InitY, DestY);
         
         for (int x = start; x < end; x++)
         {
-            if (ChessBoard.Instance.Grid[x, InitY].Type != PieceType.Empty)
+            if (ChessBoard.Instance.Grid[InitY, x].Type != PieceType.Empty)
             {
                 return false; 
             }

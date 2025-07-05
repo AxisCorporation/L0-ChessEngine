@@ -22,6 +22,7 @@
                        Foreground="#ECF0F1"
                        HorizontalAlignment="Center"/>
         
+            <!-- The Chess Board -->
             <ItemsControl ItemsSource="{Binding GridPieces}">
             
                 <ItemsControl.ItemsPanel>
@@ -53,6 +54,13 @@
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
+
+            <TextBlock Text="{Binding CheckText}"
+                       FontSize="32"
+                       FontWeight="Bold"
+                       Foreground="#ECF0F1"
+                       HorizontalAlignment="Center"/>
+
         </StackPanel>
         
     </Border>

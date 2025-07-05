@@ -29,12 +29,13 @@ public class Move : IMove
         ValidationMap[PieceType.Rook] = IsValidRookMove;
         ValidationMap[PieceType.Bishop] = IsValidBishopMove;
         ValidationMap[PieceType.Queen] = IsValidQueenMove;
+        ValidationMap[PieceType.King] = IsValidKingMove;
 
         // Always false types
         ValidationMap[PieceType.Empty] = (m) => false;
         ValidationMap[PieceType.Black] = (m) => false;
         ValidationMap[PieceType.White] = (m) => false;
-        
+
     }
 
     /// <param name="initial">Starting coordinate</param>
@@ -73,7 +74,7 @@ public class Move : IMove
         {
             return false;
         }
-        
+
         if (move.InitPiece.Coordinates == move.DestPiece.Coordinates)
         {
             return false;
@@ -129,7 +130,7 @@ public class Move : IMove
         }
 
         move.IsEnPassant = IsValidDiagonal && move.DestPiece.IsValidPassantPlacement;
-        
+
         return IsValidForward || IsValidDiagonal;
     }
 
@@ -140,7 +141,7 @@ public class Move : IMove
         {
             return false;
         }
-        
+
         // Not necessary but it makes writing code easier and more readable
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
@@ -154,7 +155,7 @@ public class Move : IMove
         {
             return true;
         }
-        
+
         return false;
     }
 
@@ -242,11 +243,16 @@ public class Move : IMove
         }
 
         return true;
-    }   
+    }
 
     private static bool IsValidQueenMove(Move move)
     {
         return IsValidBishopMove(move) || IsValidRookMove(move);
+    }
+
+    private static bool IsValidKingMove(Move move)
+    {
+        return false;
     }
 
 }

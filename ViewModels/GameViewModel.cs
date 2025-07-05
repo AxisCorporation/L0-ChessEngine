@@ -11,6 +11,10 @@ public partial class GameViewModel : ObservableObject
     [ObservableProperty]
     private string? _turnText;
 
+    // This is a Temp Variable
+    [ObservableProperty]
+    private string? _checkText = "";
+
     private ChessBoard Board { get; set; } = ChessBoard.Instance;
 
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
@@ -61,7 +65,7 @@ public partial class GameViewModel : ObservableObject
 
     private void OnSquareClick(SquareViewModel squareClicked)
     {
-        Console.WriteLine($"{squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
+        Console.WriteLine($"DEBUG: {squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
 
         if (_selectedSquare is null)
         {
@@ -86,16 +90,17 @@ public partial class GameViewModel : ObservableObject
             _selectedSquare.IsSelected = false;
             _selectedSquare = null;
         }
-        
+
         NotifyCanClickSquare();
         UpdateTurnString();
+        UpdateCheckString();
     }
 
     private void NotifyCanClickSquare()
     {
         foreach (var piece in GridPieces)
         {
-            ((RelayCommand) piece.ClickCommand!).NotifyCanExecuteChanged();
+            ((RelayCommand)piece.ClickCommand!).NotifyCanExecuteChanged();
         }
     }
 
@@ -113,6 +118,20 @@ public partial class GameViewModel : ObservableObject
         return false;
     }
 
+    // Temp Functions (Hopefully)
     private void UpdateTurnString() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
+
+    private void UpdateCheckString()
+    {
+        if (IsWhiteTurn && Board.IsCheck)
+        {
+            CheckText = "White is In Check";
+        }
+        else if (!IsWhiteTurn && Board.IsCheck)
+        {
+            CheckText = "Black is in Check";
+        }
+        else CheckText = "";
+    }
     
 }

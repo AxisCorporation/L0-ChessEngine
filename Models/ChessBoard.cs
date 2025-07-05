@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
@@ -15,6 +16,19 @@ public class ChessBoard : IChessBoard
     // Invoked every time grid updates
     public event Action? GridUpdated;
 
+    // Temp Variable
+    private bool _isWhiteTurn;
+
+    private PieceType CheckColour
+    {
+        get
+        {
+            if (_isWhiteTurn) return PieceType.White;
+
+            return PieceType.Black;
+        }
+    }
+
 
     private static ChessBoard? _instance;
     public static ChessBoard Instance
@@ -24,6 +38,8 @@ public class ChessBoard : IChessBoard
 
     private ChessBoard() // Constructor to initialize
     {
+        _isWhiteTurn = true;
+
         Grid = new ChessPiece[8, 8];
         IsCheck = false;
         IsCheckMate = false;
@@ -64,12 +80,59 @@ public class ChessBoard : IChessBoard
 
         pieceToMove.Coordinates = move.DestPiece.Coordinates;
 
+        // Check Logic
+        _isWhiteTurn = !_isWhiteTurn;
+        CheckScan(CheckColour);
+
+        Console.WriteLine($"{CheckColour} : {IsCheck}");
+
         GridUpdated?.Invoke();
     }
 
     public void ResetBoard()
     {
         ReadFEN(DefaultFEN);
+    }
+
+
+    private void CheckScan(PieceType colour)
+    {
+        PieceType oppositeColour = (PieceType)((int)colour ^ 0b11_000);
+
+        int kingX = 0, kingY = 0;
+
+        for (int y = 0; y < 8; y++)
+        {
+            for (int x = 0; x < 8; x++)
+            {
+                if (Grid[x, y].Type == (PieceType.King | colour))
+                {
+                    (kingX, kingY) = (x, y);
+                    break;
+                }
+            }
+        }
+
+        for (int Y = 0; Y < 8; Y++)
+        {
+            for (int X = 0; X < 8; X++)
+            {
+                if ((int)(Grid[X, Y].Type & oppositeColour) != 0)
+                {
+                    Move move = new((ChessPiece)Grid[X, Y], (ChessPiece)Grid[kingX, kingY]);
+
+                    if (move.IsValid)
+                    {
+                        IsCheck = true;
+                        return;
+                    }
+                    
+                }
+            }
+        }
+
+        IsCheck = false;
+
     }
 
     private void CheckSpecialPawnConditions(Move move, ref ChessPiece PieceToMove)

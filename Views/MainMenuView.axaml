@@ -18,7 +18,7 @@
 					   HorizontalAlignment="Center"/>
 
 			<!-- Play Toggle Button -->
-			<ToggleButton x:Name="PlayToggle"
+			<Button x:Name="PlayToggle"
 						  Content="Play"
 						  Width="200"
 						  Background="#FEEBC8"
@@ -27,7 +27,7 @@
 						  HorizontalContentAlignment="Center"
 						  VerticalContentAlignment="Center">
 				
-				<ToggleButton.Styles>
+				<Button.Styles>
 					<Style Selector="ToggleButton:pointerover">
 						<Setter Property="Background" Value="#E6B07C"/>
 					</Style>
@@ -35,11 +35,11 @@
 					<Style Selector="ToggleButton:pressed">
 						<Setter Property="Background" Value="#CC7A33"/>
 					</Style>
-				</ToggleButton.Styles>
+				</Button.Styles>
 				
-			</ToggleButton>
+			</Button>
 			
-			<StackPanel x:Name="GameModeOptions" IsVisible="False" Opacity="0" Spacing="5">
+			<StackPanel x:Name="GameModeOptions" IsVisible="False" Spacing="5">
 				
 				<!-- Local + AI -->
 				<StackPanel HorizontalAlignment="Center" Spacing="10">
@@ -224,6 +224,28 @@
 				</Button>
 				
 			</StackPanel>
+
+			<Button x:Name="BackButton"
+					Content="Back"
+					Width="100"
+					IsVisible="False"
+					Background="#FEEBC8"
+					Foreground="Black"
+					CornerRadius="10"
+					HorizontalContentAlignment="Left"
+					VerticalContentAlignment="Bottom">
+				
+				<Button.Styles>
+					<Style Selector="Button:pointerover">
+						<Setter Property="Background" Value="#E6B07C"/>
+					</Style>
+					
+					<Style Selector="Button:pressed">
+						<Setter Property="Background" Value="#CC7A33"/>
+					</Style>
+				</Button.Styles>
+				
+			</Button>
 			
 		</StackPanel>
 		

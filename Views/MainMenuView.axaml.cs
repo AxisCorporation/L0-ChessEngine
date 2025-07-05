@@ -12,18 +12,26 @@ public partial class MainMenuView : UserControl
         InitializeComponent();
         MainWindow = mainWindow;
 
-        PlayToggle.Checked += (_, _) =>
+        PlayToggle.Click += (_, _) =>
         {
             PlayToggle.IsVisible = false; // Play itself gone
             
             GameModeOptions.IsVisible = true;
-            GameModeOptions.Opacity = 1;
-            
-            // show Local time options
-            // TimeOptions.IsVisible = true;
-            // TimeOptions.Opacity = 1;
+
+            BackButton.IsVisible = true;
 
             OtherOptions.IsVisible = false; // hide credits/quit
+        };
+
+        BackButton.Click += (_, _) =>
+        {
+            PlayToggle.IsVisible = true;
+
+            GameModeOptions.IsVisible = false;
+
+            BackButton.IsVisible = false;
+
+            OtherOptions.IsVisible = true; // hide credits/quit
         };
 
         LocalGame.Click += PlayGame;

@@ -3,10 +3,10 @@ using System;
 
 namespace L_0_Chess_Engine.Tests;
 
-class AllTests
+static class AllTests
 {
 
-    static void TestReadFENValid()
+    public static void TestReadFENValid()
     {
         var board = ChessBoard.Instance;
         bool result = board.ReadFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");

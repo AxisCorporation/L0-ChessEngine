@@ -1,4 +1,5 @@
 ﻿using Avalonia;
+using L_0_Chess_Engine.Tests;
 using System;
 
 namespace L_0_Chess_Engine;
@@ -11,8 +12,13 @@ class Program
 
     //test
     [STAThread]
-    public static void Main(string[] args) => BuildAvaloniaApp()
-        .StartWithClassicDesktopLifetime(args);
+    public static void Main(string[] args)
+    {
+        // Run Test Cases Here
+        // AllTests.TestReadFENValid();
+
+        BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
+    }
 
     // Avalonia configuration, don't remove; also used by visual designer.
     public static AppBuilder BuildAvaloniaApp()

@@ -1,5 +1,7 @@
 using Avalonia.Interactivity;
 using Avalonia.Controls;
+using Avalonia;
+using System;
 
 namespace L_0_Chess_Engine.Views;
 
@@ -33,6 +35,8 @@ public partial class MainMenuView : UserControl
 
             OtherOptions.IsVisible = true; // hide credits/quit
         };
+
+        QuitButton.Click += (_, _) => Environment.Exit(0);
 
         LocalGame.Click += PlayGame;
 

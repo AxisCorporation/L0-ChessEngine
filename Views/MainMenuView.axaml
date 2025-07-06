@@ -226,29 +226,28 @@
 				</StackPanel>
 			</StackPanel>
 
-				<Button x:Name="BackButton"
-						Content="Back"
-						Width="100"
-						IsVisible="False"
-						Background="#FEEBC8"
-						Foreground="Black"
-						CornerRadius="10"
-						HorizontalAlignment="Center"
-						VerticalAlignment="Bottom"
-						HorizontalContentAlignment="Center"
-						VerticalContentAlignment="Bottom">
+			<Button x:Name="BackButton"
+					Content="Back"
+					Width="100"
+					IsVisible="False"
+					Background="#FEEBC8"
+					Foreground="Black"
+					CornerRadius="10"
+					HorizontalAlignment="Center"
+					VerticalAlignment="Bottom"
+					HorizontalContentAlignment="Center"
+					VerticalContentAlignment="Bottom">
+				
+				<Button.Styles>
+					<Style Selector="Button:pointerover">
+						<Setter Property="Background" Value="#E6B07C"/>
+					</Style>
 					
-					<Button.Styles>
-						<Style Selector="Button:pointerover">
-							<Setter Property="Background" Value="#E6B07C"/>
-						</Style>
-						
-						<Style Selector="Button:pressed">
-							<Setter Property="Background" Value="#CC7A33"/>
-						</Style>
-					</Button.Styles>
-					
-				</Button>
+					<Style Selector="Button:pressed">
+						<Setter Property="Background" Value="#CC7A33"/>
+					</Style>
+				</Button.Styles>
+			</Button>
 		</Grid>
 	</Border>
 	

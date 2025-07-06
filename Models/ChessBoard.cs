@@ -69,7 +69,7 @@ public class ChessBoard
             CheckSpecialPawnConditions(move, ref pieceToMove);
         }
 
-        Grid[initX, initY].Type = PieceType.Empty;
+        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
 
         // Check Logic

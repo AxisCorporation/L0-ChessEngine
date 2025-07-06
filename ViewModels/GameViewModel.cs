@@ -1,4 +1,4 @@
-using System;
+using System.Diagnostics;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -65,7 +65,7 @@ public partial class GameViewModel : ObservableObject
 
     private void OnSquareClick(SquareViewModel squareClicked)
     {
-        Console.WriteLine($"DEBUG: {squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
+        Debug.WriteLine($"DEBUG: {squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
 
         if (_selectedSquare is null)
         {

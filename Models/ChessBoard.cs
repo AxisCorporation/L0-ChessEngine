@@ -76,8 +76,6 @@ public class ChessBoard
         _isWhiteTurn = !_isWhiteTurn;
         CheckScan(CheckColour);
 
-        Console.WriteLine($"{CheckColour} : {IsCheck}");
-
         GridUpdated?.Invoke();
     }
 

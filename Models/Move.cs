@@ -7,9 +7,6 @@ public class Move
 {
     public bool IsValid { get => IsValidMove(); }
 
-
-    // Rather than have two separate chesspieces AND coordinate objects here, it might also be better to 
-    // just store the coordinates inside the chesspieces, but this would require refactoring
     public ChessPiece InitPiece { get; set; }
     public ChessPiece DestPiece { get; set; }
 

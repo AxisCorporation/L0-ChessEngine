@@ -1,5 +1,4 @@
 using System;
-using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -18,9 +17,9 @@ public enum PieceType
     White = 8,
     Black = 16
 }
+public record Coordinate(int X, int Y);
 
-
-public class ChessPiece : IChessPiece
+public class ChessPiece 
 {
     public PieceType Type { get; set; }
     public Coordinate Coordinates { get; set; }

@@ -1,11 +1,10 @@
 ﻿using System;
-using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
 
-public class GameManager : IGameManager
+public class GameManager 
 {
-    public IChessBoard Board { get; set; }
+    public ChessBoard Board { get; set; }
     public bool IsWhiteTurn { get; private set; }
     public bool GameRunning { get; private set; }
 
@@ -35,9 +34,6 @@ public class GameManager : IGameManager
         IsWhiteTurn = !IsWhiteTurn;
     }
 
-    public static ChessPiece GetPieceFromPromotion()
-    {
-        throw new NotSupportedException();
-    }
+
 }
 

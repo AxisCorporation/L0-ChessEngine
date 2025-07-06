@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Drawing;
-using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
 
-public class ChessBoard : IChessBoard
+public class ChessBoard
 {
-    public IChessPiece[,] Grid { get; set; }
+    public ChessPiece[,] Grid { get; set; }
     public bool IsCheck { get; set; }
     public bool IsCheckMate { get; set; }
 
@@ -47,10 +45,8 @@ public class ChessBoard : IChessBoard
         ResetBoard(); // Initialize the board
     }
 
-    public void MakeMove(IMove moveInterface)
+    public void MakeMove(Move move)
     {
-        Move move = (Move) moveInterface;
-
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
         {
@@ -63,19 +59,15 @@ public class ChessBoard : IChessBoard
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
-
-        ChessPiece pieceToMove = move.InitPiece;
+        ChessPiece pieceToMove = Grid[initX, initY];
         pieceToMove.HasMoved = true;
-
-        ChessPiece PieceToMove = (ChessPiece) Grid[initX, initY];
-        PieceToMove.HasMoved = true;
 
         if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
             CheckSpecialPawnConditions(move, ref pieceToMove);
         }
 
-        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+        Grid[initX, initY].Type = PieceType.Empty;
         Grid[destX, destY] = pieceToMove;
 
         pieceToMove.Coordinates = move.DestPiece.Coordinates;
@@ -119,14 +111,14 @@ public class ChessBoard : IChessBoard
             {
                 if ((int)(Grid[X, Y].Type & oppositeColour) != 0)
                 {
-                    Move move = new((ChessPiece)Grid[X, Y], (ChessPiece)Grid[kingX, kingY]);
+                    Move move = new(Grid[X, Y], Grid[kingX, kingY]);
 
                     if (move.IsValid)
                     {
                         IsCheck = true;
                         return;
                     }
-                    
+
                 }
             }
         }
@@ -135,14 +127,14 @@ public class ChessBoard : IChessBoard
 
     }
 
-    private void CheckSpecialPawnConditions(Move move, ref ChessPiece PieceToMove)
+    private void CheckSpecialPawnConditions(Move move, ref ChessPiece pieceToMove)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
         if (destY == 0 || destY == 7)
         {
-            PieceToMove = GameManager.GetPieceFromPromotion();
+            pieceToMove = GetPieceFromPromotion();
         }
         else if (Math.Abs(destY - initY) == 2)
         {
@@ -151,7 +143,7 @@ public class ChessBoard : IChessBoard
         }
         else if (move.IsEnPassant)
         {
-            int CapturedPawnY = PieceToMove.IsWhite ? destY - 1 : destY + 1;
+            int CapturedPawnY = pieceToMove.IsWhite ? destY - 1 : destY + 1;
             Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(CapturedPawnY, destX));
         }
     }
@@ -231,5 +223,10 @@ public class ChessBoard : IChessBoard
 
         // Return true when the board is successfully set up
         return true;
+    }
+
+    public static ChessPiece GetPieceFromPromotion()
+    {
+        throw new NotSupportedException();
     }
 }

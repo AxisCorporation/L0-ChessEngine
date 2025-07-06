@@ -32,7 +32,7 @@ public partial class GameViewModel : ObservableObject
             {
                 var piece = Board.Grid[col, row]; // or however your grid is structured
 
-                SquareViewModel square = new((ChessPiece)piece)
+                SquareViewModel square = new(piece)
                 {
                     IsLightSquare = (row + col + 1) % 2 == 0
                 };
@@ -57,7 +57,7 @@ public partial class GameViewModel : ObservableObject
             var updatedPiece = Board.Grid[col, row];
             var existingSquare = GridPieces[63 - i];
 
-            existingSquare.Piece = (ChessPiece)updatedPiece;
+            existingSquare.Piece = updatedPiece;
             existingSquare.UpdateImage();
         }
     }

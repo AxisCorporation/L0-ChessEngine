@@ -68,9 +68,9 @@ public class ChessBoard
         }
 
         Grid[initX, initY].Type = PieceType.Empty;
-        Grid[destX, destY] = pieceToMove;
 
-        pieceToMove.Coordinates = move.DestPiece.Coordinates;
+        Grid[destX, destY] = pieceToMove;
+        Grid[destX, destY].Coordinates = new(destX, destY);
 
         // Check Logic
         _isWhiteTurn = !_isWhiteTurn;
@@ -109,7 +109,7 @@ public class ChessBoard
         {
             for (int X = 0; X < 8; X++)
             {
-                if ((int)(Grid[X, Y].Type & oppositeColour) != 0)
+                if ((Grid[X, Y].Type & oppositeColour) != 0)
                 {
                     Move move = new(Grid[X, Y], Grid[kingX, kingY]);
 
@@ -144,7 +144,7 @@ public class ChessBoard
         else if (move.IsEnPassant)
         {
             int CapturedPawnY = pieceToMove.IsWhite ? destY - 1 : destY + 1;
-            Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(CapturedPawnY, destX));
+            Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(destX, CapturedPawnY));
         }
     }
 

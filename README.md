@@ -56,20 +56,36 @@ The Development Cycles have been divided into various Stages.
 ### Stage 2
 **Deadline:** 2 July, 23 59 (PST)
 
-- [ ] Test Cases - Isaac
-- [ ] Interaction for Moves between Frontend and Backend - Daud
+- [ ] ~~Test Cases - Isaac~~
+- [X] Interaction for Moves between Frontend and Backend - Daud
 - [ ] Backend
-  - [ ] Sliding Pieces (Rook, Bishop, Queen) (Excluding Special Moves like Castling) - Kalsoom
-  - [ ] Knight Moves - Zain
-  - [ ] All Pawn Moves - Daud
-  - [ ] Starting and running the Game State - Daud
-  - [ ] Check Logic (Not CheckMate, just Check) - Kalsoom
+  - [X] Sliding Pieces (Rook, Bishop, Queen) (Excluding Special Moves like Castling) - Kalsoom
+  - [X] Knight Moves - Zain
+  - [X] All Pawn Moves - Daud
+  - [X] Starting and running the Game State - Daud
+  - [ ] ~~Check Logic (Not CheckMate, just Check) - Kalsoom~~ (Miscommunication)
 
-- [ ] Frontend
-  - [ ] Point-and-Click Action (To Move Pieces) - Zain
-  - [ ] Addtional Main Menu Options - Isaac
+- [X] Frontend
+  - [X] Point-and-Click Action (To Move Pieces) - Zain
+  - [X] Addtional Main Menu Options - Isaac
 
-- [ ] Artwork: Main Menu Background - Haya
+- [ ] ~~Artwork: Main Menu Background - Haya~~
+
+#### Stage 2.1
+
+- [X] Check Logic - Zain
+- [X] Bug Fixes and Code Refactor - Zain
+- [ ] Test Cases (Move Validation, Check, and Checkmate) - Kalsoom
+
+### Stage 3
+
+- [ ] Checkmate logic - Zain 
+- [ ] Integrate PvP and PvE Mode for Main Menu - Zain
+- [ ] Castling - Isaac
+- [ ] Move Validation for Check - Isaac
+- [ ] Pawn Promotion (Front End and Back End) - Kalsoom
+- [ ] Game timer & Turn timers - Daud
+- [ ] Revamp Check Logic - Daud
 
 ### Stage ω
 - [ ] A Reinforced Trained Engine
@@ -141,7 +157,6 @@ Chess:
 
 - Admin/Owner, CEO: Zain Farhan
 - Head Developer, Head Communications, Cult Leader: Daud Khawaja
-- Head Debt Collector: Haya Afareen
-- Head Zain Hater: Kalsoom Nawaz
-- Token Non LUMS Student: Isaac Ashar
-- Unpaid Intern: Ali Qaisar
+- Head Debt Collector, Head Communications: Haya Afareen
+- Head Zain Hater, Head Communications: Kalsoom Nawaz
+- Token Non LUMS Student, Head Communications that kalsoom thinks less of: Isaac Ashar

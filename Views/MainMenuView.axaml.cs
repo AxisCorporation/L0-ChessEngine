@@ -1,52 +1,51 @@
 using Avalonia.Interactivity;
 using Avalonia.Controls;
+using Avalonia;
+using System;
 
 namespace L_0_Chess_Engine.Views;
 
 public partial class MainMenuView : UserControl
 {
-    public MainWindow? MainWindow { get; set; }
+    private MainWindow? MainWindow { get; }
 
     public MainMenuView(MainWindow? mainWindow)
     {
         InitializeComponent();
         MainWindow = mainWindow;
 
-        PlayToggle.Checked += (_, _) =>
+        PlayToggle.Click += (_, _) =>
         {
             PlayToggle.IsVisible = false; // Play itself gone
-            PlayMainOptions.IsVisible = true;
-            PlayMainOptions.Opacity = 1;
+            
+            GameModeOptions.IsVisible = true;
+
+            BackButton.IsVisible = true;
 
             OtherOptions.IsVisible = false; // hide credits/quit
         };
 
-        LocalButton.Click += (_, _) =>
+        BackButton.Click += (_, _) =>
         {
-            // hide Local/AI choices
-            PlayMainOptions.IsVisible = false;
-            PlayMainOptions.Opacity = 0;
+            PlayToggle.IsVisible = true;
 
-            // show Local time options
-            LocalTimeOptions.IsVisible = true;
-            LocalTimeOptions.Opacity = 1;
+            GameModeOptions.IsVisible = false;
+
+            BackButton.IsVisible = false;
+
+            OtherOptions.IsVisible = true; // hide credits/quit
         };
 
-        AIButton.Click += (_, _) =>
-        {
-            // hide Local/AI choices
-            PlayMainOptions.IsVisible = false;
-            PlayMainOptions.Opacity = 0;
+        QuitButton.Click += (_, _) => Environment.Exit(0);
 
-            // show AI time options
-            AITimeOptions.IsVisible = true;
-            AITimeOptions.Opacity = 1;
-        };
+        LocalGame.Click += PlayGame;
+
+        AiGame.Click += PlayGame;
     }
 
     public void PlayGame(object? sender, RoutedEventArgs e)
     {
-        var chessBoard = new GameView();
-        MainWindow?.SetMainContent(chessBoard);
+        var game = new GameView();
+        MainWindow?.SetMainContent(game);
     }
 }

@@ -1,17 +1,12 @@
 using System;
 using System.Collections.Generic;
-using Avalonia.Controls;
-using L_0_Chess_Engine.Contracts;
 
 namespace L_0_Chess_Engine.Models;
 
-public class Move : IMove
+public class Move 
 {
     public bool IsValid { get => IsValidMove(); }
 
-
-    // Rather than have two separate chesspieces AND coordinate objects here, it might also be better to 
-    // just store the coordinates inside the chesspieces, but this would require refactoring
     public ChessPiece InitPiece { get; set; }
     public ChessPiece DestPiece { get; set; }
 
@@ -29,12 +24,13 @@ public class Move : IMove
         ValidationMap[PieceType.Rook] = IsValidRookMove;
         ValidationMap[PieceType.Bishop] = IsValidBishopMove;
         ValidationMap[PieceType.Queen] = IsValidQueenMove;
+        ValidationMap[PieceType.King] = IsValidKingMove;
 
         // Always false types
         ValidationMap[PieceType.Empty] = (m) => false;
         ValidationMap[PieceType.Black] = (m) => false;
         ValidationMap[PieceType.White] = (m) => false;
-        
+
     }
 
     /// <param name="initial">Starting coordinate</param>
@@ -73,7 +69,7 @@ public class Move : IMove
         {
             return false;
         }
-        
+
         if (move.InitPiece.Coordinates == move.DestPiece.Coordinates)
         {
             return false;
@@ -129,7 +125,7 @@ public class Move : IMove
         }
 
         move.IsEnPassant = IsValidDiagonal && move.DestPiece.IsValidPassantPlacement;
-        
+
         return IsValidForward || IsValidDiagonal;
     }
 
@@ -140,7 +136,7 @@ public class Move : IMove
         {
             return false;
         }
-        
+
         // Not necessary but it makes writing code easier and more readable
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
@@ -154,140 +150,76 @@ public class Move : IMove
         {
             return true;
         }
-        
+
         return false;
     }
 
- private static bool IsValidRookMove(Move move)
- {
-    if (!IsValidGenericMove(move))
+
+    private static bool IsValidRookMove(Move move)
     {
-        return false;
-    }
-
-    (int InitX, int InitY) = move.InitPiece.Coordinates;
-    (int DestX, int DestY) = move.DestPiece.Coordinates;
-
-    bool IsValidHorizontal = InitX == DestX;
-    bool IsValidVertical = InitY == DestY;
-
-    if (IsValidHorizontal)
-    {
-        int start = Math.Min(InitY, DestY) + 1;
-        int end = Math.Max(InitY, DestY);
-        
-        for (int y = start; y < end; y++)
-        {
-            if (ChessBoard.Instance.Grid[InitX, y].Type != PieceType.Empty)
-            {
-                return false; 
-            }
-        }
-    }
-    else if (IsValidVertical)
-    {
-        int start = Math.Min(InitX, DestX) + 1;
-        int end = Math.Max(InitX, DestX);
-        
-        for (int x = start; x < end; x++)
-        {
-            if (ChessBoard.Instance.Grid[x, InitY].Type != PieceType.Empty)
-            {
-                return false; 
-            }
-        }
-    }
-    else
-    {
-        return false;
-    }
-    
-    return true;
-}
-
-private static bool IsValidBishopMove(Move move)
-{
-    if(!IsValidGenericMove(move))
-    {
-        return false;
-    }
-
-    (int InitX, int InitY) = move.InitPiece.Coordinates;
-    (int DestX, int DestY) = move.DestPiece.Coordinates;
-
-    bool IsValidDiagonal = Math.Abs(DestX - InitX) == Math.Abs(DestY - InitY);
-
-    if(!IsValidDiagonal)
-    {
-        return false;
-    }
-
-    int xDirection = DestX > InitX ? 1 : -1;
-    int yDirection = DestY > InitY ? 1 : -1;
-
-    int x = InitX + xDirection;
-    int y = InitY + yDirection;
-
-    while (x != DestX && y != DestY)
-    {
-        if (ChessBoard.Instance.Grid[x, y].Type != PieceType.Empty)
+        if (!IsValidGenericMove(move))
         {
             return false;
         }
 
-        x += xDirection;
-        y += yDirection;
-    }
 
-    return true;
-}   
+        (int InitX, int InitY) = move.InitPiece.Coordinates;
+        (int DestX, int DestY) = move.DestPiece.Coordinates;
 
-private static bool IsValidQueenMove(Move move)
-{
-    if(!IsValidGenericMove(move))
-    {
-        return false;
-    }
+        bool IsValidHorizontal = InitY == DestY;
+        bool IsValidVertical = InitX == DestX;
 
-    (int InitX, int InitY) = move.InitPiece.Coordinates;
-    (int DestX, int DestY) = move.DestPiece.Coordinates;
 
-    bool IsValidHorizontal = InitX == DestX;
-    bool IsValidVertical = InitY == DestY;
-    bool IsValidDiagonal = Math.Abs(DestX - InitX) == Math.Abs(DestY - InitY);
-
-    if(!IsValidHorizontal && !IsValidVertical && !IsValidDiagonal)  
-    {
-        return false;
-    }
-    if (IsValidHorizontal)
-    {
-        int start = Math.Min(InitY, DestY) + 1;
-        int end = Math.Max(InitY, DestY);
-        
-        for (int y = start; y < end; y++)
+        if (IsValidHorizontal)
         {
-            if (ChessBoard.Instance.Grid[InitX, y].Type != PieceType.Empty)
+            int start = Math.Min(InitX, DestX) + 1;
+            int end = Math.Max(InitX, DestX);
+
+            for (int x = start; x < end; x++)
             {
-                return false; 
+                if (ChessBoard.Instance.Grid[x, InitY].Type != PieceType.Empty)
+                {
+                    return false;
+                }
             }
         }
-    }
-    else if (IsValidVertical)
-    {
-        int start = Math.Min(InitX, DestX) + 1;
-        int end = Math.Max(InitX, DestX);
-        
-        for (int x = start; x < end; x++)
+
+        else if (IsValidVertical)
         {
-            if (ChessBoard.Instance.Grid[x, InitY].Type != PieceType.Empty)
+            int start = Math.Min(InitY, DestY) + 1;
+            int end = Math.Max(InitY, DestY);
+
+            for (int y = start; y < end; y++)
             {
-                return false; 
+                if (ChessBoard.Instance.Grid[InitX, y].Type != PieceType.Empty)
+                {
+                    return false;
+                }
             }
         }
+
+        else if (!IsValidHorizontal && !IsValidVertical) return false;
+
+        return true;
     }
-    else if(IsValidDiagonal)
+
+    private static bool IsValidBishopMove(Move move)
     {
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
+
+        (int InitX, int InitY) = move.InitPiece.Coordinates;
+        (int DestX, int DestY) = move.DestPiece.Coordinates;
+
+        bool IsValidDiagonal = Math.Abs(DestX - InitX) == Math.Abs(DestY - InitY);
+
+        if (!IsValidDiagonal)
+        {
+            return false;
+        }
+
         int xDirection = DestX > InitX ? 1 : -1;
         int yDirection = DestY > InitY ? 1 : -1;
 
@@ -304,8 +236,18 @@ private static bool IsValidQueenMove(Move move)
             x += xDirection;
             y += yDirection;
         }
+
+        return true;
     }
-    return true;
-}
+
+    private static bool IsValidQueenMove(Move move)
+    {
+        return IsValidBishopMove(move) || IsValidRookMove(move);
+    }
+
+    private static bool IsValidKingMove(Move move)
+    {
+        return false;
+    }
 
 }

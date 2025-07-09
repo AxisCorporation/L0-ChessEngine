@@ -3,11 +3,23 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using L_0_Chess_Engine.Models;
+using System;
+using System.Timers;
 
 namespace L_0_Chess_Engine.ViewModels;
 
 public partial class GameViewModel : ObservableObject
 {
+    public TimeSpan WhiteTime { get; set; }
+
+    [ObservableProperty]
+    private string _whiteTimeText;
+
+    public TimeSpan BlackTime { get; set; }
+
+    [ObservableProperty]
+    private string _blackTimeText;
+
     [ObservableProperty]
     private string? _turnText;
 
@@ -18,13 +30,43 @@ public partial class GameViewModel : ObservableObject
     private ChessBoard Board { get; set; } = ChessBoard.Instance;
 
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
-    public bool IsWhiteTurn { get; set; }
+
+    private bool _isWhiteTurn;
+    public bool IsWhiteTurn
+    {
+        get => _isWhiteTurn;
+        set
+        {
+            _isWhiteTurn = value;
+            NotifyCanClickSquare();
+            UpdateTurnString();
+        }
+    }
     private SquareViewModel? _selectedSquare;
 
-    public GameViewModel()
+    public GameViewModel(int timeLimit)
     {
         IsWhiteTurn = true;
-        UpdateTurnString();
+
+        WhiteTime = TimeSpan.FromMinutes(timeLimit);
+        BlackTime = TimeSpan.FromMinutes(timeLimit);
+
+        Timer timer = new(100)
+        {
+            Enabled = true
+        }; // ticks every 100 milliseconds
+
+        timer.Elapsed += (_, _) =>
+        {
+            if (IsWhiteTurn)
+            {
+                WhiteTime = WhiteTime.Subtract(TimeSpan.FromMilliseconds(100));
+            }
+            else
+            {
+                BlackTime = BlackTime.Subtract(TimeSpan.FromMilliseconds(100));
+            }
+        };
 
         for (int row = 7; row >= 0; row--)
         {
@@ -71,6 +113,7 @@ public partial class GameViewModel : ObservableObject
         {
             _selectedSquare = squareClicked;
             _selectedSquare.IsSelected = true;
+            NotifyCanClickSquare();
         }
         else
         {
@@ -91,8 +134,6 @@ public partial class GameViewModel : ObservableObject
             _selectedSquare = null;
         }
 
-        NotifyCanClickSquare();
-        UpdateTurnString();
         UpdateCheckString();
     }
 
@@ -118,14 +159,13 @@ public partial class GameViewModel : ObservableObject
         return false;
     }
 
-    // Temp Functions (Hopefully)
     private void UpdateTurnString() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 
     private void UpdateCheckString()
     {
         if (IsWhiteTurn && Board.IsCheck)
         {
-            CheckText = "White is In Check";
+            CheckText = "White is in Check";
         }
         else if (!IsWhiteTurn && Board.IsCheck)
         {
@@ -133,5 +173,8 @@ public partial class GameViewModel : ObservableObject
         }
         else CheckText = "";
     }
-    
+
+    private void StartTimer()
+    {
+    }
 }

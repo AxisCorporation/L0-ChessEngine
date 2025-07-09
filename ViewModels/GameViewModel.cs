@@ -101,7 +101,7 @@ public partial class GameViewModel : ObservableObject
 
     private void OnSquareClick(SquareViewModel squareClicked)
     {
-        Debug.WriteLine($"DEBUG: {squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates} | Is dest en passant: {squareClicked.Piece.IsValidPassantPlacement}");
+        Debug.WriteLine($"DEBUG: {squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
 
         if (_selectedSquare is null)
         {

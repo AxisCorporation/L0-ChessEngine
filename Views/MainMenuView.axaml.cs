@@ -62,7 +62,7 @@ public partial class MainMenuView : UserControl
             "10 min" => 10,
             "15 min" => 15,
 
-            _ => 5 // Default
+            _ => 1 // Default
         };
 
         foreach (var child in TimeOptions.Children)

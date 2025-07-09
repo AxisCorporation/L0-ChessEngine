@@ -16,7 +16,12 @@
     <Border Background="#FF7D29" CornerRadius="20" Padding="30">
         
         <StackPanel x:Name="Board" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="{Binding BlackTimeText}"/>
+            <TextBlock Text="{Binding BlackTimerText}"
+                       FontSize="32"
+                       FontWeight="Bold"
+                       Foreground="#ECF0F1"
+                       HorizontalAlignment="Center"/>
+
             <TextBlock Text="{Binding TurnText}"
                        FontSize="32"
                        FontWeight="Bold"
@@ -56,7 +61,13 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
 
-            <TextBlock Text="{Binding CheckText}"
+            <TextBlock Text="{Binding GameStateText}"
+                       FontSize="32"
+                       FontWeight="Bold"
+                       Foreground="#ECF0F1"
+                       HorizontalAlignment="Center"/>
+
+            <TextBlock Text="{Binding WhiteTimerText}"
                        FontSize="32"
                        FontWeight="Bold"
                        Foreground="#ECF0F1"

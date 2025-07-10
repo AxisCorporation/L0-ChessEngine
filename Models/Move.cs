@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace L_0_Chess_Engine.Models;
 
-public class Move 
+public class Move
 {
     public bool IsValid { get => IsValidMove(); }
 
@@ -247,7 +247,33 @@ public class Move
 
     private static bool IsValidKingMove(Move move)
     {
-        return false;
-    }
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
 
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
+
+        if (move.DestPiece != PieceType.Empty)
+        {
+            if (move.DestPiece.IsWhite == move.InitPiece.IsWhite)
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+        if (destX > initX + 1 || destX < initX - 1)
+        {
+            return false;
+        }
+        else if (destY > initY + 1 || destX < initY - 1)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

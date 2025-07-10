@@ -269,7 +269,7 @@ public class Move
         {
             return false;
         }
-        else if (destY > initY + 1 || destX < initY - 1)
+        else if (destY > initY + 1 || destY < initY - 1)
         {
             return false;
         }

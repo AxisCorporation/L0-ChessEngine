@@ -126,9 +126,8 @@ public partial class GameViewModel : ObservableObject
 
             _selectedSquare.IsSelected = false;
             _selectedSquare = null;
+            UpdateGameStateText();
         }
-
-        UpdateGameStateText();
     }
 
     private void NotifyCanClickSquares()

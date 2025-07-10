@@ -11,6 +11,7 @@ public class Move
     public ChessPiece DestPiece { get; set; }
 
     public bool IsEnPassant { get; set; }
+    public bool IsCastling { get; set; }
 
     /// <summary>
     /// Takes in an uncolored piecetype, and returns a function that takes in a Move object,
@@ -251,7 +252,7 @@ public class Move
         {
             return false;
         }
-
+        
         (int InitX, int InitY) = move.InitPiece.Coordinates;
         (int DestX, int DestY) = move.DestPiece.Coordinates;
 
@@ -261,6 +262,13 @@ public class Move
         //King moves 1 square in any direction
         if (destx <= 1 && desty <= 1)
         {
+            return true;
+        }
+
+        // Castling conditions: king moves 2 squares horizontally and hasn't moved
+        if (desty == 0 && destx == 2 && !move.InitPiece.HasMoved)
+        {
+            move.IsCastling = true;
             return true;
         }
 

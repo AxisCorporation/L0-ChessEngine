@@ -247,7 +247,26 @@ public class Move
 
     private static bool IsValidKingMove(Move move)
     {
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
+
+        (int InitX, int InitY) = move.InitPiece.Coordinates;
+        (int DestX, int DestY) = move.DestPiece.Coordinates;
+
+        int destx = Math.Abs(DestX - InitX);
+        int desty = Math.Abs(DestY - InitY);
+
+        //King moves 1 square in any direction
+        if (destx <= 1 && desty <= 1)
+        {
+            return true;
+        }
+
+        //Not a valid king move
         return false;
+
     }
 
 }

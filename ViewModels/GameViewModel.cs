@@ -178,6 +178,10 @@ public partial class GameViewModel : ObservableObject
         {
             GameStateText = "Time's up for Black - White wins!";
         }
+        else
+        {
+            GameStateText = "";
+        }
     }
 
     private async Task UpdateTurnTimersAsync()

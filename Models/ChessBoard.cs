@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace L_0_Chess_Engine.Models;
 
 public class ChessBoard
 {
     public ChessPiece[,] Grid { get; set; }
-    public bool IsCheck { get; set; }
+    public bool IsCheck { get => CheckScan(); }
     public bool IsCheckMate { get; set; }
 
     //Constant FEN for the starting position
@@ -14,18 +16,7 @@ public class ChessBoard
     // Invoked every time grid updates
     public event Action? GridUpdated;
 
-    // Temp Variable
-    private bool _isWhiteTurn;
-
-    private PieceType CheckColour
-    {
-        get
-        {
-            if (_isWhiteTurn) return PieceType.White;
-
-            return PieceType.Black;
-        }
-    }
+    public bool IsWhiteTurn { get; set; }
 
 
     private static ChessBoard? _instance;
@@ -36,10 +27,9 @@ public class ChessBoard
 
     private ChessBoard() // Constructor to initialize
     {
-        _isWhiteTurn = true;
+        IsWhiteTurn = true;
 
         Grid = new ChessPiece[8, 8];
-        IsCheck = false;
         IsCheckMate = false;
 
         ResetBoard(); // Initialize the board
@@ -72,9 +62,7 @@ public class ChessBoard
         Grid[destX, destY] = pieceToMove;
         pieceToMove.Coordinates = new(destX, destY);
 
-        // Check Logic
-        _isWhiteTurn = !_isWhiteTurn;
-        CheckScan(CheckColour);
+        IsWhiteTurn = !IsWhiteTurn;
 
         GridUpdated?.Invoke();
     }
@@ -85,44 +73,46 @@ public class ChessBoard
     }
 
 
-    private void CheckScan(PieceType colour)
+    // After making a move, it checks if the opposite team is in check
+    private bool CheckScan()
     {
-        PieceType oppositeColour = (PieceType)((int)colour ^ 0b11_000);
+        PieceType oppositeColour;
 
-        int kingX = 0, kingY = 0;
-
-        for (int y = 0; y < 8; y++)
+        if (IsWhiteTurn)
         {
-            for (int x = 0; x < 8; x++)
-            {
-                if (Grid[x, y].Type == (PieceType.King | colour))
-                {
-                    (kingX, kingY) = (x, y);
-                    break;
-                }
-            }
+            oppositeColour = PieceType.Black;
+        }
+        else
+        {
+            oppositeColour = PieceType.White;
         }
 
-        for (int Y = 0; Y < 8; Y++)
-        {
-            for (int X = 0; X < 8; X++)
-            {
-                if ((Grid[X, Y].Type & oppositeColour) != 0)
-                {
-                    Move move = new(Grid[X, Y], Grid[kingX, kingY]);
 
-                    if (move.IsValid)
+        for (int x = 0; x < 8; x++)
+        {
+            for (int y = 0; y < 8; y++)
+            {
+                if (Grid[x, y].Type == PieceType.Empty)
+                {
+                    continue;
+                }
+
+                if (Grid[x, y].Color == oppositeColour)
+                {
+                    List<Move> moves = [..from m in Move.GetPossibleMoves(Grid[x, y])
+                                       where m.TargetsKing
+                                       select m]; // Gets all moves for piece where it can threaten the king
+
+                    if (moves.Count != 0)
                     {
-                        IsCheck = true;
-                        return;
+                        return true;
                     }
-
                 }
+
             }
         }
 
-        IsCheck = false;
-
+        return false;
     }
 
     private void CheckSpecialPawnConditions(Move move, ref ChessPiece pieceToMove)
@@ -144,11 +134,6 @@ public class ChessBoard
             int CapturedPawnY = pieceToMove.IsWhite ? destY - 1 : destY + 1;
             Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(destX, CapturedPawnY));
         }
-    }
-
-    public void PrintBoardToTerminal()
-    {
-
     }
 
     public bool ReadFEN(string fen)

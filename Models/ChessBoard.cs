@@ -6,18 +6,18 @@ namespace L_0_Chess_Engine.Models;
 
 public class ChessBoard
 {
-    public ChessPiece[,] Grid { get; set; }
-    public bool IsCheck { get => CheckScan(); }
-    public bool IsCheckMate { get; set; }
-
     //Constant FEN for the starting position
     private const string DefaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+    
+    public ChessPiece[,] Grid { get; set; }
+
+    public bool IsCheck { get => CheckScan(); }
+    public bool IsCheckMate { get; set; }
 
     // Invoked every time grid updates
     public event Action? GridUpdated;
 
     public bool IsWhiteTurn { get; set; }
-
 
     private static ChessBoard? _instance;
     public static ChessBoard Instance
@@ -76,17 +76,7 @@ public class ChessBoard
     // After making a move, it checks if the opposite team is in check
     private bool CheckScan()
     {
-        PieceType oppositeColour;
-
-        if (IsWhiteTurn)
-        {
-            oppositeColour = PieceType.Black;
-        }
-        else
-        {
-            oppositeColour = PieceType.White;
-        }
-
+        PieceType oppositeColour = IsWhiteTurn ? PieceType.Black : PieceType.White;
 
         for (int x = 0; x < 8; x++)
         {
@@ -138,7 +128,6 @@ public class ChessBoard
 
     public bool ReadFEN(string fen)
     {
-
         // Split the layout into rows (8 rows for an 8x8 board)
         var rows = fen.Split('/');
         if (rows.Length != 8)

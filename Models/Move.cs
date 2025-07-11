@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace L_0_Chess_Engine.Models;
 
-public class Move 
+public class Move
 {
     public bool IsValid { get => IsValidMove(); }
 
@@ -25,12 +25,6 @@ public class Move
         ValidationMap[PieceType.Bishop] = IsValidBishopMove;
         ValidationMap[PieceType.Queen] = IsValidQueenMove;
         ValidationMap[PieceType.King] = IsValidKingMove;
-
-        // Always false types
-        ValidationMap[PieceType.Empty] = (m) => false;
-        ValidationMap[PieceType.Black] = (m) => false;
-        ValidationMap[PieceType.White] = (m) => false;
-
     }
 
     /// <param name="initial">Starting coordinate</param>
@@ -65,17 +59,19 @@ public class Move
     private static bool IsValidGenericMove(Move move)
     {
         // False if the player just sets the piece back down in order to avoid turn skipping
-        if (move.InitPiece.Type == PieceType.Empty)
-        {
-            return false;
-        }
-
         if (move.InitPiece.Coordinates == move.DestPiece.Coordinates)
         {
             return false;
         }
 
+        // Cannot capture same team
         if (move.DestPiece != PieceType.Empty && (move.DestPiece.IsWhite == move.InitPiece.IsWhite))
+        {
+            return false;
+        }
+
+        // Cannot capture king
+        if (move.DestPiece.EqualsUncolored(PieceType.King))
         {
             return false;
         }
@@ -247,7 +243,33 @@ public class Move
 
     private static bool IsValidKingMove(Move move)
     {
-        return false;
-    }
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
 
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
+
+        if (move.DestPiece != PieceType.Empty)
+        {
+            if (move.DestPiece.IsWhite == move.InitPiece.IsWhite)
+            {
+                return false;
+            }
+
+            return false;
+        }
+
+        if (destX > initX + 1 || destX < initX - 1)
+        {
+            return false;
+        }
+        else if (destY > initY + 1 || destY < initY - 1)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }

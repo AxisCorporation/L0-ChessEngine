@@ -62,7 +62,6 @@ public class ChessBoard
         ChessPiece pieceToMove = Grid[initX, initY];
 
         pieceToMove.HasMoved = true;
-        pieceToMove.Coordinates = new(destX, destY);
 
         if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
@@ -71,6 +70,7 @@ public class ChessBoard
 
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
+        pieceToMove.Coordinates = new(destX, destY);
 
         // Check Logic
         _isWhiteTurn = !_isWhiteTurn;

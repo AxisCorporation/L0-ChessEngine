@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Reflection.Metadata;
@@ -206,7 +206,7 @@ public class ChessBoard
         rook.HasMoved = true;
 
         // Update turn and notify
-        _isWhiteTurn = !_isWhiteTurn;
+        IsWhiteTurn = !IsWhiteTurn;
         GridUpdated?.Invoke();
     }
 

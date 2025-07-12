@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -49,7 +50,7 @@ public class ChessBoard
     {
         if (move.IsCastling)
         {
-            CastlingHandling(move);
+            HandleCastling(move);
             return; //done before king moves to get both coordinates
         }
 
@@ -151,7 +152,7 @@ public class ChessBoard
             Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(destX, CapturedPawnY));
         }
     }
-    public void CastlingHandling(Move move)
+    public void HandleCastling(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
@@ -162,12 +163,12 @@ public class ChessBoard
 
         bool isKingSide;
         // Determine if kingside or not
-        if (destX>initX)
+        if (destX>  initX)
         { 
-            isKingSide=true;
+            isKingSide = true;
             Console.WriteLine("kingside ture");
         }
-        else if (destX<initX)
+        else if (destX < initX)
         {
             isKingSide = false;
             Console.WriteLine("kingside false");
@@ -219,6 +220,7 @@ public class ChessBoard
         king.Coordinates = new Coordinate(destX, destY);
         Grid[destX, destY] = king;
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+
         king.HasMoved = true;
         rook.HasMoved = true;
 

@@ -256,17 +256,17 @@ public class Move
         (int InitX, int InitY) = move.InitPiece.Coordinates;
         (int DestX, int DestY) = move.DestPiece.Coordinates;
 
-        int destx = Math.Abs(DestX - InitX);
-        int desty = Math.Abs(DestY - InitY);
+        int diffX = Math.Abs(DestX - InitX);
+        int diffY = Math.Abs(DestY - InitY);
 
         //King moves 1 square in any direction
-        if (destx <= 1 && desty <= 1)
+        if (diffX <= 1 && diffY <= 1)
         {
             return true;
         }
 
         // Castling conditions: king moves 2 squares horizontally and hasn't moved
-        if (desty == 0 && destx == 2 && !move.InitPiece.HasMoved)
+        if (diffY == 0 && diffX == 2 && !move.InitPiece.HasMoved)
         {
             move.IsCastling = true;
             return true;

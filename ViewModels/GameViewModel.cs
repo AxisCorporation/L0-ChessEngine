@@ -3,28 +3,60 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using L_0_Chess_Engine.Models;
+using System;
+using System.Timers;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace L_0_Chess_Engine.ViewModels;
 
 public partial class GameViewModel : ObservableObject
 {
+    public bool GameRunning { get; set; }
+    public TimeSpan WhiteTimer { get; set; }
+
+    [ObservableProperty]
+    private string _whiteTimerText;
+
+    public TimeSpan BlackTimer { get; set; }
+
+    [ObservableProperty]
+    private string _blackTimerText;
+
     [ObservableProperty]
     private string? _turnText;
 
+    private readonly string _timeFormat = @"m\:ss";
+
     // This is a Temp Variable
     [ObservableProperty]
-    private string? _checkText = "";
+    private string? _gameStateText = "";
 
     private ChessBoard Board { get; set; } = ChessBoard.Instance;
 
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
-    public bool IsWhiteTurn { get; set; }
+
+    private bool _isWhiteTurn;
+    public bool IsWhiteTurn
+    {
+        get => _isWhiteTurn;
+        set
+        {
+            _isWhiteTurn = value;
+            NotifyCanClickSquares();
+            UpdateTurnText();
+        }
+    }
+
     private SquareViewModel? _selectedSquare;
 
-    public GameViewModel()
+    public GameViewModel(int timeLimit)
     {
-        IsWhiteTurn = true;
-        UpdateTurnString();
+        WhiteTimer = TimeSpan.FromMinutes(timeLimit);
+        BlackTimer = TimeSpan.FromMinutes(timeLimit);
+
+        WhiteTimerText = WhiteTimer.ToString(_timeFormat); // Formats the time in 5:00
+        BlackTimerText = BlackTimer.ToString(_timeFormat);
 
         for (int row = 7; row >= 0; row--)
         {
@@ -44,6 +76,10 @@ public partial class GameViewModel : ObservableObject
         }
 
         Board.GridUpdated += UpdateGrid;
+        GameRunning = true;
+        IsWhiteTurn = true;
+    
+        _ = UpdateTurnTimersAsync();
     }
 
 
@@ -71,6 +107,7 @@ public partial class GameViewModel : ObservableObject
         {
             _selectedSquare = squareClicked;
             _selectedSquare.IsSelected = true;
+            NotifyCanClickSquares();
         }
         else
         {
@@ -89,14 +126,11 @@ public partial class GameViewModel : ObservableObject
 
             _selectedSquare.IsSelected = false;
             _selectedSquare = null;
+            UpdateGameStateText();
         }
-
-        NotifyCanClickSquare();
-        UpdateTurnString();
-        UpdateCheckString();
     }
 
-    private void NotifyCanClickSquare()
+    private void NotifyCanClickSquares()
     {
         foreach (var piece in GridPieces)
         {
@@ -106,6 +140,11 @@ public partial class GameViewModel : ObservableObject
 
     private bool CanClickSquare(SquareViewModel squareClicked)
     {
+        if (!GameRunning)
+        {
+            return false;
+        }
+
         if (_selectedSquare is null && squareClicked.Piece != PieceType.Empty && squareClicked.Piece.IsWhite == IsWhiteTurn)
         {
             return true;
@@ -118,20 +157,55 @@ public partial class GameViewModel : ObservableObject
         return false;
     }
 
-    // Temp Functions (Hopefully)
-    private void UpdateTurnString() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
+    private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 
-    private void UpdateCheckString()
+    private void UpdateGameStateText()
     {
-        if (IsWhiteTurn && Board.IsCheck)
+        if (Board.IsCheck)
         {
-            CheckText = "White is In Check";
+            GameStateText = IsWhiteTurn ? "White is in Check!" : "Black is in Check!";
         }
-        else if (!IsWhiteTurn && Board.IsCheck)
+        else if (Board.IsCheckMate)
         {
-            CheckText = "Black is in Check";
+            GameStateText = IsWhiteTurn ? "Checkmate for Black!" : "Checkmate for White!";
         }
-        else CheckText = "";
+        else if (WhiteTimer <= TimeSpan.Zero)
+        {
+            GameStateText = "Time's up for White - Black wins!";
+        }
+        else if (BlackTimer <= TimeSpan.Zero)
+        {
+            GameStateText = "Time's up for Black - White wins!";
+        }
+        else
+        {
+            GameStateText = "";
+        }
     }
-    
+
+    private async Task UpdateTurnTimersAsync()
+    {
+        while (GameRunning)
+        {
+            await Task.Delay(100);
+            if (IsWhiteTurn)
+            {
+                WhiteTimer -= TimeSpan.FromMilliseconds(100);
+                WhiteTimerText = WhiteTimer.ToString(_timeFormat);
+            }
+            else
+            {
+                BlackTimer -= TimeSpan.FromMilliseconds(100);
+                BlackTimerText = BlackTimer.ToString(_timeFormat);
+            }
+
+            if (WhiteTimer <= TimeSpan.Zero || BlackTimer <= TimeSpan.Zero)
+            {
+                GameRunning = false;
+
+                NotifyCanClickSquares();
+                UpdateGameStateText();
+            }
+        }
+    }
 }

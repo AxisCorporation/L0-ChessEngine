@@ -11,6 +11,7 @@ public class Move
     public ChessPiece DestPiece { get; set; }
 
     public bool IsEnPassant { get; set; }
+    public bool IsCastling { get; set; }
 
     /// <summary>
     /// Takes in an uncolored piecetype, and returns a function that takes in a Move object,
@@ -247,29 +248,27 @@ public class Move
         {
             return false;
         }
+        
+        (int InitX, int InitY) = move.InitPiece.Coordinates;
+        (int DestX, int DestY) = move.DestPiece.Coordinates;
 
-        (int initX, int initY) = move.InitPiece.Coordinates;
-        (int destX, int destY) = move.DestPiece.Coordinates;
+        int diffX = Math.Abs(DestX - InitX);
+        int diffY = Math.Abs(DestY - InitY);
 
-        if (move.DestPiece != PieceType.Empty)
+        //King moves 1 square in any direction
+        if (diffX <= 1 && diffY <= 1)
         {
-            if (move.DestPiece.IsWhite == move.InitPiece.IsWhite)
-            {
-                return false;
-            }
-
-            return false;
+            return true;
         }
 
-        if (destX > initX + 1 || destX < initX - 1)
+        // Castling conditions: king moves 2 squares horizontally and hasn't moved
+        if (diffY == 0 && diffX == 2 && !move.InitPiece.HasMoved)
         {
-            return false;
-        }
-        else if (destY > initY + 1 || destY < initY - 1)
-        {
-            return false;
+            move.IsCastling = true;
+            return true;
         }
 
-        return true;
+        //Not a valid king move
+        return false;
     }
 }

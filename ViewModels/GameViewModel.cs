@@ -7,6 +7,8 @@ using System;
 using System.Timers;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using L_0_Chess_Engine.Views;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -119,6 +121,20 @@ public partial class GameViewModel : ObservableObject
                 _selectedSquare = null;
                 return;
             }
+            
+            if (IsPawnPromotionMove(_selectedSquare.Piece, squareClicked.Piece))
+            {
+                ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () =>
+                {
+                    // This will be called after promotion piece is selected
+                    Board.MakeMove(move);
+                    IsWhiteTurn = !IsWhiteTurn;
+                    _selectedSquare.IsSelected = false;
+                    _selectedSquare = null;
+                    UpdateGameStateText();
+                });
+                return;
+            }
 
             Board.MakeMove(move);
 
@@ -128,6 +144,55 @@ public partial class GameViewModel : ObservableObject
             _selectedSquare = null;
             UpdateGameStateText();
         }
+    }
+
+    private bool IsPawnPromotionMove(ChessPiece initPiece, ChessPiece destPiece)
+    {
+        // Check if the piece is a pawn
+        if (!initPiece.EqualsUncolored(PieceType.Pawn))
+        {
+            return false;
+        }
+            
+        int destY = destPiece.Coordinates.Y;
+        return (initPiece.IsWhite && destY == 7) || (!initPiece.IsWhite && destY == 0);
+    }
+
+    private void ShowPawnPromotionDialog(bool isWhite, Action onPieceSelected)
+    {
+        var promotionView = new PawnPromotionView(isWhite);
+        var viewModel = (PawnPromotionViewModel)promotionView.DataContext!;
+        
+        viewModel.PieceSelected += (pieceType) =>
+        {
+            ClosePromotionDialog();
+            onPieceSelected?.Invoke();
+        };
+        
+        ShowPromotionDialog(promotionView);
+    }
+    private void ShowPromotionDialog(PawnPromotionView view)
+    {
+        var window = new Window
+        {
+            Content = view,
+            Width = 300,
+            Height = 150,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            SystemDecorations = SystemDecorations.None,
+            CanResize = false,
+            ShowInTaskbar = false,
+            Title = "Pawn Promotion"
+        };
+        
+        _promotionWindow = window;
+        window.Show();
+    }
+    private Window? _promotionWindow;
+    private void ClosePromotionDialog()
+    {
+        _promotionWindow?.Close();
+        _promotionWindow = null;
     }
 
     private void NotifyCanClickSquares()

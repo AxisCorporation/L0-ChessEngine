@@ -37,12 +37,21 @@ public class ChessBoard
         ResetBoard(); // Initialize the board
     }
 
-    public void MakeMove(Move move)
+    public bool MakeMove(Move move)
     {
-        if (move.IsCastling)
+        if (!move.IsValid || WouldCauseCheck(move))
+            return false;
+
+        if (move.IsCastling)//done before to get both coordinates
         {
-            HandleCastling(move);
-            return; //done before king moves to get both coordinates
+            bool castled = HandleCastling(move);
+            if (castled)
+            {
+                IsWhiteTurn = !IsWhiteTurn;
+                GridUpdated?.Invoke();
+                return true;
+            }
+            return false;
         }
 
         // Reset all valid En Passant moves
@@ -73,6 +82,7 @@ public class ChessBoard
         IsWhiteTurn = !IsWhiteTurn;
 
         GridUpdated?.Invoke();
+        return true;
     }
 
     public void ResetBoard()
@@ -133,14 +143,14 @@ public class ChessBoard
             Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(destX, CapturedPawnY));
         }
     }
-    public void HandleCastling(Move move)
+    public bool HandleCastling(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
         ChessPiece king = move.InitPiece;
 
-        if (!move.IsCastling) return;
+        if (!move.IsCastling) return false;
 
         bool isKingSide;
         // Determine if kingside or not
@@ -157,7 +167,7 @@ public class ChessBoard
         else
         {
             Console.WriteLine("shouldn't happen");
-            return;
+            return false;
         }
 
         // Rook's start and new positions
@@ -170,13 +180,13 @@ public class ChessBoard
         if (rook.Type == PieceType.Empty || !rook.EqualsUncolored(PieceType.Rook) || rook.IsWhite != king.IsWhite)
         {
             Console.WriteLine("v1 fail rook");
-            return;
+            return false;
         }
 
         if (rook.HasMoved)
         {
             Console.WriteLine("v2 fail rook");
-            return;
+            return false;
         }
 
         // Check if pieces between king and rook
@@ -188,7 +198,7 @@ public class ChessBoard
             if (Grid[x, initY].Type != PieceType.Empty)
             {
                 Console.WriteLine("pieces between");
-                return;
+                return false;
             }
         }
 
@@ -205,9 +215,31 @@ public class ChessBoard
         king.HasMoved = true;
         rook.HasMoved = true;
 
-        // Update turn and notify
-        IsWhiteTurn = !IsWhiteTurn;
-        GridUpdated?.Invoke();
+        return true;
+    }
+
+    private bool WouldCauseCheck(Move move)
+    {
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
+
+        ChessPiece originalInit = Grid[initX, initY];
+        ChessPiece originalDest = Grid[destX, destY];
+
+        // Apply simulated move
+        Grid[destX, destY] = originalInit;
+        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+        originalInit.Coordinates = new(destX, destY);
+
+        bool result = CheckScan(); // Will return true if king is in check
+
+        // Undo move
+        Grid[initX, initY] = originalInit;
+        Grid[destX, destY] = originalDest;
+        originalInit.Coordinates = new(initX, initY);
+        originalDest.Coordinates = new(destX, destY); // if needed
+
+        return result;
     }
 
     public bool ReadFEN(string fen)

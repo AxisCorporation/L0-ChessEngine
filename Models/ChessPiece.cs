@@ -38,7 +38,7 @@ public class ChessPiece
         HasMoved = false;
         IsValidPassantPlacement = false;
     }
-
+    
     public ChessPiece(PieceType type, Coordinate coordinates)
     {
         Type = type;

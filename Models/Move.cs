@@ -25,6 +25,11 @@ public class Move
         ValidationMap[PieceType.Bishop] = IsValidBishopMove;
         ValidationMap[PieceType.Queen] = IsValidQueenMove;
         ValidationMap[PieceType.King] = IsValidKingMove;
+
+        // Always false types
+        ValidationMap[PieceType.Empty] = (m) => false;
+        ValidationMap[PieceType.Black] = (m) => false;
+        ValidationMap[PieceType.White] = (m) => false;
     }
 
     /// <param name="initial">Starting coordinate</param>

@@ -7,10 +7,14 @@ namespace L_0_Chess_Engine.Views;
 
 public partial class GameView : UserControl
 {
-    public GameView(int timeSetting)
+    public GameView(int timeSetting, bool AiGame = false)
     {
         InitializeComponent();
 
-        DataContext = new GameViewModel(timeSetting);
+        if (AiGame)
+        {
+            DataContext = new GameViewModel(timeSetting, true);
+        }
+        else DataContext = new GameViewModel(timeSetting);
     }
 }

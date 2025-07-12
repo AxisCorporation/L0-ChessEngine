@@ -14,6 +14,7 @@ public class ChessBoard
     public ChessPiece[,] Grid { get; set; }
 
     public bool IsCheck { get => CheckScan(); }
+
     public bool IsCheckMate { get; set; }
 
     // Invoked every time grid updates
@@ -198,6 +199,46 @@ public class ChessBoard
             if (Grid[x, initY].Type != PieceType.Empty)
             {
                 Console.WriteLine("pieces between");
+                return false;
+            }
+        }
+
+        // King cannot castle while in check
+        if (CheckScan())
+        {
+            Console.WriteLine("King in check.");
+            return false;
+        }
+
+        //check to see if check enroute or lands on check
+        // Save original piece references
+        int[] kingPath;
+        if (isKingSide)
+            kingPath = new[] { initX + 1, initX + 2 };
+        else
+            kingPath = new[] { initX - 1, initX - 2 };
+
+        foreach (int x in kingPath)
+        {
+            var originalKing = Grid[initX, initY];
+            var originalDest = Grid[x, initY];
+
+            // Temporarily move the king to the square x
+            Grid[x, initY] = originalKing;
+            Grid[initX, initY] = new ChessPiece(PieceType.Empty, new Coordinate(initX, initY));
+            originalKing.Coordinates = new Coordinate(x, initY);
+
+            // Check if the king would be in check at this spot
+            bool inCheck = CheckScan();
+
+            // Undo the move
+            Grid[initX, initY] = originalKing;
+            Grid[x, initY] = originalDest;
+            originalKing.Coordinates = new Coordinate(initX, initY);
+
+            if (inCheck)
+            {
+                Console.WriteLine("Can't castle through or into check.");
                 return false;
             }
         }

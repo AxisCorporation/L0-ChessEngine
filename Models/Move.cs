@@ -285,8 +285,6 @@ public class Move
     public static List<Move> GetPossibleMoves(ChessPiece piece)
     {
         PieceType color = piece.Color;
-        PieceType oppositeColor = piece.IsWhite ? PieceType.Black : PieceType.White;
-
         PieceType type = piece.Type ^ color;
 
         (int auraX, int auraY) = AuraMap[type];
@@ -311,8 +309,6 @@ public class Move
                 }
 
                 Move move = new(piece, ChessBoard.Instance.Grid[totalX, totalY]);
-
-                Console.WriteLine($"MOVE CREATED: {move.InitPiece.Type}: {move.InitPiece.Coordinates} | {move.DestPiece.Coordinates}");
 
                 if (move.IsValid)
                 {

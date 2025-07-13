@@ -36,6 +36,7 @@ public class Move
         ValidationMap[PieceType.Queen] = IsValidQueenMove;
         ValidationMap[PieceType.King] = IsValidKingMove;
 
+
         AuraMap[PieceType.Pawn] = new(1, 2);
         AuraMap[PieceType.Knight] = new(2, 2);
         AuraMap[PieceType.Rook] = new(8, 8);

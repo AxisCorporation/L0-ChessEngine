@@ -49,13 +49,32 @@ public partial class MainMenuView : UserControl
 
     public void PlayGame(object? sender, RoutedEventArgs e)
     {
-        var game = new GameView(TimeSelected);
+        var button = sender as Button;
+        var mode = button?.Tag as string;
+
+        GameView game;
+
+        switch (mode)
+        {
+            case "Local":
+                game = new GameView(TimeSelected);
+                break;
+
+            case "Ai":
+                game = new GameView(TimeSelected, true);
+                break;
+
+            default:
+                game = new GameView(TimeSelected);
+                break;
+        }
+
         MainWindow?.SetMainContent(game);
     }
 
     private void TimeOptionSelected(object? sender, RoutedEventArgs e)
     {
-        ToggleButton button = (ToggleButton)sender!;
+        ToggleButton button = (ToggleButton) sender!;
 
         TimeSelected = button.Content switch
         {

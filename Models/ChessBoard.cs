@@ -40,9 +40,6 @@ public class ChessBoard
 
     public bool MakeMove(Move move)
     {
-        if (!move.IsValid || WouldCauseCheck(move))
-            return false;
-
         if (move.IsCastling)//done before to get both coordinates
         {
             bool castled = HandleCastling(move);
@@ -144,6 +141,7 @@ public class ChessBoard
             Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(destX, CapturedPawnY));
         }
     }
+    
     public bool HandleCastling(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
@@ -155,8 +153,8 @@ public class ChessBoard
 
         bool isKingSide;
         // Determine if kingside or not
-        if (destX>  initX)
-        { 
+        if (destX > initX)
+        {
             isKingSide = true;
             Console.WriteLine("kingside ture");
         }
@@ -259,7 +257,7 @@ public class ChessBoard
         return true;
     }
 
-    private bool WouldCauseCheck(Move move)
+    public bool WouldCauseCheck(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;

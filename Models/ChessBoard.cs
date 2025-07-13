@@ -121,6 +121,7 @@ public class ChessBoard
         if (destY == 0 || destY == 7)
         {
             pieceToMove = GetPieceFromPromotion();
+            pieceToMove.Coordinates = new(destX, destY);
         }
         else if (Math.Abs(destY - initY) == 2)
         {
@@ -281,8 +282,17 @@ public class ChessBoard
         return true;
     }
 
+    private static PieceType? _promotedPieceType;
+    public static void SetPromotedPieceType(PieceType pieceType)
+    {
+        _promotedPieceType = pieceType;
+    }
     public static ChessPiece GetPieceFromPromotion()
     {
-        throw new NotSupportedException();
+        if (_promotedPieceType is null)
+        {
+            throw new InvalidOperationException("Promoted piece type is not set.");
+        }
+        return new ChessPiece(_promotedPieceType.Value, new(0, 0));
     }
 }

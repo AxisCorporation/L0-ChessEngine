@@ -25,7 +25,8 @@ public class ChessPiece
     public Coordinate Coordinates { get; set; }
     public bool HasMoved { get; set; }
     public bool IsValidPassantPlacement { get; set; }
-    public bool IsWhite { get => (Type & PieceType.White) == PieceType.White; }
+    public bool IsWhite { get => (Type & PieceType.White) == PieceType.White; } // remove this later and just use the Color property
+    public PieceType Color { get => GetColor(); }
 
     // Constructors
 
@@ -33,11 +34,11 @@ public class ChessPiece
     {
         Type = PieceType.White | PieceType.Pawn;
         Coordinates = new(0, 0);
-        
+
         HasMoved = false;
         IsValidPassantPlacement = false;
     }
-
+    
     public ChessPiece(PieceType type, Coordinate coordinates)
     {
         Type = type;
@@ -47,6 +48,18 @@ public class ChessPiece
         IsValidPassantPlacement = false;
     }
 
+    private PieceType GetColor()
+    {
+        PieceType mask = PieceType.White | PieceType.Black;
+        if ((Type & mask) == PieceType.White)
+        {
+            return PieceType.White;
+        }
+        else
+        {
+            return PieceType.Black;
+        }
+    }
     public bool EqualsUncolored(PieceType type) => IsWhite ? (Type ^ PieceType.White) == type : (Type ^ PieceType.Black) == type; 
 
     public static bool operator ==(ChessPiece A, PieceType B) => A.Type == B;

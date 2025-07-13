@@ -119,7 +119,7 @@ public partial class GameViewModel : ObservableObject
         {
             Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
 
-            if (!move.IsValid)
+            if (!move.IsValid || move.TargetsKing)
             {
                 _selectedSquare.IsSelected = false;
                 _selectedSquare = null;
@@ -138,6 +138,7 @@ public partial class GameViewModel : ObservableObject
 
             _selectedSquare.IsSelected = false;
             _selectedSquare = null;
+
             UpdateGameStateText();
         }
     }

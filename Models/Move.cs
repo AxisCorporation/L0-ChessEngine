@@ -10,13 +10,23 @@ public class Move
     public ChessPiece InitPiece { get; set; }
     public ChessPiece DestPiece { get; set; }
 
+    public bool TargetsKing { get => DestPiece.EqualsUncolored(PieceType.King); }
+
     public bool IsEnPassant { get; set; }
+    public bool IsCastling { get; set; }
 
     /// <summary>
     /// Takes in an uncolored piecetype, and returns a function that takes in a Move object,
     /// and returns true if the move is valid
     /// </summary>
     private static Dictionary<PieceType, Func<Move, bool>> ValidationMap = [];
+
+    /// <summary>
+    /// Takes in an uncolored piecetype, and returns a coordinate object that 
+    /// represents the absolute units that the piece is allowed to move
+    /// </summary>
+    private static Dictionary<PieceType, Coordinate> AuraMap = [];
+
     static Move()
     {
         ValidationMap[PieceType.Pawn] = IsValidPawnMove;
@@ -26,10 +36,13 @@ public class Move
         ValidationMap[PieceType.Queen] = IsValidQueenMove;
         ValidationMap[PieceType.King] = IsValidKingMove;
 
-        // Always false types
-        ValidationMap[PieceType.Empty] = (m) => false;
-        ValidationMap[PieceType.Black] = (m) => false;
-        ValidationMap[PieceType.White] = (m) => false;
+
+        AuraMap[PieceType.Pawn] = new(1, 2);
+        AuraMap[PieceType.Knight] = new(2, 2);
+        AuraMap[PieceType.Rook] = new(8, 8);
+        AuraMap[PieceType.Bishop] = new(8, 8);
+        AuraMap[PieceType.Queen] = new(8, 8);
+        AuraMap[PieceType.King] = new(1, 1);
     }
 
     /// <param name="initial">Starting coordinate</param>
@@ -71,12 +84,6 @@ public class Move
 
         // Cannot capture same team
         if (move.DestPiece != PieceType.Empty && (move.DestPiece.IsWhite == move.InitPiece.IsWhite))
-        {
-            return false;
-        }
-
-        // Cannot capture king
-        if (move.DestPiece.EqualsUncolored(PieceType.King))
         {
             return false;
         }
@@ -145,7 +152,6 @@ public class Move
         if (Math.Abs(destX - initX) == 2 && Math.Abs(destY - initY) == 1)
         {
             return true;
-
         }
         if (Math.Abs(destX - initX) == 1 && Math.Abs(destY - initY) == 2)
         {
@@ -184,7 +190,6 @@ public class Move
                 }
             }
         }
-
         else if (IsValidVertical)
         {
             int start = Math.Min(InitY, DestY) + 1;
@@ -198,8 +203,10 @@ public class Move
                 }
             }
         }
-
-        else if (!IsValidHorizontal && !IsValidVertical) return false;
+        else if (!IsValidHorizontal && !IsValidVertical)
+        {
+            return false;
+        }
 
         return true;
     }
@@ -252,29 +259,66 @@ public class Move
         {
             return false;
         }
+        
+        (int InitX, int InitY) = move.InitPiece.Coordinates;
+        (int DestX, int DestY) = move.DestPiece.Coordinates;
 
-        (int initX, int initY) = move.InitPiece.Coordinates;
-        (int destX, int destY) = move.DestPiece.Coordinates;
+        int diffX = Math.Abs(DestX - InitX);
+        int diffY = Math.Abs(DestY - InitY);
 
-        if (move.DestPiece != PieceType.Empty)
+        //King moves 1 square in any direction
+        if (diffX <= 1 && diffY <= 1)
         {
-            if (move.DestPiece.IsWhite == move.InitPiece.IsWhite)
-            {
-                return false;
-            }
-
-            return false;
+            return true;
         }
 
-        if (destX > initX + 1 || destX < initX - 1)
+        // Castling conditions: king moves 2 squares horizontally and hasn't moved
+        if (diffY == 0 && diffX == 2 && !move.InitPiece.HasMoved)
         {
-            return false;
-        }
-        else if (destY > initY + 1 || destY < initY - 1)
-        {
-            return false;
+            move.IsCastling = true;
+            return true;
         }
 
-        return true;
+        //Not a valid king move
+        return false;
     }
+
+    public static List<Move> GetPossibleMoves(ChessPiece piece)
+    {
+        PieceType color = piece.Color;
+        PieceType type = piece.Type ^ color;
+
+        (int auraX, int auraY) = AuraMap[type];
+
+        List<Move> validMoves = [];
+
+        for (int dX = -auraX; dX <= auraX; dX++)
+        {
+            for (int dY = -auraY; dY <= auraY; dY++)
+            {
+                int totalX = dX + piece.Coordinates.X;
+                int totalY = dY + piece.Coordinates.Y;
+
+                if (totalX < 0 || totalX >= 8 || totalY < 0 || totalY >= 8)
+                {
+                    continue;
+                }
+
+                if (type == PieceType.Rook && dX != 0 && dY != 0) // skip any diagonal moves for rook - automatically invalid
+                {
+                    continue;
+                }
+
+                Move move = new(piece, ChessBoard.Instance.Grid[totalX, totalY]);
+
+                if (move.IsValid)
+                {
+                    validMoves.Add(move);
+                }
+            }
+        }
+
+        return validMoves;
+    }
+
 }

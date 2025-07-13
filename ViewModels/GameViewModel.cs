@@ -121,7 +121,7 @@ public partial class GameViewModel : ObservableObject
         {
             Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
 
-            if (!move.IsValid || move.TargetsKing)
+            if (!move.IsValid || move.TargetsKing || ChessBoard.Instance.WouldCauseCheck(move))
             {
                 _selectedSquare.IsSelected = false;
                 _selectedSquare = null;

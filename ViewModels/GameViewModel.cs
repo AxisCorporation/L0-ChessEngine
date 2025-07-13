@@ -4,11 +4,10 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using L_0_Chess_Engine.Models;
 using System;
-using System.Timers;
-using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using L_0_Chess_Engine.Views;
+using L_0_Chess_Engine.AI;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -36,6 +35,8 @@ public partial class GameViewModel : ObservableObject
 
     private ChessBoard Board { get; set; } = ChessBoard.Instance;
 
+    private Ai _ai;
+
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
 
     private bool _isWhiteTurn;
@@ -52,7 +53,7 @@ public partial class GameViewModel : ObservableObject
 
     private SquareViewModel? _selectedSquare;
 
-    public GameViewModel(int timeLimit)
+    public GameViewModel(int timeLimit, bool LoadAi = false)
     {
         WhiteTimer = TimeSpan.FromMinutes(timeLimit);
         BlackTimer = TimeSpan.FromMinutes(timeLimit);
@@ -80,8 +81,13 @@ public partial class GameViewModel : ObservableObject
         Board.GridUpdated += UpdateGrid;
         GameRunning = true;
         IsWhiteTurn = true;
-    
+
         _ = UpdateTurnTimersAsync();
+        
+        if (LoadAi)
+        {
+            LoadAiModule();
+        }
     }
 
 
@@ -115,7 +121,7 @@ public partial class GameViewModel : ObservableObject
         {
             Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
 
-            if (!move.IsValid)
+            if (!move.IsValid || move.TargetsKing)
             {
                 _selectedSquare.IsSelected = false;
                 _selectedSquare = null;
@@ -140,8 +146,15 @@ public partial class GameViewModel : ObservableObject
 
             IsWhiteTurn = !IsWhiteTurn;
 
+            if (_ai is not null && !IsWhiteTurn)
+            {
+                MakeAiMove();
+                IsWhiteTurn = true;
+            }
+
             _selectedSquare.IsSelected = false;
             _selectedSquare = null;
+
             UpdateGameStateText();
         }
     }
@@ -199,13 +212,18 @@ public partial class GameViewModel : ObservableObject
     {
         foreach (var piece in GridPieces)
         {
-            ((RelayCommand)piece.ClickCommand!).NotifyCanExecuteChanged();
+            ((RelayCommand) piece.ClickCommand!).NotifyCanExecuteChanged();
         }
     }
 
     private bool CanClickSquare(SquareViewModel squareClicked)
     {
         if (!GameRunning)
+        {
+            return false;
+        }
+
+        if (_ai is not null && !IsWhiteTurn)
         {
             return false;
         }
@@ -220,6 +238,16 @@ public partial class GameViewModel : ObservableObject
         }
 
         return false;
+    }
+
+    private void LoadAiModule()
+    {
+        _ai = new Ai();
+    }
+
+    private void MakeAiMove()
+    {
+        Board.MakeMove(_ai.GenerateMove());
     }
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";

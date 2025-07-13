@@ -17,7 +17,7 @@
 						Foreground="#ECF0F1"
 						HorizontalAlignment="Center"/>
 
-				<!-- Play Toggle Button -->
+				<!-- Play Button -->
 				<Button x:Name="PlayToggle"
 							Content="Play"
 							Width="200"
@@ -58,6 +58,7 @@
 								HorizontalAlignment="Center"/>
 
 						<Button x:Name="LocalGame"
+								Tag="Local"
 								Content="Local"
 								Width="200"
 								Background="#FEEBC8"
@@ -79,6 +80,7 @@
 						</Button>
 
 						<Button x:Name="AiGame"
+								Tag="Ai"
 								Content="AI"
 								Width="200"
 								Background="#FEEBC8"

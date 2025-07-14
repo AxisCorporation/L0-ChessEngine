@@ -28,6 +28,8 @@ public class ChessBoard
         get => _instance ??= new ChessBoard();
     }
 
+    private PieceType _promotedPieceType = PieceType.Empty;
+
     private ChessBoard() // Constructor to initialize
     {
         IsWhiteTurn = true;
@@ -353,17 +355,19 @@ public class ChessBoard
         return true;
     }
 
-    private static PieceType? _promotedPieceType;
-    public static void SetPromotedPieceType(PieceType pieceType)
+    public void SetPromotedPieceType(PieceType pieceType)
     {
         _promotedPieceType = pieceType;
     }
-    public static ChessPiece GetPieceFromPromotion()
+
+    public ChessPiece GetPieceFromPromotion()
     {
-        if (_promotedPieceType is null)
+        if (_promotedPieceType == PieceType.Empty)
         {
             throw new InvalidOperationException("Promoted piece type is not set.");
         }
-        return new ChessPiece(_promotedPieceType.Value, new(0, 0));
+        
+        // Coordinates are set later
+        return new ChessPiece(_promotedPieceType, new(0, 0));
     }
 }

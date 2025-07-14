@@ -83,7 +83,7 @@ public class Move
         }
 
         // Cannot capture same team
-        if (move.DestPiece != PieceType.Empty && (move.DestPiece.IsWhite == move.InitPiece.IsWhite))
+        if (move.DestPiece != PieceType.Empty && (move.DestPiece.Color == move.InitPiece.Color))
         {
             return false;
         }
@@ -145,7 +145,6 @@ public class Move
             return false;
         }
 
-        // Not necessary but it makes writing code easier and more readable
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 

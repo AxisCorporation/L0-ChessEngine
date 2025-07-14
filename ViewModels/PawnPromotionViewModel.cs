@@ -30,7 +30,7 @@ public partial class PawnPromotionViewModel : ObservableObject
     public ICommand SelectBishopCommand { get; }
     public ICommand SelectKnightCommand { get; }
     
-    public event Action<PieceType>? PieceSelected;
+    public event Action? PieceSelected;
     
     public PawnPromotionViewModel(bool isWhite)
     {
@@ -52,7 +52,7 @@ public partial class PawnPromotionViewModel : ObservableObject
     
     private void SelectPiece(PieceType pieceType)
     {
-        ChessBoard.SetPromotedPieceType(pieceType);
-        PieceSelected?.Invoke(pieceType);
+        ChessBoard.Instance.SetPromotedPieceType(pieceType);
+        PieceSelected?.Invoke();
     }
 }

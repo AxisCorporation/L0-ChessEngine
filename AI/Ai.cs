@@ -16,7 +16,7 @@ namespace L_0_Chess_Engine.AI
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if (ChessBoard.Instance.Grid[x, y].IsWhite == false)
+                    if (!ChessBoard.Instance.Grid[x, y].IsWhite)
                     {
                         for (int i = 0; i < 8; i++)
                         {

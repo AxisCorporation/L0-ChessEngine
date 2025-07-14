@@ -10,6 +10,7 @@ public class ChessBoard
 {
     //Constant FEN for the starting position
     private const string DefaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+    private PieceType _promotedPieceType = PieceType.Empty;
     
     public ChessPiece[,] Grid { get; set; }
 
@@ -27,6 +28,7 @@ public class ChessBoard
     {
         get => _instance ??= new ChessBoard();
     }
+
 
     private ChessBoard() // Constructor to initialize
     {
@@ -49,6 +51,7 @@ public class ChessBoard
                 GridUpdated?.Invoke();
                 return true;
             }
+
             return false;
         }
 
@@ -150,25 +153,8 @@ public class ChessBoard
 
         ChessPiece king = move.InitPiece;
 
-        if (!move.IsCastling) return false;
-
-        bool isKingSide;
         // Determine if kingside or not
-        if (destX > initX)
-        {
-            isKingSide = true;
-            Console.WriteLine("kingside ture");
-        }
-        else if (destX < initX)
-        {
-            isKingSide = false;
-            Console.WriteLine("kingside false");
-        }
-        else
-        {
-            Console.WriteLine("shouldn't happen");
-            return false;
-        }
+        bool isKingSide = destX > initX;
 
         // Rook's start and new positions
         int rookStartX = isKingSide ? 7 : 0;
@@ -177,7 +163,7 @@ public class ChessBoard
         ChessPiece rook = Grid[rookStartX, initY];
 
         // Validate rook
-        if (rook.Type == PieceType.Empty || !rook.EqualsUncolored(PieceType.Rook) || rook.IsWhite != king.IsWhite)
+        if (rook.Type == PieceType.Empty || !rook.EqualsUncolored(PieceType.Rook) || rook.Color != king.Color)
         {
             Console.WriteLine("v1 fail rook");
             return false;
@@ -203,7 +189,7 @@ public class ChessBoard
         }
 
         // King cannot castle while in check
-        if (CheckScan())
+        if (IsCheck)
         {
             Console.WriteLine("King in check.");
             return false;
@@ -211,35 +197,17 @@ public class ChessBoard
 
         //check to see if check enroute or lands on check
         // Save original piece references
-        int[] kingPath;
-        if (isKingSide)
-            kingPath = new[] { initX + 1, initX + 2 };
-        else
-            kingPath = new[] { initX - 1, initX - 2 };
+        int[] kingPath = isKingSide ? [initX + 1, initX + 2] : [initX - 1, initX - 2];
 
         foreach (int x in kingPath)
         {
-            var originalKing = Grid[initX, initY];
-            var originalDest = Grid[x, initY];
+            Move attemptedMove = new(Grid[initX, initY], Grid[x, initY]);
 
-            // Temporarily move the king to the square x
-            Grid[x, initY] = originalKing;
-            Grid[initX, initY] = new ChessPiece(PieceType.Empty, new Coordinate(initX, initY));
-            originalKing.Coordinates = new Coordinate(x, initY);
-
-            // Check if the king would be in check at this spot
-            bool inCheck = CheckScan();
-
-            // Undo the move
-            Grid[initX, initY] = originalKing;
-            Grid[x, initY] = originalDest;
-            originalKing.Coordinates = new Coordinate(initX, initY);
-
-            if (inCheck)
+            if (WouldCauseCheck(attemptedMove))
             {
                 Console.WriteLine("Can't castle through or into check.");
                 return false;
-            }
+            } 
         }
 
         // Move rook to new spot
@@ -353,17 +321,19 @@ public class ChessBoard
         return true;
     }
 
-    private static PieceType? _promotedPieceType;
-    public static void SetPromotedPieceType(PieceType pieceType)
+    public void SetPromotedPieceType(PieceType pieceType)
     {
         _promotedPieceType = pieceType;
     }
-    public static ChessPiece GetPieceFromPromotion()
+
+    public ChessPiece GetPieceFromPromotion()
     {
-        if (_promotedPieceType is null)
+        if (_promotedPieceType == PieceType.Empty)
         {
             throw new InvalidOperationException("Promoted piece type is not set.");
         }
-        return new ChessPiece(_promotedPieceType.Value, new(0, 0));
+        
+        // Coordinates are set later
+        return new ChessPiece(_promotedPieceType, new(0, 0));
     }
 }

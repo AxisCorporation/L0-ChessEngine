@@ -36,6 +36,7 @@ public partial class GameViewModel : ObservableObject
     private ChessBoard Board { get; set; } = ChessBoard.Instance;
 
     private Ai _ai;
+    private Window? _promotionWindow;
 
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
 
@@ -82,14 +83,13 @@ public partial class GameViewModel : ObservableObject
         GameRunning = true;
         IsWhiteTurn = true;
 
-        _ = UpdateTurnTimersAsync();
-        
         if (LoadAi)
         {
             LoadAiModule();
         }
-    }
 
+        _ = UpdateTurnTimersAsync();
+    }
 
     private void UpdateGrid()
     {
@@ -119,94 +119,90 @@ public partial class GameViewModel : ObservableObject
         }
         else
         {
-            Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
+            HandleMove(squareClicked);
+        }
 
-            if (!move.IsValid || move.TargetsKing || ChessBoard.Instance.WouldCauseCheck(move))
-            {
-                _selectedSquare.IsSelected = false;
-                _selectedSquare = null;
-                return;
-            }
-            
-            if (IsPawnPromotionMove(_selectedSquare.Piece, squareClicked.Piece))
-            {
-                ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () =>
-                {
-                    // This will be called after promotion piece is selected
-                    Board.MakeMove(move);
-                    IsWhiteTurn = !IsWhiteTurn;
-                    _selectedSquare.IsSelected = false;
-                    _selectedSquare = null;
-                    UpdateGameStateText();
-                });
-                return;
-            }
+    }
 
-            Board.MakeMove(move);
+    private void HandleMove(SquareViewModel squareClicked)
+    {
+        Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
 
-            IsWhiteTurn = !IsWhiteTurn;
-
-            if (_ai is not null && !IsWhiteTurn)
-            {
-                MakeAiMove();
-                IsWhiteTurn = true;
-            }
-
+        if (!move.IsValid || move.TargetsKing || ChessBoard.Instance.WouldCauseCheck(move))
+        {
             _selectedSquare.IsSelected = false;
             _selectedSquare = null;
+            return;
+        }
 
-            UpdateGameStateText();
+        if (IsPawnPromotionMove(_selectedSquare.Piece, squareClicked.Piece))
+            {
+                ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () => RegisterMove(move));
+                return;
+            }
+            else
+            {
+                RegisterMove(move);
+            }
+
+        if (_ai is not null && !IsWhiteTurn)
+        {
+            MakeAiMove();
         }
     }
 
-    private bool IsPawnPromotionMove(ChessPiece initPiece, ChessPiece destPiece)
+    private void RegisterMove(Move move)
+    {
+        bool moveSucceeded = Board.MakeMove(move);
+
+        _selectedSquare!.IsSelected = false;
+        _selectedSquare = null;
+
+        if (moveSucceeded)
+        {
+            IsWhiteTurn = !IsWhiteTurn;
+        }
+
+        UpdateGameStateText();
+    }
+
+    private static bool IsPawnPromotionMove(ChessPiece initPiece, ChessPiece destPiece)
     {
         // Check if the piece is a pawn
         if (!initPiece.EqualsUncolored(PieceType.Pawn))
         {
             return false;
         }
-            
-        int destY = destPiece.Coordinates.Y;
-        return (initPiece.IsWhite && destY == 7) || (!initPiece.IsWhite && destY == 0);
+
+        return destPiece.Coordinates.Y == 7 || destPiece.Coordinates.Y == 0;
     }
 
     private void ShowPawnPromotionDialog(bool isWhite, Action onPieceSelected)
     {
         var promotionView = new PawnPromotionView(isWhite);
         var viewModel = (PawnPromotionViewModel)promotionView.DataContext!;
-        
-        viewModel.PieceSelected += (pieceType) =>
+
+        viewModel.PieceSelected += () =>
         {
-            ClosePromotionDialog();
+            _promotionWindow!.Close();
             onPieceSelected?.Invoke();
         };
-        
-        ShowPromotionDialog(promotionView);
-    }
-    private void ShowPromotionDialog(PawnPromotionView view)
-    {
+
         var window = new Window
         {
-            Content = view,
+            Content = promotionView,
             Width = 300,
             Height = 150,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            SystemDecorations = SystemDecorations.None,
             CanResize = false,
             ShowInTaskbar = false,
             Title = "Pawn Promotion"
         };
-        
+
         _promotionWindow = window;
+
         window.Show();
     }
-    private Window? _promotionWindow;
-    private void ClosePromotionDialog()
-    {
-        _promotionWindow?.Close();
-        _promotionWindow = null;
-    }
+    
 
     private void NotifyCanClickSquares()
     {
@@ -240,15 +236,13 @@ public partial class GameViewModel : ObservableObject
         return false;
     }
 
-    private void LoadAiModule()
-    {
-        _ai = new Ai();
-    }
-
     private void MakeAiMove()
     {
         Board.MakeMove(_ai.GenerateMove());
+        IsWhiteTurn = !IsWhiteTurn;
     }
+
+    private void LoadAiModule() => _ai = new Ai();    
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 

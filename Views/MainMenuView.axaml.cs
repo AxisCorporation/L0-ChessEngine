@@ -52,22 +52,12 @@ public partial class MainMenuView : UserControl
         var button = sender as Button;
         var mode = button?.Tag as string;
 
-        GameView game;
-
-        switch (mode)
+        GameView game = mode switch
         {
-            case "Local":
-                game = new GameView(TimeSelected);
-                break;
-
-            case "Ai":
-                game = new GameView(TimeSelected, true);
-                break;
-
-            default:
-                game = new GameView(TimeSelected);
-                break;
-        }
+            "Local" => new GameView(TimeSelected),
+            "Ai" => new GameView(TimeSelected, true),
+            _ => new GameView(TimeSelected),
+        };
 
         MainWindow?.SetMainContent(game);
     }

@@ -136,14 +136,14 @@ public partial class GameViewModel : ObservableObject
         }
 
         if (IsPawnPromotionMove(_selectedSquare.Piece, squareClicked.Piece))
-        {
-            ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () => RegisterMove(move));
-            return;
-        }
-        else
-        {
-            RegisterMove(move);
-        }
+            {
+                ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () => RegisterMove(move));
+                return;
+            }
+            else
+            {
+                RegisterMove(move);
+            }
 
         if (_ai is not null && !IsWhiteTurn)
         {
@@ -153,12 +153,15 @@ public partial class GameViewModel : ObservableObject
 
     private void RegisterMove(Move move)
     {
-        Board.MakeMove(move);
-
-        IsWhiteTurn = !IsWhiteTurn;
+        bool moveSucceeded = Board.MakeMove(move);
 
         _selectedSquare!.IsSelected = false;
         _selectedSquare = null;
+
+        if (moveSucceeded)
+        {
+            IsWhiteTurn = !IsWhiteTurn;
+        }
 
         UpdateGameStateText();
     }

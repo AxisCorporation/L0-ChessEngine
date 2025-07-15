@@ -136,14 +136,14 @@ public partial class GameViewModel : ObservableObject
         }
 
         if (IsPawnPromotionMove(_selectedSquare.Piece, squareClicked.Piece))
-            {
-                ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () => RegisterMove(move));
-                return;
-            }
-            else
-            {
-                RegisterMove(move);
-            }
+        {
+            ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () => RegisterMove(move));
+            return;
+        }
+        else
+        {
+            RegisterMove(move);
+        }
 
         if (_ai is not null && !IsWhiteTurn)
         {

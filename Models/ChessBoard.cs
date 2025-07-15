@@ -101,23 +101,19 @@ public class ChessBoard
         {
             for (int y = 0; y < 8; y++)
             {
-                if (Grid[x, y].Type == PieceType.Empty)
+                if (Grid[x, y].Type == PieceType.Empty || Grid[x, y].Color != oppositeColour)
                 {
                     continue;
                 }
 
-                if (Grid[x, y].Color == oppositeColour)
+                List<Move> moves = [..from m in Move.GetPossibleMoves(Grid[x, y])
+                                    where m.TargetsKing
+                                    select m]; // Gets all moves for piece where it can threaten the king
+
+                if (moves.Count != 0)
                 {
-                    List<Move> moves = [..from m in Move.GetPossibleMoves(Grid[x, y])
-                                       where m.TargetsKing
-                                       select m]; // Gets all moves for piece where it can threaten the king
-
-                    if (moves.Count != 0)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-
             }
         }
 

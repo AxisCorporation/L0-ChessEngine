@@ -2,13 +2,14 @@
 // We will have to change the structure here later, bit for now this is fine.
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using L_0_Chess_Engine.Models;
 
 namespace L_0_Chess_Engine.AI
 {
     class Ai
     {
-        public Move GenerateMove()
+        public async Task<Move> GenerateMove()
         {
             var moves = new List<Move>{};
 
@@ -34,6 +35,7 @@ namespace L_0_Chess_Engine.AI
             var random = new Random();
             int index = random.Next(moves.Count); // from 0 to moves.Count - 1
 
+            await Task.Delay(2000);
             return moves[index];
         }
         

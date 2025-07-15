@@ -124,7 +124,7 @@ public partial class GameViewModel : ObservableObject
 
     }
 
-    private void HandleMove(SquareViewModel squareClicked)
+    private async Task HandleMove(SquareViewModel squareClicked)
     {
         Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
 
@@ -150,7 +150,7 @@ public partial class GameViewModel : ObservableObject
 
         if (_ai is not null && !IsWhiteTurn)
         {
-            MakeAiMove();
+            await MakeAiMove();
         }
     }
 
@@ -239,9 +239,9 @@ public partial class GameViewModel : ObservableObject
         return false;
     }
 
-    private void MakeAiMove()
+    private async Task MakeAiMove()
     {
-        Board.MakeMove(_ai.GenerateMove());
+        Board.MakeMove(await _ai.GenerateMove());
         IsWhiteTurn = !IsWhiteTurn;
     }
 

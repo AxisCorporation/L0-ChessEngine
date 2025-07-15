@@ -233,7 +233,7 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         originalInit.Coordinates = new(destX, destY);
 
-        bool result = CheckScan(); // Will return true if king is in check
+        bool causesCheck = CheckScan(); // Will return true if king is in check
 
         // Undo move
         Grid[initX, initY] = originalInit;
@@ -241,7 +241,12 @@ public class ChessBoard
         originalInit.Coordinates = new(initX, initY);
         originalDest.Coordinates = new(destX, destY); // if needed
 
-        return result;
+        if (causesCheck)
+        {
+            move.ErrorMessage = "Cannot move into check!";
+        }
+        
+        return causesCheck;
     }
 
     public bool ReadFEN(string fen)

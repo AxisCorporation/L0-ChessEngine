@@ -148,7 +148,7 @@ public partial class GameViewModel : ObservableObject
             RegisterMove(move);
         }
 
-        if (_ai is not null && !IsWhiteTurn)
+        if (_ai is not null)
         {
             MakeAiMove();
         }

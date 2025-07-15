@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Reflection.Metadata;
-
 
 namespace L_0_Chess_Engine.Models;
 
@@ -17,7 +15,7 @@ public class ChessBoard
     public bool IsCheck { get => CheckScan(); }
 
     public bool IsCheckMate { get; set; }
-    
+
     public bool IsWhiteTurn { get; set; }
 
     // Invoked every time grid updates

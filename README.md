@@ -75,17 +75,24 @@ The Development Cycles have been divided into various Stages.
 
 - [X] Check Logic - Zain
 - [X] Bug Fixes and Code Refactor - Zain
-- [ ] Test Cases (Move Validation, Check, and Checkmate) - Kalsoom
+- [X] Test Cases (Move Validation, Check, and Checkmate) - Kalsoom
 
 ### Stage 3
+**Deadline:** 12th July 23:59 PST
 
-- [ ] Checkmate logic - Zain 
-- [ ] Integrate PvP and PvE Mode for Main Menu - Zain
+- [ ] ~~Checkmate logic - Zain~~
+- [X] Integrate PvP and PvE Mode for Main Menu - Zain
 - [ ] Castling - Isaac
-- [ ] Move Validation for Check - Isaac
-- [ ] Pawn Promotion (Front End and Back End) - Kalsoom
-- [ ] Game timer & Turn timers - Daud
-- [ ] Revamp Check Logic - Daud
+- [X] Move Validation for Check - Isaac
+- [X] Pawn Promotion (Front End and Back End) - Kalsoom
+- [X] Game timer & Turn timers - Daud
+- [X] Revamp Check Logic - Daud
+
+#### Stage 3.1
+
+- [ ] Checkmate logic - Zain
+- [ ] Code Cleanup - Daud && Kalsoom
+- [ ] AI Practical - @Everyone
 
 ### Stage ω
 - [ ] A Reinforced Trained Engine

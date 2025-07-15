@@ -17,11 +17,11 @@ public class ChessBoard
     public bool IsCheck { get => CheckScan(); }
 
     public bool IsCheckMate { get; set; }
+    
+    public bool IsWhiteTurn { get; set; }
 
     // Invoked every time grid updates
     public event Action? GridUpdated;
-
-    public bool IsWhiteTurn { get; set; }
 
     private static ChessBoard? _instance;
     public static ChessBoard Instance

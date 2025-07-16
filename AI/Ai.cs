@@ -9,9 +9,21 @@ namespace L_0_Chess_Engine.AI
 {
     class Ai
     {
+        private static readonly Dictionary<PieceType, int> ValueMap = [];
+
+        static Ai()
+        {
+            ValueMap[PieceType.Pawn] = 1;
+            ValueMap[PieceType.Knight] = 3;
+            ValueMap[PieceType.Bishop] = 3;
+            ValueMap[PieceType.Rook] = 5;
+            ValueMap[PieceType.Queen] = 9;
+
+            ValueMap[PieceType.King] = 0;
+        }
         public async Task<Move> GenerateMove()
         {
-            var moves = new List<Move>{};
+            var moves = new List<Move> { };
 
             for (int x = 0; x < 8; x++)
             {
@@ -21,7 +33,7 @@ namespace L_0_Chess_Engine.AI
                     {
                         continue;
                     }
-                    
+
                     for (int i = 0; i < 8; i++)
                     {
                         for (int j = 0; j < 8; j++)
@@ -31,7 +43,7 @@ namespace L_0_Chess_Engine.AI
                             if (move.IsValid) moves.Add(move);
                         }
                     }
-                    
+
                 }
             }
 
@@ -41,7 +53,17 @@ namespace L_0_Chess_Engine.AI
             await Task.Delay(2000);
             return moves[index];
         }
-        
+
+
+        private int EvaluateBoard(ChessPiece[,] Grid)
+        {
+            int whiteScore = 0;
+            int blackScore = 0;
+
+            foreach (var square in Grid)
+            {
+                
+            }
+        }
     }
-    
 }

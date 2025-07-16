@@ -67,7 +67,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
     public bool IsValidMove()
     {
         // We can take out the color to make the mapping simpler
-        PieceType type = InitPiece.IsWhite ? (InitPiece.Type ^ PieceType.White) : (InitPiece.Type ^ PieceType.Black);
+        PieceType type = InitPiece.Type ^ InitPiece.Color;
 
         return ValidationMap[type](this);
     }

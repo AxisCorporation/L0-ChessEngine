@@ -107,7 +107,7 @@ public partial class GameViewModel : ObservableObject
     }
 
 
-    private void OnSquareClick(SquareViewModel squareClicked)
+    private async Task OnSquareClick(SquareViewModel squareClicked)
     {
         Debug.WriteLine($"DEBUG: {squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
 
@@ -119,7 +119,7 @@ public partial class GameViewModel : ObservableObject
         }
         else
         {
-            HandleMove(squareClicked);
+            await HandleMove(squareClicked);
         }
 
     }
@@ -140,21 +140,16 @@ public partial class GameViewModel : ObservableObject
 
         if (IsPawnPromotionMove(_selectedSquare.Piece, squareClicked.Piece))
         {
-            ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () => RegisterMove(move));
+            ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, async () => await RegisterMove(move));
             return;
         }
         else
         {
-            RegisterMove(move);
-        }
-
-        if (_ai is not null && !IsWhiteTurn)
-        {
-            await MakeAiMove();
+            await RegisterMove(move);
         }
     }
 
-    private void RegisterMove(Move move)
+    private async Task RegisterMove(Move move)
     {
         bool moveSucceeded = Board.MakeMove(move);
 
@@ -167,6 +162,11 @@ public partial class GameViewModel : ObservableObject
         }
 
         UpdateGameStateText(move);
+
+        if (_ai is not null && !IsWhiteTurn)
+        {
+            await MakeAiMove();
+        }
     }
 
     private static bool IsPawnPromotionMove(ChessPiece initPiece, ChessPiece destPiece)
@@ -241,8 +241,12 @@ public partial class GameViewModel : ObservableObject
 
     private async Task MakeAiMove()
     {
-        Board.MakeMove(await _ai.GenerateMove());
+        Move move = await _ai.GenerateMove();
+
+        Board.MakeMove(move);
         IsWhiteTurn = !IsWhiteTurn;
+
+        UpdateGameStateText(move);
     }
 
     private void LoadAiModule() => _ai = new Ai();

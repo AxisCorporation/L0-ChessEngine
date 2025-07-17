@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using L_0_Chess_Engine.Models;
+using System.Linq;
+using System.Diagnostics;
 
 namespace L_0_Chess_Engine.AI
 {
@@ -23,47 +25,116 @@ namespace L_0_Chess_Engine.AI
         }
         public async Task<Move> GenerateMove()
         {
-            var moves = new List<Move> { };
+            List<Move> moves = [];
 
-            for (int x = 0; x < 8; x++)
+            var GenerateAllMoves = Task.Run(() =>
             {
-                for (int y = 0; y < 8; y++)
+                for (int x = 0; x < 8; x++)
                 {
-                    if (ChessBoard.Instance.Grid[x, y].IsWhite || ChessBoard.Instance.Grid[x, y] == PieceType.Empty)
+                    for (int y = 0; y < 8; y++)
                     {
-                        continue;
-                    }
-
-                    for (int i = 0; i < 8; i++)
-                    {
-                        for (int j = 0; j < 8; j++)
+                        if (ChessBoard.Instance.Grid[x, y] == PieceType.Empty || ChessBoard.Instance.Grid[x, y].IsWhite)
                         {
-                            Move move = new(ChessBoard.Instance.Grid[x, y], ChessBoard.Instance.Grid[i, j]);
-
-                            if (move.IsValid) moves.Add(move);
+                            continue;
                         }
-                    }
 
+                        moves.AddRange(Move.GetPossibleMoves(ChessBoard.Instance.Grid[x, y]));
+                    }
                 }
+            });
+
+            await GenerateAllMoves;
+
+            var moveEvals = from m in moves
+                            select new
+                            {
+                                StoredMove = m,
+                                Eval = EvaluateMove(ChessBoard.Instance.Grid, m)
+                            };
+
+            foreach (var move in moveEvals)
+            {
+                Debug.WriteLine("DEBUG: ");
+                Debug.WriteLine($"Move: {move.StoredMove.InitPiece.Type} | {move.StoredMove.InitPiece.Coordinates} | {move.StoredMove.DestPiece.Coordinates}");
+                Debug.WriteLine($"Eval: {move.Eval}");
             }
 
-            var random = new Random();
-            int index = random.Next(moves.Count); // from 0 to moves.Count - 1
+            var maxEval = moveEvals.Min(x => x.Eval); // min is better for
+
+            List<Move> bestMoves = [..from m in moveEvals
+                                    where m.Eval == maxEval
+                                    select m.StoredMove];
+
+            Random rand = new();
+            int random = rand.Next(bestMoves.Count);
 
             await Task.Delay(2000);
-            return moves[index];
+            return bestMoves[random];
         }
 
 
-        private int EvaluateBoard(ChessPiece[,] Grid)
+        private int EvaluateMove(ChessPiece[,] Grid, Move move)
         {
             int whiteScore = 0;
             int blackScore = 0;
 
+            (int initX, int initY) = move.InitPiece.Coordinates;
+            (int destX, int destY) = move.DestPiece.Coordinates;
+
+            ChessPiece pieceToMove = Grid[initX, initY];
+            ChessPiece destPiece = Grid[destX, destY];
+
+            Grid[destX, destY] = pieceToMove;
+            bool hasMovedPreviously = pieceToMove.HasMoved;
+            pieceToMove.HasMoved = true;
+
+            pieceToMove.Coordinates = new(destX, destY);
+
+            Grid[initX, initY] = new(PieceType.Empty, new(initX, initY));
+
             foreach (var square in Grid)
             {
-                
+                if (square == PieceType.Empty)
+                {
+                    continue;
+                }
+
+                PieceType typeUncolored = square.Type ^ square.Color;
+
+                if (square.IsWhite)
+                {
+                    whiteScore += ValueMap[typeUncolored];
+                }
+                else
+                {
+                    blackScore += ValueMap[typeUncolored];
+                }
             }
+
+            if (ChessBoard.Instance.IsCheck && !ChessBoard.Instance.IsWhiteTurn)
+            {
+                Console.WriteLine("Here");
+                Grid[initX, initY] = pieceToMove;
+                Grid[destX, destY] = destPiece;
+
+                pieceToMove.Coordinates = new(initX, initY);
+                pieceToMove.HasMoved = hasMovedPreviously;
+
+                return -36;
+            }
+            else if (ChessBoard.Instance.IsCheck)
+            {
+                blackScore -= 36;
+            }
+
+            // revert move
+            Grid[initX, initY] = pieceToMove;
+            Grid[destX, destY] = destPiece;
+
+            pieceToMove.Coordinates = new(initX, initY);
+            pieceToMove.HasMoved = hasMovedPreviously;
+
+            return whiteScore - blackScore; // Lower value is better for the AI
         }
     }
 }

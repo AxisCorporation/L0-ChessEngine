@@ -97,7 +97,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
             move.ErrorMessage = "Path obstructed!";
             return false;
         }
-
+        
         return true;
     }
 

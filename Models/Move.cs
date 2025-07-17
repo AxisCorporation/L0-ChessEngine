@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Net.NetworkInformation;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -274,11 +276,39 @@ public class Move
         // Castling conditions: king moves 2 squares horizontally and hasn't moved
         if (diffY == 0 && diffX == 2 && !move.InitPiece.HasMoved)
         {
+            bool isKingSide = DestX > InitX;
+            int rookX = isKingSide ? 7 : 0;
+            ChessPiece rook = ChessBoard.Instance.Grid[rookX, InitY];
+
+            if (rook.Type == PieceType.Empty || !rook.EqualsUncolored(PieceType.Rook) || rook.Color != move.InitPiece.Color || rook.HasMoved)
+                return false;
+
+            // Check if squares between king and rook are empty
+            int min = Math.Min(InitX, rookX) + 1;
+            int max = Math.Max(InitX, rookX);
+            for (int x = min; x < max; x++)
+            {
+                if (ChessBoard.Instance.Grid[x, InitY].Type != PieceType.Empty)
+                    return false;
+            }
+
+            // Check for check on current and intermediate squares
+            if (ChessBoard.Instance.IsCheck)
+                return false;
+
+            int[] kingPath = isKingSide ? new[] { InitX + 1, InitX + 2 } : new[] { InitX - 1, InitX - 2 };
+
+            foreach (int x in kingPath)
+            {
+                var simulatedMove = new Move(move.InitPiece, ChessBoard.Instance.Grid[x, InitY]);
+                if (ChessBoard.Instance.WouldCauseCheck(simulatedMove))
+                    return false;
+            }
+
             move.IsCastling = true;
             return true;
         }
 
-        //Not a valid king move
         return false;
     }
 

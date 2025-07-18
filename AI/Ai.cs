@@ -16,18 +16,21 @@ namespace L_0_Chess_Engine.AI
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if (!ChessBoard.Instance.Grid[x, y].IsWhite)
+                    if (ChessBoard.Instance.Grid[x, y].IsWhite || ChessBoard.Instance.Grid[x, y] == PieceType.Empty)
                     {
-                        for (int i = 0; i < 8; i++)
+                        continue;
+                    }
+                    
+                    for (int i = 0; i < 8; i++)
+                    {
+                        for (int j = 0; j < 8; j++)
                         {
-                            for (int j = 0; j < 8; j++)
-                            {
-                                Move move = new Move(ChessBoard.Instance.Grid[x, y], ChessBoard.Instance.Grid[i, j]);
+                            Move move = new(ChessBoard.Instance.Grid[x, y], ChessBoard.Instance.Grid[i, j]);
 
-                                if (move.IsValid) moves.Add(move);
-                            }
+                            if (move.IsValid) moves.Add(move);
                         }
                     }
+                    
                 }
             }
 

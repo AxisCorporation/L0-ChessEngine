@@ -33,8 +33,8 @@ public class ChessPiece
     public ChessPiece()
     {
         Color = PieceType.White;
-
         Type = PieceType.Pawn | Color;
+
         Coordinates = new(0, 0);
 
         HasMoved = false;
@@ -64,6 +64,7 @@ public class ChessPiece
             return PieceType.Black;
         }
     }
+    
     public bool EqualsUncolored(PieceType type) => IsWhite ? (Type ^ PieceType.White) == type : (Type ^ PieceType.Black) == type; 
 
     public static bool operator ==(ChessPiece A, PieceType B) => A.Type == B;

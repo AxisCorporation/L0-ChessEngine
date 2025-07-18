@@ -5,14 +5,33 @@ using System.Net.NetworkInformation;
 
 namespace L_0_Chess_Engine.Models;
 
-public class Move
+/// <param name="initial">Starting coordinate</param>
+/// <param name="destination">Destination Coordinate</param>
+/// <param name="initPiece">Piece that belongs at the starting coordinate</param>
+/// <param name="destPiece">Piece that belongs at the end coordinate</param>
+public class Move(ChessPiece initPiece, ChessPiece destPiece)
 {
     public bool IsValid { get => IsValidMove(); }
 
-    public ChessPiece InitPiece { get; set; }
-    public ChessPiece DestPiece { get; set; }
+    // The message to be displayed when a move is invalidated
+    public string ErrorMessage { get; set; } = "";
 
-    public bool TargetsKing { get => DestPiece.EqualsUncolored(PieceType.King); }
+    public ChessPiece InitPiece { get; set; } = initPiece;
+    public ChessPiece DestPiece { get; set; } = destPiece;
+
+    public bool TargetsKing
+    {
+        get
+        {
+            if (DestPiece.EqualsUncolored(PieceType.King))
+            {
+                ErrorMessage = "Cannot capture king!";
+                return true;
+            }
+
+            return false;
+        }
+    }
 
     public bool IsEnPassant { get; set; }
     public bool IsCastling { get; set; }
@@ -21,13 +40,13 @@ public class Move
     /// Takes in an uncolored piecetype, and returns a function that takes in a Move object,
     /// and returns true if the move is valid
     /// </summary>
-    private static Dictionary<PieceType, Func<Move, bool>> ValidationMap = [];
+    private static readonly Dictionary<PieceType, Func<Move, bool>> ValidationMap = [];
 
     /// <summary>
     /// Takes in an uncolored piecetype, and returns a coordinate object that 
     /// represents the absolute units that the piece is allowed to move
     /// </summary>
-    private static Dictionary<PieceType, Coordinate> AuraMap = [];
+    private static readonly Dictionary<PieceType, Coordinate> AuraMap = [];
 
     static Move()
     {
@@ -47,20 +66,10 @@ public class Move
         AuraMap[PieceType.King] = new(1, 1);
     }
 
-    /// <param name="initial">Starting coordinate</param>
-    /// <param name="destination">Destination Coordinate</param>
-    /// <param name="initPiece">Piece that belongs at the starting coordinate</param>
-    /// <param name="destPiece">Piece that belongs at the end coordinate</param>
-    public Move(ChessPiece initPiece, ChessPiece destPiece)
-    {
-        InitPiece = initPiece;
-        DestPiece = destPiece;
-    }
-
     public bool IsValidMove()
     {
         // We can take out the color to make the mapping simpler
-        PieceType type = InitPiece.IsWhite ? (InitPiece.Type ^ PieceType.White) : (InitPiece.Type ^ PieceType.Black);
+        PieceType type = InitPiece.Type ^ InitPiece.Color;
 
         return ValidationMap[type](this);
     }
@@ -87,6 +96,7 @@ public class Move
         // Cannot capture same team
         if (move.DestPiece != PieceType.Empty && (move.DestPiece.Color == move.InitPiece.Color))
         {
+            move.ErrorMessage = "Path obstructed!";
             return false;
         }
 
@@ -150,16 +160,8 @@ public class Move
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
-        if (Math.Abs(destX - initX) == 2 && Math.Abs(destY - initY) == 1)
-        {
-            return true;
-        }
-        if (Math.Abs(destX - initX) == 1 && Math.Abs(destY - initY) == 2)
-        {
-            return true;
-        }
-
-        return false;
+        return (Math.Abs(destX - initX) == 2 && Math.Abs(destY - initY) == 1) ||
+               (Math.Abs(destX - initX) == 1 && Math.Abs(destY - initY) == 2);
     }
 
 
@@ -204,10 +206,11 @@ public class Move
                 }
             }
         }
-        else if (!IsValidHorizontal && !IsValidVertical)
+        else
         {
             return false;
         }
+
 
         return true;
     }
@@ -260,7 +263,7 @@ public class Move
         {
             return false;
         }
-        
+
         (int InitX, int InitY) = move.InitPiece.Coordinates;
         (int DestX, int DestY) = move.DestPiece.Coordinates;
 
@@ -352,4 +355,24 @@ public class Move
         return validMoves;
     }
 
+    private static string CoordinateToString(Coordinate coordinate)
+    {
+        char column = ' ';
+        int row = coordinate.Y + 1;
+
+        for (int i = 0; i <= coordinate.X; i++)
+        {
+            column = (char)(65 + i);
+        }
+
+        return column + row.ToString();
+    }
+
+    public string GeneratePieceMovedMessage()
+    {
+        string piece = (InitPiece.Type ^ InitPiece.Color).ToString();
+        string destination = CoordinateToString(DestPiece.Coordinates);
+
+        return $"({InitPiece.Color}) {piece} to {destination}";
+    }
 }

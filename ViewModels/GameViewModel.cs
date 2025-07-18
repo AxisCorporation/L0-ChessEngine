@@ -132,20 +132,23 @@ public partial class GameViewModel : ObservableObject
         {
             _selectedSquare.IsSelected = false;
             _selectedSquare = null;
+
+            GameStateText = move.ErrorMessage != string.Empty ? move.ErrorMessage : "Invalid move!";
             return;
         }
 
-        if (IsPawnPromotionMove(_selectedSquare.Piece, squareClicked.Piece))
-            {
-                ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () => RegisterMove(move));
-                return;
-            }
-            else
-            {
-                RegisterMove(move);
-            }
 
-        if (_ai is not null && !IsWhiteTurn)
+        if (IsPawnPromotionMove(_selectedSquare.Piece, squareClicked.Piece))
+        {
+            ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () => RegisterMove(move));
+            return;
+        }
+        else
+        {
+            RegisterMove(move);
+        }
+
+        if (_ai is not null)
         {
             MakeAiMove();
         }
@@ -160,7 +163,7 @@ public partial class GameViewModel : ObservableObject
 
         IsWhiteTurn = !IsWhiteTurn;
 
-        UpdateGameStateText();
+        UpdateGameStateText(move);
     }
 
     private static bool IsPawnPromotionMove(ChessPiece initPiece, ChessPiece destPiece)
@@ -199,13 +202,13 @@ public partial class GameViewModel : ObservableObject
 
         window.Show();
     }
-    
+
 
     private void NotifyCanClickSquares()
     {
         foreach (var piece in GridPieces)
         {
-            ((RelayCommand) piece.ClickCommand!).NotifyCanExecuteChanged();
+            ((RelayCommand)piece.ClickCommand!).NotifyCanExecuteChanged();
         }
     }
 
@@ -235,23 +238,27 @@ public partial class GameViewModel : ObservableObject
 
     private void MakeAiMove()
     {
-        Board.MakeMove(_ai.GenerateMove());
+        Move move = _ai.GenerateMove();
+
+        Board.MakeMove(move);
         IsWhiteTurn = !IsWhiteTurn;
+
+        UpdateGameStateText(move);
     }
 
-    private void LoadAiModule() => _ai = new Ai();    
+    private void LoadAiModule() => _ai = new Ai();
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 
-    private void UpdateGameStateText()
+    private void UpdateGameStateText(Move? move = null)
     {
         if (Board.IsCheck)
         {
-            GameStateText = IsWhiteTurn ? "White is in Check!" : "Black is in Check!";
+            GameStateText = AppendMove(IsWhiteTurn ? "White is in Check!" : "Black is in Check!", move);
         }
         else if (Board.IsCheckMate)
         {
-            GameStateText = IsWhiteTurn ? "Checkmate for Black!" : "Checkmate for White!";
+            GameStateText = AppendMove(IsWhiteTurn ? "Checkmate for Black!" : "Checkmate for White!", move);
         }
         else if (WhiteTimer <= TimeSpan.Zero)
         {
@@ -263,7 +270,7 @@ public partial class GameViewModel : ObservableObject
         }
         else
         {
-            GameStateText = "";
+            GameStateText = AppendMove("", move);
         }
     }
 
@@ -291,5 +298,15 @@ public partial class GameViewModel : ObservableObject
                 UpdateGameStateText();
             }
         }
+    }
+
+    private static string AppendMove(string Message, Move? move)
+    {
+        if (!string.IsNullOrWhiteSpace(Message))
+        {
+            Message = Message.Insert(0, "- ");
+        }        
+
+        return move is not null ? $"{move.GeneratePieceMovedMessage()} {Message}" : Message; 
     }
 }

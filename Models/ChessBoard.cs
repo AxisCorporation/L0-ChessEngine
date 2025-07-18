@@ -17,10 +17,10 @@ public class ChessBoard
 
     public bool IsCheckMate { get; set; }
 
+    public bool IsWhiteTurn { get; set; }
+
     // Invoked every time grid updates
     public event Action? GridUpdated;
-
-    public bool IsWhiteTurn { get; set; }
 
     private static ChessBoard? _instance;
     public static ChessBoard Instance
@@ -41,7 +41,6 @@ public class ChessBoard
 
     public void MakeMove(Move move)
     {
- 
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
         {
@@ -91,23 +90,19 @@ public class ChessBoard
         {
             for (int y = 0; y < 8; y++)
             {
-                if (Grid[x, y].Type == PieceType.Empty)
+                if (Grid[x, y].Type == PieceType.Empty || Grid[x, y].Color != oppositeColour)
                 {
                     continue;
                 }
 
-                if (Grid[x, y].Color == oppositeColour)
+                List<Move> moves = [..from m in Move.GetPossibleMoves(Grid[x, y])
+                                    where m.TargetsKing
+                                    select m]; // Gets all moves for piece where it can threaten the king
+
+                if (moves.Count != 0)
                 {
-                    List<Move> moves = [..from m in Move.GetPossibleMoves(Grid[x, y])
-                                       where m.TargetsKing
-                                       select m]; // Gets all moves for piece where it can threaten the king
-
-                    if (moves.Count != 0)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
-
             }
         }
 
@@ -174,7 +169,7 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         originalInit.Coordinates = new(destX, destY);
 
-        bool result = CheckScan(); // Will return true if king is in check
+        bool causesCheck = CheckScan(); // Will return true if king is in check
 
         // Undo move
         Grid[initX, initY] = originalInit;
@@ -182,7 +177,12 @@ public class ChessBoard
         originalInit.Coordinates = new(initX, initY);
         originalDest.Coordinates = new(destX, destY); // if needed
 
-        return result;
+        if (causesCheck)
+        {
+            move.ErrorMessage = "Cannot move into check!";
+        }
+        
+        return causesCheck;
     }
 
     public bool ReadFEN(string fen)

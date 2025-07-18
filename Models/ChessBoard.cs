@@ -132,32 +132,12 @@ public class ChessBoard
         // Making all King Moves and Checking if it fixes Check
         foreach (var move in kingMoves)
         {
-            (int initX, int initY) = move.InitPiece.Coordinates;
-            (int destX, int destY) = move.DestPiece.Coordinates;
+            bool checkRemoved = !WouldCauseCheck(move);
 
-            ChessPiece originalInit = Grid[initX, initY];
-            ChessPiece originalDest = Grid[destX, destY];
-
-
-            Grid[destX, destY] = originalInit;
-            Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-
-            if (!IsCheck)
+            if (checkRemoved)
             {
-                
-                Grid[initX, initY] = originalInit;
-                Grid[destX, destY] = originalDest;
-                originalInit.Coordinates = new(initX, initY);
-                originalDest.Coordinates = new(destX, destY); // if needed
-
                 return false;
-
             }
-
-            Grid[initX, initY] = originalInit;
-            Grid[destX, destY] = originalDest;
-            originalInit.Coordinates = new(initX, initY);
-            originalDest.Coordinates = new(destX, destY); // if needed
 
         }
 
@@ -175,30 +155,12 @@ public class ChessBoard
                     foreach (var move in moves)
                     {
 
-                        (int initX, int initY) = move.InitPiece.Coordinates;
-                        (int destX, int destY) = move.DestPiece.Coordinates;
+                        bool checkRemoved = !WouldCauseCheck(move);
 
-                        ChessPiece originalInit = Grid[initX, initY];
-                        ChessPiece originalDest = Grid[destX, destY];
-
-
-                        Grid[destX, destY] = originalInit;
-                        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-
-                        if (!IsCheck)
+                        if (checkRemoved)
                         {
-                            Grid[initX, initY] = originalInit;
-                            Grid[destX, destY] = originalDest;
-                            originalInit.Coordinates = new(initX, initY);
-                            originalDest.Coordinates = new(destX, destY); // if needed
                             return false;
-
                         }
-
-                        Grid[initX, initY] = originalInit;
-                        Grid[destX, destY] = originalDest;
-                        originalInit.Coordinates = new(initX, initY);
-                        originalDest.Coordinates = new(destX, destY); // if needed
                         
                     }
                 }
@@ -297,10 +259,10 @@ public class ChessBoard
         originalInit.Coordinates = new(initX, initY);
         originalDest.Coordinates = new(destX, destY); // if needed
 
-        if (causesCheck)
-        {
-            move.ErrorMessage = "Cannot move into check!";
-        }
+        // if (causesCheck)
+        // {
+        //     move.ErrorMessage = "Cannot move into check!";
+        // }
         
         return causesCheck;
     }

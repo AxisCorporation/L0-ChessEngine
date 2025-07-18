@@ -156,15 +156,12 @@ public partial class GameViewModel : ObservableObject
 
     private void RegisterMove(Move move)
     {
-        bool moveSucceeded = Board.MakeMove(move);
+        Board.MakeMove(move);
 
         _selectedSquare!.IsSelected = false;
         _selectedSquare = null;
 
-        if (moveSucceeded)
-        {
-            IsWhiteTurn = !IsWhiteTurn;
-        }
+        IsWhiteTurn = !IsWhiteTurn;
 
         UpdateGameStateText(move);
     }

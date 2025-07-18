@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 
+
 namespace L_0_Chess_Engine.Models;
 
 public class ChessBoard
@@ -38,21 +39,9 @@ public class ChessBoard
         ResetBoard(); // Initialize the board
     }
 
-    public bool MakeMove(Move move)
+    public void MakeMove(Move move)
     {
-        if (move.IsCastling)//done before to get both coordinates
-        {
-            bool castled = HandleCastling(move);
-            if (castled)
-            {
-                IsWhiteTurn = !IsWhiteTurn;
-                GridUpdated?.Invoke();
-                return true;
-            }
-
-            return false;
-        }
-
+ 
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
         {
@@ -69,7 +58,11 @@ public class ChessBoard
 
         pieceToMove.HasMoved = true;
 
-        if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
+        if (move.IsCastling)
+        {
+            HandleCastling(move);
+        }
+        else if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
             CheckSpecialPawnConditions(move, ref pieceToMove);
         }
@@ -77,11 +70,10 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
         pieceToMove.Coordinates = new(destX, destY);
-
+        
         IsWhiteTurn = !IsWhiteTurn;
 
         GridUpdated?.Invoke();
-        return true;
     }
 
     public void ResetBoard()
@@ -140,7 +132,7 @@ public class ChessBoard
         }
     }
     
-    public bool HandleCastling(Move move)
+    public void HandleCastling(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
@@ -156,68 +148,13 @@ public class ChessBoard
 
         ChessPiece rook = Grid[rookStartX, initY];
 
-        // Validate rook
-        if (rook.Type == PieceType.Empty || !rook.EqualsUncolored(PieceType.Rook) || rook.Color != king.Color)
-        {
-            Console.WriteLine("v1 fail rook");
-            return false;
-        }
-
-        if (rook.HasMoved)
-        {
-            Console.WriteLine("v2 fail rook");
-            return false;
-        }
-
-        // Check if pieces between king and rook
-        int minX = Math.Min(initX, rookStartX) + 1;
-        int maxX = Math.Max(initX, rookStartX);
-
-        for (int x = minX; x < maxX; x++)
-        {
-            if (Grid[x, initY].Type != PieceType.Empty)
-            {
-                Console.WriteLine("pieces between");
-                return false;
-            }
-        }
-
-        // King cannot castle while in check
-        if (IsCheck)
-        {
-            Console.WriteLine("King in check.");
-            return false;
-        }
-
-        //check to see if check enroute or lands on check
-        // Save original piece references
-        int[] kingPath = isKingSide ? [initX + 1, initX + 2] : [initX - 1, initX - 2];
-
-        foreach (int x in kingPath)
-        {
-            Move attemptedMove = new(Grid[initX, initY], Grid[x, initY]);
-
-            if (WouldCauseCheck(attemptedMove))
-            {
-                Console.WriteLine("Can't castle through or into check.");
-                return false;
-            } 
-        }
-
         // Move rook to new spot
         rook.Coordinates = new Coordinate(rookNewX, initY);
         Grid[rookNewX, initY] = rook;
         Grid[rookStartX, initY] = new ChessPiece(PieceType.Empty, new(rookStartX, initY));
 
-        // Move king to new spot
-        king.Coordinates = new Coordinate(destX, destY);
-        Grid[destX, destY] = king;
-        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-
         king.HasMoved = true;
         rook.HasMoved = true;
-
-        return true;
     }
 
     public bool WouldCauseCheck(Move move)

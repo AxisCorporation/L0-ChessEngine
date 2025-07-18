@@ -42,17 +42,7 @@ public class ChessBoard
 
     public void MakeMove(Move move)
     {
-        if (!move.IsValid)
-            return;
-
-        if (move.IsCastling)
-        {
-            HandleCastling(move);
-            IsWhiteTurn = !IsWhiteTurn;
-            GridUpdated?.Invoke();
-            return;
-        }
-
+ 
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
         {
@@ -69,15 +59,22 @@ public class ChessBoard
 
         pieceToMove.HasMoved = true;
 
-        if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
+        if (move.IsCastling)
         {
-            CheckSpecialPawnConditions(move, ref pieceToMove);
+            HandleCastling(move);
+            return;
         }
+        else
+        {
+            if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
+            {
+                CheckSpecialPawnConditions(move, ref pieceToMove);
+            }
 
-        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-        Grid[destX, destY] = pieceToMove;
-        pieceToMove.Coordinates = new(destX, destY);
-
+            Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+            Grid[destX, destY] = pieceToMove;
+            pieceToMove.Coordinates = new(destX, destY);
+        }
         IsWhiteTurn = !IsWhiteTurn;
 
         GridUpdated?.Invoke();

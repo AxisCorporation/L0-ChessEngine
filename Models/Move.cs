@@ -281,8 +281,10 @@ public class Move
             ChessPiece rook = ChessBoard.Instance.Grid[rookX, InitY];
 
             if (rook.Type == PieceType.Empty || !rook.EqualsUncolored(PieceType.Rook) || rook.Color != move.InitPiece.Color || rook.HasMoved)
+            {
                 return false;
-
+            }
+            
             // Check if squares between king and rook are empty
             int min = Math.Min(InitX, rookX) + 1;
             int max = Math.Max(InitX, rookX);

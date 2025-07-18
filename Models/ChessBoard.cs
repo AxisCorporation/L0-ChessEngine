@@ -62,7 +62,6 @@ public class ChessBoard
         if (move.IsCastling)
         {
             HandleCastling(move);
-            return;
         }
         else
         {

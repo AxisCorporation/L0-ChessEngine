@@ -63,17 +63,15 @@ public class ChessBoard
         {
             HandleCastling(move);
         }
-        else
+        else if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
-            if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
-            {
-                CheckSpecialPawnConditions(move, ref pieceToMove);
-            }
-
-            Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-            Grid[destX, destY] = pieceToMove;
-            pieceToMove.Coordinates = new(destX, destY);
+            CheckSpecialPawnConditions(move, ref pieceToMove);
         }
+
+        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+        Grid[destX, destY] = pieceToMove;
+        pieceToMove.Coordinates = new(destX, destY);
+        
         IsWhiteTurn = !IsWhiteTurn;
 
         GridUpdated?.Invoke();
@@ -159,11 +157,6 @@ public class ChessBoard
         rook.Coordinates = new Coordinate(rookNewX, initY);
         Grid[rookNewX, initY] = rook;
         Grid[rookStartX, initY] = new ChessPiece(PieceType.Empty, new(rookStartX, initY));
-
-        // Move king to new spot
-        king.Coordinates = new Coordinate(destX, destY);
-        Grid[destX, destY] = king;
-        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
 
         king.HasMoved = true;
         rook.HasMoved = true;

@@ -37,6 +37,7 @@ public partial class GameViewModel : ObservableObject
 
     private Ai _ai;
     private Window? _promotionWindow;
+    private bool _isPawnPromotionActive;
 
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
 
@@ -185,6 +186,7 @@ public partial class GameViewModel : ObservableObject
         viewModel.PieceSelected += () =>
         {
             _promotionWindow!.Close();
+            _isPawnPromotionActive = false;
             onPieceSelected?.Invoke();
         };
 
@@ -201,6 +203,7 @@ public partial class GameViewModel : ObservableObject
         _promotionWindow = window;
 
         window.Show();
+        _isPawnPromotionActive = true;
     }
     
 
@@ -219,6 +222,11 @@ public partial class GameViewModel : ObservableObject
             return false;
         }
 
+        if(_isPawnPromotionActive)
+        {
+            return false;
+        }
+        
         if (_ai is not null && !IsWhiteTurn)
         {
             return false;

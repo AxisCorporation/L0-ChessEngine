@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-
+using Avalonia.Controls.Platform;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -15,7 +15,7 @@ public class ChessBoard
 
     public bool IsCheck { get => CheckScan(); }
 
-    public bool IsCheckMate { get; set; }
+    public bool IsCheckMate { get => CheckmateScan(); }
 
     public bool IsWhiteTurn { get; set; }
 
@@ -34,7 +34,6 @@ public class ChessBoard
         IsWhiteTurn = true;
 
         Grid = new ChessPiece[8, 8];
-        IsCheckMate = false;
 
         ResetBoard(); // Initialize the board
     }
@@ -107,6 +106,127 @@ public class ChessBoard
         }
 
         return false;
+    }
+
+    private bool CheckmateScan()
+    {
+        PieceType colour = IsWhiteTurn ? PieceType.White : PieceType.Black;
+
+        if (!IsCheck) return false;
+
+        (int kingX, int kingY) = (0, 0);
+
+        for (int X = 0; X < 8; X++)
+        {
+            for (int Y = 0; Y < 8; Y++)
+            {
+                if (Grid[X, Y].Type == (PieceType.King ^ colour))
+                {
+                    (kingX, kingY) = Grid[X, Y].Coordinates;
+                }
+            }
+        }
+
+        List<Move> kingMoves = Move.GetPossibleMoves(Grid[kingX, kingY]);
+
+        // Making all King Moves and Checking if it fixes Check
+        foreach (var move in kingMoves)
+        {
+            (int initX, int initY) = move.InitPiece.Coordinates;
+            (int destX, int destY) = move.DestPiece.Coordinates;
+
+            ChessPiece originalInit = Grid[initX, initY];
+            ChessPiece originalDest = Grid[destX, destY];
+
+
+            Grid[destX, destY] = originalInit;
+            Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+
+            if (!IsCheck)
+            {
+                
+                Grid[initX, initY] = originalInit;
+                Grid[destX, destY] = originalDest;
+                originalInit.Coordinates = new(initX, initY);
+                originalDest.Coordinates = new(destX, destY); // if needed
+
+                return false;
+
+            }
+
+            Grid[initX, initY] = originalInit;
+            Grid[destX, destY] = originalDest;
+            originalInit.Coordinates = new(initX, initY);
+            originalDest.Coordinates = new(destX, destY); // if needed
+
+        }
+
+        // Checking if ANY other Piece can remove check
+
+        for (int X = 0; X < 8; X++)
+        {
+            for (int Y = 0; Y < 8; Y++)
+            {
+                if ((Grid[X, Y].Type & colour) != 0)
+                {
+
+                    List<Move> moves = Move.GetPossibleMoves(Grid[X, Y]);
+
+                    foreach (var move in moves)
+                    {
+
+                        (int initX, int initY) = move.InitPiece.Coordinates;
+                        (int destX, int destY) = move.DestPiece.Coordinates;
+
+                        ChessPiece originalInit = Grid[initX, initY];
+                        ChessPiece originalDest = Grid[destX, destY];
+
+
+                        Grid[destX, destY] = originalInit;
+                        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+
+                        if (!IsCheck)
+                        {
+                            Grid[initX, initY] = originalInit;
+                            Grid[destX, destY] = originalDest;
+                            originalInit.Coordinates = new(initX, initY);
+                            originalDest.Coordinates = new(destX, destY); // if needed
+                            return false;
+
+                        }
+
+                        Grid[initX, initY] = originalInit;
+                        Grid[destX, destY] = originalDest;
+                        originalInit.Coordinates = new(initX, initY);
+                        originalDest.Coordinates = new(destX, destY); // if needed
+                        
+                    }
+                }
+            }
+        }
+
+        return true;
+
+    }
+
+    private void HypotheticalMove(Move move)
+    {
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
+
+        ChessPiece pieceToMove = Grid[initX, initY];
+
+        if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
+        {
+            CheckSpecialPawnConditions(move, ref pieceToMove);
+        }
+
+        Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+        Grid[destX, destY] = pieceToMove;
+
+        pieceToMove.Coordinates = new(destX, destY);
+
+        GridUpdated?.Invoke();
     }
 
     private void CheckSpecialPawnConditions(Move move, ref ChessPiece pieceToMove)

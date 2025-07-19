@@ -168,5 +168,5 @@ Chess:
 - Admin/Owner, CEO: Zain Farhan
 - Head Developer, Head Communications, Cult Leader: Daud Khawaja
 - Head Debt Collector, Head Communications: Haya Afareen
-- Head Zain Hater, Head Communications: Kalsoom Nawaz
+- Head Zain Hater, Head Communications, Local Company Extrovert: Kalsoom Nawaz
 - Token Non LUMS Student, Head Communications that kalsoom thinks less of: Isaac Ashar

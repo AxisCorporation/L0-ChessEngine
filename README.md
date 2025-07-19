@@ -89,9 +89,12 @@ The Development Cycles have been divided into various Stages.
 - [X] Revamp Check Logic - Daud
 
 #### Stage 3.1
+**Deadline:** 18th July 23:59 PST
 
-- [ ] Checkmate logic - Zain
-- [ ] Code Cleanup - Daud && Kalsoom
+- [X] Checkmate logic - Zain
+- [X] Code Cleanup - Daud
+- [X] Pawn Promotion Clean Up - Kalsoom
+- [X] Castling Clean Up - Kalsoom
 - [ ] AI Practical - @Everyone
 
 ### Stage ω

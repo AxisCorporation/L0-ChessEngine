@@ -63,7 +63,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-            <!-- X Labels -->
+                        <!-- X Labels -->
                         <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="*,*,*,*,*,*,*,*">
                             <TextBlock Text="A" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
                             <TextBlock Text="B" Grid.Column="1" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>

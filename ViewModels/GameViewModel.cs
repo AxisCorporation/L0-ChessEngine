@@ -252,13 +252,13 @@ public partial class GameViewModel : ObservableObject
 
     private void UpdateGameStateText(Move? move = null)
     {
-        if (Board.IsCheck)
+        if (Board.IsCheckMate)
+        {
+            GameStateText = AppendMove(IsWhiteTurn ? "White is in Checkmate!" : "Black is in Checkmate!", move);
+        }
+        else if (Board.IsCheck)
         {
             GameStateText = AppendMove(IsWhiteTurn ? "White is in Check!" : "Black is in Check!", move);
-        }
-        else if (Board.IsCheckMate)
-        {
-            GameStateText = AppendMove(IsWhiteTurn ? "Checkmate for Black!" : "Checkmate for White!", move);
         }
         else if (WhiteTimer <= TimeSpan.Zero)
         {

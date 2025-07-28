@@ -1,6 +1,4 @@
 
-// We will have to change the structure here later, bit for now this is fine.
-using System;
 using System.Collections.Generic;
 using L_0_Chess_Engine.Models;
 
@@ -8,38 +6,68 @@ namespace L_0_Chess_Engine.AI
 {
     class Ai
     {
+        
+        // Creating a copy of pointer for clarity
+        ChessPiece[,] Grid = ChessBoard.Instance.Grid;
+
+        // Used for assigning a value to each piece
+        private readonly Dictionary<PieceType, int> ValueMap;
+
+        bool maximizePlayer = false;
+
+        public Ai(bool maxPlayer)
+        {
+            maximizePlayer = maxPlayer;
+
+            // TODO: Initialize ValueMap with a respective value for each PieceType
+        }
+
         public Move GenerateMove()
         {
-            var moves = new List<Move>{};
+            List<Move> moves = [];
 
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if (ChessBoard.Instance.Grid[x, y].IsWhite || ChessBoard.Instance.Grid[x, y] == PieceType.Empty)
+                    if (Grid[x, y].IsWhite || Grid[x, y] == PieceType.Empty)
                     {
                         continue;
                     }
-                    
-                    for (int i = 0; i < 8; i++)
-                    {
-                        for (int j = 0; j < 8; j++)
-                        {
-                            Move move = new(ChessBoard.Instance.Grid[x, y], ChessBoard.Instance.Grid[i, j]);
 
-                            if (move.IsValid) moves.Add(move);
-                        }
-                    }
-                    
+                    moves.AddRange(Move.GetPossibleMoves(Grid[x, y]));
                 }
             }
 
-            var random = new Random();
-            int index = random.Next(moves.Count); // from 0 to moves.Count - 1
-
-            return moves[index];
+            return MiniMaxMove(moves);
         }
-        
+
+        private Move MiniMaxMove(List<Move> moves)
+        {
+            // TODO: 
+            // Recursive logic to determine the highest and lowest move score
+            // Return lowest scoring move if maximizePlayer = true
+            return moves[0];
+        }
+
+        private int EvaluateMove(Move move)
+        {
+            int whiteScore = 0;
+            int blackScore = 0;
+
+            // TODO: Calculate each side's score based on piece value
+
+            // Add board position score to black's score
+            blackScore += EvaluateBoardPosition();
+
+            return whiteScore - blackScore; // Lower is better for bot
+        }
+
+        private int EvaluateBoardPosition()
+        {
+            // TODO: Write an algorithm to determine how good the board position (not counting piece value) is for the AI
+            return 0; 
+        }
     }
     
 }

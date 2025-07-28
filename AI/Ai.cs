@@ -24,7 +24,7 @@ namespace L_0_Chess_Engine.AI
 
         public Move GenerateMove()
         {
-            var moves = new List<Move> { };
+            List<Move> moves = [];
 
             for (int x = 0; x < 8; x++)
             {

@@ -1,8 +1,5 @@
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using Avalonia.Controls;
 using L_0_Chess_Engine.Models;
 
 namespace L_0_Chess_Engine.AI

@@ -6,22 +6,25 @@ namespace L_0_Chess_Engine.AI
 {
     class Ai
     {
-        bool maximizePlayer = false;
+        
+        // Creating a copy of pointer for clarity
+        ChessPiece[,] Grid = ChessBoard.Instance.Grid;
+
+        // Used for assigning a value to each piece
         private readonly Dictionary<PieceType, int> ValueMap;
+
+        bool maximizePlayer = false;
 
         public Ai(bool maxPlayer)
         {
             maximizePlayer = maxPlayer;
 
-            // Initialize ValueMap with a respective value for each PieceType
+            // TODO: Initialize ValueMap with a respective value for each PieceType
         }
 
         public Move GenerateMove()
         {
             var moves = new List<Move> { };
-
-            // Creating a copy of pointer for clarity
-            ChessPiece[,] Grid = ChessBoard.Instance.Grid;
 
             for (int x = 0; x < 8; x++)
             {
@@ -41,6 +44,7 @@ namespace L_0_Chess_Engine.AI
 
         private Move MiniMaxMove(List<Move> moves)
         {
+            // TODO: 
             // Recursive logic to determine the highest and lowest move score
             // Return lowest scoring move if maximizePlayer = true
             return moves[0];
@@ -51,7 +55,9 @@ namespace L_0_Chess_Engine.AI
             int whiteScore = 0;
             int blackScore = 0;
 
-            // Calculate each side's score based on piece value
+            // TODO: Calculate each side's score based on piece value
+
+            // Add board position score to black's score
             blackScore += EvaluateBoardPosition();
 
             return whiteScore - blackScore; // Lower is better for bot
@@ -59,7 +65,7 @@ namespace L_0_Chess_Engine.AI
 
         private int EvaluateBoardPosition()
         {
-            // Write an algorithm to determine how good the board position (not counting piece value) is for the bot
+            // TODO: Write an algorithm to determine how good the board position (not counting piece value) is for the AI
             return 0; 
         }
     }

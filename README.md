@@ -94,8 +94,20 @@ The Development Cycles have been divided into various Stages.
 - [X] Checkmate logic - Zain
 - [X] Code Cleanup - Daud
 - [X] Pawn Promotion Clean Up - Kalsoom
-- [X] Castling Clean Up - Kalsoom
+- [X] Castling Clean Up - Isaac
 - [ ] AI Practical - @Everyone
+
+#### Stage 3.2
+- [ ] Bug Fixes
+
+### Stage 4
+**Deadline:** 3rd Aug 23:59 PST
+
+- [ ] Evaluation Basic - Isaac
+- [ ] Evaluation Detailed - Kalsoom
+- [ ] MinMax Algorithm - Zain
+- [ ] Alpha Beta Pruning + Difficulty - Daud
+- [ ] Implementing Draw - Daud
 
 ### Stage ω
 - [ ] A Reinforced Trained Engine

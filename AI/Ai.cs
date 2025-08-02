@@ -55,9 +55,46 @@ namespace L_0_Chess_Engine.AI
             int whiteScore = 0;
             int blackScore = 0;
 
-            // TODO: Calculate each side's score based on piece value
+            // Simulating move
+            var board = ChessBoard.Instance;
+            (int initX, int initY) = move.InitPiece.Coordinates;
+            (int destX, int destY) = move.DestPiece.Coordinates;
 
-            // Add board position score to black's score
+            ChessPiece originalInit = board.Grid[initX, initY];
+            ChessPiece originalDest = board.Grid[destX, destY];
+
+            // Applying move
+            board.Grid[destX, destY] = originalInit;
+            board.Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+            originalInit.Coordinates = new(destX, destY);
+
+            // Gotta evaluate the board after move
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    ChessPiece piece = board.Grid[x, y];
+                    if (piece.Type == PieceType.Empty) continue;
+
+                    PieceType baseType = piece.Type & ~PieceType.White & ~PieceType.Black;
+
+                    if (!ValueMap.TryGetValue(baseType, out int value))
+                        continue;
+
+                    if (piece.IsWhite)
+                        whiteScore += value;
+                    else
+                        blackScore += value;
+                }
+            }
+
+            // Undoing move
+            board.Grid[initX, initY] = originalInit;
+            board.Grid[destX, destY] = originalDest;
+            originalInit.Coordinates = new(initX, initY);
+            originalDest.Coordinates = new(destX, destY);
+
+            // Add board position score to black's scoresw
             blackScore += EvaluateBoardPosition();
 
             return whiteScore - blackScore; // Lower is better for bot

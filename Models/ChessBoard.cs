@@ -12,10 +12,11 @@ public class ChessBoard
     private PieceType _promotedPieceType = PieceType.Empty;
     
     public ChessPiece[,] Grid { get; set; }
+    public bool IsDraw { get; private set; }
 
-    public bool IsCheck { get => CheckScan(); }
+    public bool IsCheck { get; private set; }
 
-    public bool IsCheckMate { get => CheckmateScan(); }
+    public bool IsCheckMate { get; private set; }
 
     public bool IsWhiteTurn { get; set; }
 
@@ -68,9 +69,11 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
         pieceToMove.Coordinates = new(destX, destY);
-        
-        IsWhiteTurn = !IsWhiteTurn;
 
+        IsCheck = CheckScan();
+        IsCheckMate = IsCheck && CheckmateScan(); // CheckmateScan is only called if game is in check
+
+        IsWhiteTurn = !IsWhiteTurn;
         GridUpdated?.Invoke();
     }
 
@@ -168,7 +171,6 @@ public class ChessBoard
         }
 
         return true;
-
     }
 
     private void HypotheticalMove(Move move)

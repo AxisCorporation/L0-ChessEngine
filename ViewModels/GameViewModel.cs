@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
+using System.Linq;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -238,12 +239,12 @@ public partial class GameViewModel : ObservableObject
 
     private void MakeAiMove()
     {
-        // Move move = _ai.GenerateMove();
+        Move move = _ai.GenerateMoves().First();
 
-        // Board.MakeMove(move);
-        // IsWhiteTurn = !IsWhiteTurn;
+        Board.MakeMove(move);
+        IsWhiteTurn = !IsWhiteTurn;
 
-        // UpdateGameStateText(move);
+        UpdateGameStateText(move);
     }
 
     private void LoadAiModule() => _ai = new Ai(true);

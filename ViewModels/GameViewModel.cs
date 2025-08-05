@@ -238,15 +238,15 @@ public partial class GameViewModel : ObservableObject
 
     private void MakeAiMove()
     {
-        Move move = _ai.GenerateMove();
+        // Move move = _ai.GenerateMove();
 
-        Board.MakeMove(move);
-        IsWhiteTurn = !IsWhiteTurn;
+        // Board.MakeMove(move);
+        // IsWhiteTurn = !IsWhiteTurn;
 
-        UpdateGameStateText(move);
+        // UpdateGameStateText(move);
     }
 
-    private void LoadAiModule() => _ai = new Ai();
+    private void LoadAiModule() => _ai = new Ai(true);
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using Avalonia.Controls.Platform;
+using L_0_Chess_Engine.Enums;
 
 namespace L_0_Chess_Engine.Models;
 

@@ -58,12 +58,9 @@ public partial class MainMenuView : UserControl
 
         PlayToggle.Click += (_, _) => CurrentPanel = GameModeOptions;
         AiGame.Click += (_, _) => CurrentPanel = DifficultyOptions;
-
         QuitButton.Click += (_, _) => Environment.Exit(0);
 
         LocalGame.Click += PlayGame;
-
-
 
         BackButton.Click += (_, _) =>
         {

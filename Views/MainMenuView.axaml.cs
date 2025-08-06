@@ -3,9 +3,7 @@ using Avalonia.Controls;
 using Avalonia;
 using System;
 using Avalonia.Controls.Primitives;
-using CommunityToolkit.Mvvm.Input;
 using System.Collections.Generic;
-using Avalonia.Platform;
 using L_0_Chess_Engine.Enums;
 
 namespace L_0_Chess_Engine.Views;

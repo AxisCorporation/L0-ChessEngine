@@ -74,11 +74,7 @@ public partial class MainMenuView : UserControl
 
     private void PlayGame(object? sender, RoutedEventArgs e)
     {
-        var button = sender as Button;
-        var mode = button?.Tag as string;
-
         GameView game = new(TimeSelected);
-
         MainWindow?.SetMainContent(game);
     }
 

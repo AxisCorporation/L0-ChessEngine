@@ -107,6 +107,8 @@ namespace L_0_Chess_Engine.AI
 
         private int EvaluateMove(Move move)
         {
+            int score = 0;
+            
             int whiteScore = 0;
             int blackScore = 0;
 
@@ -152,7 +154,7 @@ namespace L_0_Chess_Engine.AI
             // Add board position score to black's scoresw
             blackScore += EvaluateBoardPosition();
 
-            return whiteScore - blackScore; // Lower is better for bot
+            return score; // Lower is better for bot
         }
 
         private int EvaluateBoardPosition()

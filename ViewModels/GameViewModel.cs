@@ -239,12 +239,12 @@ public partial class GameViewModel : ObservableObject
 
     private void MakeAiMove()
     {
-        // Move move = _ai.GenerateMove();
+        Move move = _ai.GenerateMove();
 
-        // Board.MakeMove(move);
-        // IsWhiteTurn = !IsWhiteTurn;
+        Board.MakeMove(move);
+        IsWhiteTurn = !IsWhiteTurn;
 
-        // UpdateGameStateText(move);
+        UpdateGameStateText(move);
     }
 
     private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(Difficulty);

@@ -33,7 +33,7 @@
 
                 <!-- Difficulty Options -->
                 <StackPanel x:Name="DifficultyOptions" Spacing="10" HorizontalAlignment="Center" IsVisible="False">
-                    <TextBlock Text="Choose AI Difficulty" FontSize="28" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
+                    <TextBlock Text="AI Difficulty" FontSize="28" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
                     <Button Content="Easy" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="PlayAIGame"/>
                     <Button Content="Medium" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="PlayAIGame"/>
                     <Button Content="Hard" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="PlayAIGame"/>

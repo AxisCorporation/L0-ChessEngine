@@ -4,6 +4,7 @@ using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using L_0_Chess_Engine.Enums;
 using L_0_Chess_Engine.Models;
 
 namespace L_0_Chess_Engine.ViewModels;

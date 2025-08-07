@@ -1,20 +1,15 @@
 using Avalonia.Controls;
-
-
+using L_0_Chess_Engine.Enums;
 using L_0_Chess_Engine.ViewModels;
 
 namespace L_0_Chess_Engine.Views;
 
 public partial class GameView : UserControl
 {
-    public GameView(int timeSetting, bool AiGame = false)
+    public GameView(int timeSetting, bool AiGame = false, AIDifficulty Difficulty = AIDifficulty.Easy)
     {
         InitializeComponent();
 
-        if (AiGame)
-        {
-            DataContext = new GameViewModel(timeSetting, true);
-        }
-        else DataContext = new GameViewModel(timeSetting);
+        DataContext = new GameViewModel(timeSetting, AiGame, Difficulty);
     }
 }

@@ -72,12 +72,7 @@ public partial class MainMenuView : UserControl
         };
     }
 
-    private void PlayGame(object? sender, RoutedEventArgs e)
-    {
-        GameView game = new(TimeSelected);
-        MainWindow?.SetMainContent(game);
-    }
-
+    
     private void TimeOptionSelected(object? sender, RoutedEventArgs e)
     {
         ToggleButton button = (ToggleButton)sender!;
@@ -98,6 +93,8 @@ public partial class MainMenuView : UserControl
             }
         }
     }
+    
+    private void PlayGame(object? sender, RoutedEventArgs e) => MainWindow?.SetMainContent(new GameView(TimeSelected));
 
     private void PlayAIGame(object? sender, RoutedEventArgs e)
     {

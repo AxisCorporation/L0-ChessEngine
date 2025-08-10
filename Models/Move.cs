@@ -320,8 +320,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
 
     public static List<Move> GetPossibleMoves(ChessPiece piece)
     {
-        PieceType color = piece.Color;
-        PieceType type = piece.Type ^ color;
+        PieceType type = piece.Type ^ piece.Color;
 
         (int auraX, int auraY) = AuraMap[type];
 

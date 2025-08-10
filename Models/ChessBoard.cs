@@ -13,10 +13,11 @@ public class ChessBoard
     private PieceType _promotedPieceType = PieceType.Empty;
     
     public ChessPiece[,] Grid { get; set; }
+    public bool IsDraw { get; private set; }
 
-    public bool IsCheck { get => CheckScan(); }
+    public bool IsCheck { get; private set; }
 
-    public bool IsCheckMate { get => CheckmateScan(); }
+    public bool IsCheckMate { get; private set; }
 
     public bool IsWhiteTurn { get; set; }
 
@@ -69,9 +70,11 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
         pieceToMove.Coordinates = new(destX, destY);
-        
-        IsWhiteTurn = !IsWhiteTurn;
 
+        IsCheck = CheckScan();
+        IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
+
+        IsWhiteTurn = !IsWhiteTurn;
         GridUpdated?.Invoke();
     }
 
@@ -80,7 +83,57 @@ public class ChessBoard
         ReadFEN(DefaultFEN);
     }
 
+    private bool DrawScan()
+    {
+        // First check: Remaining material
+        // 1a. King vs King
+        // 1b. King and bishop vs king
+        // 1c. King and bishop vs king and bishop
+        int Combination = CountPiecesOfType(ConsiderColor: false, PieceType.King, PieceType.Bishop);
+        if (Combination <= 4 && Grid.Length == Combination)
+        {
+            return true;
+        }
 
+        // 1d. King and knight vs king
+        Combination = CountPiecesOfType(ConsiderColor: false, PieceType.King, PieceType.Knight);
+        if (Combination == 3 && Grid.Length == Combination)
+        {
+            return true;
+        }
+
+        // 2. Stalemate
+        List<Move> moves = [];
+
+        foreach (var square in Grid)
+        {
+            if (square.Type == PieceType.Empty)
+            {
+                continue;
+            }
+
+            moves.AddRange(from move in Move.GetPossibleMoves(square)
+                           where !WouldCauseCheck(move)
+                           select move);
+        }
+
+        return moves.Count == 0;
+    }
+
+    private int CountPiecesOfType(bool ConsiderColor, params PieceType[] Types)
+    {
+        int count = 0;
+        foreach (var piece in Grid)
+        {
+            PieceType Type = ConsiderColor ? piece.Type : piece.Type ^ piece.Color;
+            if (Types.Contains(Type))
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
     // After making a move, it checks if the opposite team is in check
     private bool CheckScan()
     {
@@ -109,7 +162,7 @@ public class ChessBoard
         return false;
     }
 
-    private bool CheckmateScan()
+    private bool CheckMateScan()
     {
         PieceType colour = IsWhiteTurn ? PieceType.White : PieceType.Black;
 
@@ -148,28 +201,28 @@ public class ChessBoard
         {
             for (int Y = 0; Y < 8; Y++)
             {
-                if ((Grid[X, Y].Type & colour) != 0)
+                if ((Grid[X, Y].Type & colour) == 0)
+                {
+                    continue;
+                }
+
+                List<Move> moves = Move.GetPossibleMoves(Grid[X, Y]);
+
+                foreach (var move in moves)
                 {
 
-                    List<Move> moves = Move.GetPossibleMoves(Grid[X, Y]);
+                    bool checkRemoved = !WouldCauseCheck(move);
 
-                    foreach (var move in moves)
+                    if (checkRemoved)
                     {
-
-                        bool checkRemoved = !WouldCauseCheck(move);
-
-                        if (checkRemoved)
-                        {
-                            return false;
-                        }
-                        
+                        return false;
                     }
+                    
                 }
             }
         }
 
         return true;
-
     }
 
     private void HypotheticalMove(Move move)

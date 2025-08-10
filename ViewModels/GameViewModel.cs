@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
 using L_0_Chess_Engine.Enums;
+using System.Linq;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -20,7 +21,7 @@ public partial class GameViewModel : ObservableObject
     [ObservableProperty]
     private string _whiteTimerText;
 
-    public TimeSpan BlackTimer { get; set; }
+    public TimeSpan BlackTimer { get; set; } // Why is this Public?
 
     [ObservableProperty]
     private string _blackTimerText;
@@ -164,7 +165,7 @@ public partial class GameViewModel : ObservableObject
 
         IsWhiteTurn = !IsWhiteTurn;
 
-        UpdateGameStateText(move);
+        UpdateGameState(move);
     }
 
     private static bool IsPawnPromotionMove(ChessPiece initPiece, ChessPiece destPiece)
@@ -237,29 +238,36 @@ public partial class GameViewModel : ObservableObject
         return false;
     }
 
+    // This Function will probably be redundant later on
     private void MakeAiMove()
     {
-        Move move = _ai.GenerateMove();
+        Move move = _ai.GenerateMoves().First();
 
         Board.MakeMove(move);
         IsWhiteTurn = !IsWhiteTurn;
 
-        UpdateGameStateText(move);
+        UpdateGameState(move);
     }
 
     private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(Difficulty);
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 
-    private void UpdateGameStateText(Move? move = null)
+    private void UpdateGameState(Move? move = null)
     {
         if (Board.IsCheckMate)
         {
             GameStateText = AppendMove(IsWhiteTurn ? "White is in Checkmate!" : "Black is in Checkmate!", move);
+            GameRunning = false;
         }
         else if (Board.IsCheck)
         {
             GameStateText = AppendMove(IsWhiteTurn ? "White is in Check!" : "Black is in Check!", move);
+        }
+        else if (Board.IsDraw)
+        {
+            GameStateText = AppendMove("It's a Draw!", move);
+            GameRunning = false;
         }
         else if (WhiteTimer <= TimeSpan.Zero)
         {
@@ -296,7 +304,7 @@ public partial class GameViewModel : ObservableObject
                 GameRunning = false;
 
                 NotifyCanClickSquares();
-                UpdateGameStateText();
+                UpdateGameState();
             }
         }
     }

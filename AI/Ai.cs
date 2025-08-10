@@ -13,7 +13,7 @@ namespace L_0_Chess_Engine.AI
         ChessPiece[,] Grid = ChessBoard.Instance.Grid;
 
         // Used for assigning a value to each piece
-        private readonly Dictionary<PieceType, int> ValueMap;
+        private readonly Dictionary<PieceType, int> ValueMap = [];
 
         bool maximizePlayer = false;
 
@@ -22,9 +22,36 @@ namespace L_0_Chess_Engine.AI
             maximizePlayer = Difficulty == AIDifficulty.Easy; // If easy, true, otherwise maximize AI
 
             // TODO: Initialize ValueMap with a respective value for each PieceType
+            ValueMap[PieceType.Pawn] = 1;
+            ValueMap[PieceType.Knight] = 3;
+            ValueMap[PieceType.Bishop] = 3;
+            ValueMap[PieceType.Rook] = 5;
+            ValueMap[PieceType.Queen] = 9;
+            ValueMap[PieceType.King] = 100; // Will Probably Change this Later
         }
 
-        public List<Move> GenerateMove()
+        public Move GenerateMove()
+        {
+            List<Move> moves = [];
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    if (Grid[x, y].IsWhite || Grid[x, y] == PieceType.Empty)
+                    {
+                        continue;
+                    }
+
+                    moves.AddRange(Move.GetPossibleMoves(Grid[x, y]));
+                }
+            }
+
+            return MiniMaxMove(0, moves);
+        }
+
+        // Function only here for hot fix, will optimize later
+        public List<Move> TempGenerateMove()
         {
             List<Move> moves = [];
 
@@ -43,7 +70,6 @@ namespace L_0_Chess_Engine.AI
 
             return moves;
         }
-
 
 
         private Move MiniMaxMove(int depth, List<Move> moves)
@@ -69,10 +95,15 @@ namespace L_0_Chess_Engine.AI
                     }
                 }
 
+                if (bestMove == null)
+                {
+                    bestMove = moves[0];
+                }
+
                 return bestMove;
 
             }
-            
+
             List<Move> bestMoves = new List<Move>();
 
             // Max
@@ -81,9 +112,27 @@ namespace L_0_Chess_Engine.AI
                 foreach (var move in moves)
                 {
                     // Will change this to make a "Hypothetical Move"
-                    ChessBoard.Instance.MakeMove(move);
+                    // ChessBoard.Instance.MakeMove(move);
 
-                    bestMoves.Add(MiniMaxMove(depth - 1, GenerateMove()));
+                    (int initX, int initY) = move.InitPiece.Coordinates;
+                    (int destX, int destY) = move.DestPiece.Coordinates;
+
+                    bestMoves.Add(MiniMaxMove(depth - 1, GenerateMoves()));
+                    ChessPiece originalInit = Grid[initX, initY];
+                    ChessPiece originalDest = Grid[destX, destY];
+
+                    // Applying move
+                    Grid[destX, destY] = originalInit;
+                    Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+                    originalInit.Coordinates = new(destX, destY);
+
+                    bestMoves.Add(MiniMaxMove(depth - 1, TempGenerateMove()));
+
+                    // Undoing move
+                    Grid[initX, initY] = originalInit;
+                    Grid[destX, destY] = originalDest;
+                    originalInit.Coordinates = new(initX, initY);
+                    originalDest.Coordinates = new(destX, destY);
 
                 }
 
@@ -94,10 +143,29 @@ namespace L_0_Chess_Engine.AI
                 foreach (var move in moves)
                 {
                     // Will change this to make a "Hypothetical Move"
-                    ChessBoard.Instance.MakeMove(move);
+                    // ChessBoard.Instance.MakeMove(move);
 
-                    bestMoves.Add(MiniMaxMove(depth - 1, GenerateMove()));
+                    (int initX, int initY) = move.InitPiece.Coordinates;
+                    (int destX, int destY) = move.DestPiece.Coordinates;
 
+
+                    bestMoves.Add(MiniMaxMove(depth - 1, GenerateMoves()));
+                  
+                    ChessPiece originalInit = Grid[initX, initY];
+                    ChessPiece originalDest = Grid[destX, destY];
+
+                    // Applying move
+                    Grid[destX, destY] = originalInit;
+                    Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+                    originalInit.Coordinates = new(destX, destY);
+
+                    bestMoves.Add(MiniMaxMove(depth - 1, TempGenerateMove()));
+
+                    // Undoing move
+                    Grid[initX, initY] = originalInit;
+                    Grid[destX, destY] = originalDest;
+                    originalInit.Coordinates = new(initX, initY);
+                    originalDest.Coordinates = new(destX, destY);
                 }
 
             }
@@ -113,16 +181,15 @@ namespace L_0_Chess_Engine.AI
             int blackScore = 0;
 
             // Simulating move
-            var board = ChessBoard.Instance;
             (int initX, int initY) = move.InitPiece.Coordinates;
             (int destX, int destY) = move.DestPiece.Coordinates;
 
-            ChessPiece originalInit = board.Grid[initX, initY];
-            ChessPiece originalDest = board.Grid[destX, destY];
+            ChessPiece originalInit = Grid[initX, initY];
+            ChessPiece originalDest = Grid[destX, destY];
 
             // Applying move
-            board.Grid[destX, destY] = originalInit;
-            board.Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+            Grid[destX, destY] = originalInit;
+            Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
             originalInit.Coordinates = new(destX, destY);
 
             // Gotta evaluate the board after move
@@ -130,7 +197,7 @@ namespace L_0_Chess_Engine.AI
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    ChessPiece piece = board.Grid[x, y];
+                    ChessPiece piece = Grid[x, y];
                     if (piece.Type == PieceType.Empty) continue;
 
                     PieceType baseType = piece.Type & ~PieceType.White & ~PieceType.Black;
@@ -138,21 +205,49 @@ namespace L_0_Chess_Engine.AI
                     if (!ValueMap.TryGetValue(baseType, out int value))
                         continue;
 
+                    int positionValue = 0;
+                    // Bonus for controlling center
+                    if ((x == 3 || x == 4) && (y == 3 || y == 4))
+                    {
+                        positionValue += 10; 
+                    }
+                    
+                    // Bonus for advancing pawns 
+                    if (baseType == PieceType.Pawn)
+                    {
+                        if (piece.IsWhite)
+                        {
+                            positionValue += y * 5;
+                        }
+                        else
+                        {
+                            positionValue += (7 - y) * 5;
+                        }
+                    }
+
+                    // Knight penalty for edge positions
+                    if (baseType == PieceType.Knight)
+                    {
+                        if (x == 0 || x == 7 || y == 0 || y == 7)
+                        {
+                            positionValue -= 10; 
+                        }
+                    }
+
                     if (piece.IsWhite)
-                        whiteScore += value;
+                        score += value;
                     else
-                        blackScore += value;
+                        score -= value;
                 }
             }
 
             // Undoing move
-            board.Grid[initX, initY] = originalInit;
-            board.Grid[destX, destY] = originalDest;
+            Grid[initX, initY] = originalInit;
+            Grid[destX, destY] = originalDest;
             originalInit.Coordinates = new(initX, initY);
             originalDest.Coordinates = new(destX, destY);
 
-            // Add board position score to black's scoresw
-            blackScore += EvaluateBoardPosition();
+            score -= EvaluateBoardPosition();
 
             return score; // Lower is better for bot
         }

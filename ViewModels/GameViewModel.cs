@@ -20,7 +20,7 @@ public partial class GameViewModel : ObservableObject
     [ObservableProperty]
     private string _whiteTimerText;
 
-    public TimeSpan BlackTimer { get; set; }
+    public TimeSpan BlackTimer { get; set; } // Why is this Public?
 
     [ObservableProperty]
     private string _blackTimerText;
@@ -237,6 +237,7 @@ public partial class GameViewModel : ObservableObject
         return false;
     }
 
+    // This Function will probably be redundant later on
     private void MakeAiMove()
     {
         Move move = _ai.GenerateMoves().First();

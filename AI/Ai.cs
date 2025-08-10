@@ -201,6 +201,35 @@ namespace L_0_Chess_Engine.AI
                     if (!ValueMap.TryGetValue(baseType, out int value))
                         continue;
 
+                    int positionValue = 0;
+                    // Bonus for controlling center
+                    if ((x == 3 || x == 4) && (y == 3 || y == 4))
+                    {
+                        positionValue += 10; 
+                    }
+                    
+                    // Bonus for advancing pawns 
+                    if (baseType == PieceType.Pawn)
+                    {
+                        if (piece.IsWhite)
+                        {
+                            positionValue += y * 5;
+                        }
+                        else
+                        {
+                            positionValue += (7 - y) * 5;
+                        }
+                    }
+
+                    // Knight penalty for edge positions
+                    if (baseType == PieceType.Knight)
+                    {
+                        if (x == 0 || x == 7 || y == 0 || y == 7)
+                        {
+                            positionValue -= 10; 
+                        }
+                    }
+
                     if (piece.IsWhite)
                         score += value;
                     else
@@ -214,7 +243,6 @@ namespace L_0_Chess_Engine.AI
             originalInit.Coordinates = new(initX, initY);
             originalDest.Coordinates = new(destX, destY);
 
-            // Add board position score to black's scores
             score -= EvaluateBoardPosition();
 
             return score; // Lower is better for bot

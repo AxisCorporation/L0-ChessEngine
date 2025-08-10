@@ -1,4 +1,5 @@
 using Avalonia.Controls;
+using L_0_Chess_Engine.Enums;
 using L_0_Chess_Engine.Models;
 using System;
 

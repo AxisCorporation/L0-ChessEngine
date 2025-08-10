@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net.NetworkInformation;
+using L_0_Chess_Engine.Enums;
 
 namespace L_0_Chess_Engine.Models;
 

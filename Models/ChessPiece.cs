@@ -1,22 +1,9 @@
 using System;
+using L_0_Chess_Engine.Enums;
 
 namespace L_0_Chess_Engine.Models;
 
-[Flags]
-public enum PieceType
-{
-    Empty,
-    Pawn,
-    Knight,
-    Bishop,
-    Rook,
-    Queen,
-    King,
 
-    // Colour
-    White = 8,
-    Black = 16
-}
 public record Coordinate(int X, int Y);
 
 public class ChessPiece 

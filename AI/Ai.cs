@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.Tracing;
+using L_0_Chess_Engine.Enums;
 using L_0_Chess_Engine.Models;
 
 namespace L_0_Chess_Engine.AI
@@ -16,9 +17,9 @@ namespace L_0_Chess_Engine.AI
 
         bool maximizePlayer = false;
 
-        public Ai(bool maxPlayer)
+        public Ai(AIDifficulty Difficulty)
         {
-            maximizePlayer = maxPlayer;
+            maximizePlayer = Difficulty == AIDifficulty.Easy; // If easy, true, otherwise maximize AI
 
             // TODO: Initialize ValueMap with a respective value for each PieceType
             ValueMap[PieceType.Pawn] = 1;
@@ -175,6 +176,9 @@ namespace L_0_Chess_Engine.AI
         private int EvaluateMove(Move move)
         {
             int score = 0;
+            
+            int whiteScore = 0;
+            int blackScore = 0;
 
             // Simulating move
             (int initX, int initY) = move.InitPiece.Coordinates;

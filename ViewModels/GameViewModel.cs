@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
+using L_0_Chess_Engine.Enums;
 using System.Linq;
 
 namespace L_0_Chess_Engine.ViewModels;
@@ -55,7 +56,7 @@ public partial class GameViewModel : ObservableObject
 
     private SquareViewModel? _selectedSquare;
 
-    public GameViewModel(int timeLimit, bool LoadAi = false)
+    public GameViewModel(int timeLimit, bool LoadAi, AIDifficulty Difficulty = AIDifficulty.Easy)
     {
         WhiteTimer = TimeSpan.FromMinutes(timeLimit);
         BlackTimer = TimeSpan.FromMinutes(timeLimit);
@@ -86,7 +87,7 @@ public partial class GameViewModel : ObservableObject
 
         if (LoadAi)
         {
-            LoadAiModule();
+            LoadAiModule(Difficulty);
         }
 
         _ = UpdateTurnTimersAsync();
@@ -248,7 +249,7 @@ public partial class GameViewModel : ObservableObject
         UpdateGameState(move);
     }
 
-    private void LoadAiModule() => _ai = new Ai(true);
+    private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(Difficulty);
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 

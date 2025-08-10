@@ -30,7 +30,7 @@ namespace L_0_Chess_Engine.AI
             ValueMap[PieceType.King] = 100; // Will Probably Change this Later
         }
 
-        public Move GenerateMove()
+        public Move GenerateMoves()
         {
             List<Move> moves = [];
 
@@ -117,7 +117,6 @@ namespace L_0_Chess_Engine.AI
                     (int initX, int initY) = move.InitPiece.Coordinates;
                     (int destX, int destY) = move.DestPiece.Coordinates;
 
-                    bestMoves.Add(MiniMaxMove(depth - 1, GenerateMoves()));
                     ChessPiece originalInit = Grid[initX, initY];
                     ChessPiece originalDest = Grid[destX, destY];
 
@@ -147,9 +146,6 @@ namespace L_0_Chess_Engine.AI
 
                     (int initX, int initY) = move.InitPiece.Coordinates;
                     (int destX, int destY) = move.DestPiece.Coordinates;
-
-
-                    bestMoves.Add(MiniMaxMove(depth - 1, GenerateMoves()));
                   
                     ChessPiece originalInit = Grid[initX, initY];
                     ChessPiece originalDest = Grid[destX, destY];
@@ -176,9 +172,6 @@ namespace L_0_Chess_Engine.AI
         private int EvaluateMove(Move move)
         {
             int score = 0;
-            
-            int whiteScore = 0;
-            int blackScore = 0;
 
             // Simulating move
             (int initX, int initY) = move.InitPiece.Coordinates;

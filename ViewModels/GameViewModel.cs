@@ -241,7 +241,7 @@ public partial class GameViewModel : ObservableObject
     // This Function will probably be redundant later on
     private void MakeAiMove()
     {
-        Move move = _ai.GenerateMoves().First();
+        Move move = _ai.GenerateMoves();
 
         Board.MakeMove(move);
         IsWhiteTurn = !IsWhiteTurn;

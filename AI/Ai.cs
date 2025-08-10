@@ -12,7 +12,7 @@ namespace L_0_Chess_Engine.AI
         ChessPiece[,] Grid = ChessBoard.Instance.Grid;
 
         // Used for assigning a value to each piece
-        private readonly Dictionary<PieceType, int> ValueMap;
+        private readonly Dictionary<PieceType, int> ValueMap = [];
 
         bool maximizePlayer = false;
 
@@ -21,9 +21,36 @@ namespace L_0_Chess_Engine.AI
             maximizePlayer = maxPlayer;
 
             // TODO: Initialize ValueMap with a respective value for each PieceType
+            ValueMap[PieceType.Pawn] = 1;
+            ValueMap[PieceType.Knight] = 3;
+            ValueMap[PieceType.Bishop] = 3;
+            ValueMap[PieceType.Rook] = 5;
+            ValueMap[PieceType.Queen] = 9;
+            ValueMap[PieceType.King] = 100; // Will Probably Change this Later
         }
 
-        public List<Move> GenerateMove()
+        public Move GenerateMove()
+        {
+            List<Move> moves = [];
+
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    if (Grid[x, y].IsWhite || Grid[x, y] == PieceType.Empty)
+                    {
+                        continue;
+                    }
+
+                    moves.AddRange(Move.GetPossibleMoves(Grid[x, y]));
+                }
+            }
+
+            return MiniMaxMove(0, moves);
+        }
+
+        // Function only here for hot fix, will optimize later
+        public List<Move> TempGenerateMove()
         {
             List<Move> moves = [];
 
@@ -42,7 +69,6 @@ namespace L_0_Chess_Engine.AI
 
             return moves;
         }
-
 
 
         private Move MiniMaxMove(int depth, List<Move> moves)
@@ -68,10 +94,15 @@ namespace L_0_Chess_Engine.AI
                     }
                 }
 
+                if (bestMove == null)
+                {
+                    bestMove = moves[0];
+                }
+
                 return bestMove;
 
             }
-            
+
             List<Move> bestMoves = new List<Move>();
 
             // Max
@@ -80,9 +111,26 @@ namespace L_0_Chess_Engine.AI
                 foreach (var move in moves)
                 {
                     // Will change this to make a "Hypothetical Move"
-                    ChessBoard.Instance.MakeMove(move);
+                    // ChessBoard.Instance.MakeMove(move);
 
-                    bestMoves.Add(MiniMaxMove(depth - 1, GenerateMove()));
+                    (int initX, int initY) = move.InitPiece.Coordinates;
+                    (int destX, int destY) = move.DestPiece.Coordinates;
+
+                    ChessPiece originalInit = Grid[initX, initY];
+                    ChessPiece originalDest = Grid[destX, destY];
+
+                    // Applying move
+                    Grid[destX, destY] = originalInit;
+                    Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+                    originalInit.Coordinates = new(destX, destY);
+
+                    bestMoves.Add(MiniMaxMove(depth - 1, TempGenerateMove()));
+
+                    // Undoing move
+                    Grid[initX, initY] = originalInit;
+                    Grid[destX, destY] = originalDest;
+                    originalInit.Coordinates = new(initX, initY);
+                    originalDest.Coordinates = new(destX, destY);
 
                 }
 
@@ -93,9 +141,26 @@ namespace L_0_Chess_Engine.AI
                 foreach (var move in moves)
                 {
                     // Will change this to make a "Hypothetical Move"
-                    ChessBoard.Instance.MakeMove(move);
+                    // ChessBoard.Instance.MakeMove(move);
 
-                    bestMoves.Add(MiniMaxMove(depth - 1, GenerateMove()));
+                    (int initX, int initY) = move.InitPiece.Coordinates;
+                    (int destX, int destY) = move.DestPiece.Coordinates;
+
+                    ChessPiece originalInit = Grid[initX, initY];
+                    ChessPiece originalDest = Grid[destX, destY];
+
+                    // Applying move
+                    Grid[destX, destY] = originalInit;
+                    Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+                    originalInit.Coordinates = new(destX, destY);
+
+                    bestMoves.Add(MiniMaxMove(depth - 1, TempGenerateMove()));
+
+                    // Undoing move
+                    Grid[initX, initY] = originalInit;
+                    Grid[destX, destY] = originalDest;
+                    originalInit.Coordinates = new(initX, initY);
+                    originalDest.Coordinates = new(destX, destY);
 
                 }
 
@@ -166,9 +231,9 @@ namespace L_0_Chess_Engine.AI
                     }
 
                     if (piece.IsWhite)
-                        whiteScore += value;
+                        score += value;
                     else
-                        blackScore += value;
+                        score -= value;
                 }
             }
 
@@ -177,7 +242,8 @@ namespace L_0_Chess_Engine.AI
             board.Grid[destX, destY] = originalDest;
             originalInit.Coordinates = new(initX, initY);
             originalDest.Coordinates = new(destX, destY);
-            // Add board position score to black's scoresw
+
+          // Add board position score to black's scoresw
             blackScore += EvaluateBoardPosition();
 
             // Determine final score based on which player we are

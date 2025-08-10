@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
+using System.Linq;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -163,7 +164,7 @@ public partial class GameViewModel : ObservableObject
 
         IsWhiteTurn = !IsWhiteTurn;
 
-        UpdateGameStateText(move);
+        UpdateGameState(move);
     }
 
     private static bool IsPawnPromotionMove(ChessPiece initPiece, ChessPiece destPiece)
@@ -239,27 +240,33 @@ public partial class GameViewModel : ObservableObject
     // This Function will probably be redundant later on
     private void MakeAiMove()
     {
-        Move move = _ai.GenerateMove();
+        Move move = _ai.GenerateMoves().First();
 
         Board.MakeMove(move);
         IsWhiteTurn = !IsWhiteTurn;
 
-        UpdateGameStateText(move);
+        UpdateGameState(move);
     }
 
     private void LoadAiModule() => _ai = new Ai(true);
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 
-    private void UpdateGameStateText(Move? move = null)
+    private void UpdateGameState(Move? move = null)
     {
         if (Board.IsCheckMate)
         {
             GameStateText = AppendMove(IsWhiteTurn ? "White is in Checkmate!" : "Black is in Checkmate!", move);
+            GameRunning = false;
         }
         else if (Board.IsCheck)
         {
             GameStateText = AppendMove(IsWhiteTurn ? "White is in Check!" : "Black is in Check!", move);
+        }
+        else if (Board.IsDraw)
+        {
+            GameStateText = AppendMove("It's a Draw!", move);
+            GameRunning = false;
         }
         else if (WhiteTimer <= TimeSpan.Zero)
         {
@@ -296,7 +303,7 @@ public partial class GameViewModel : ObservableObject
                 GameRunning = false;
 
                 NotifyCanClickSquares();
-                UpdateGameStateText();
+                UpdateGameState();
             }
         }
     }

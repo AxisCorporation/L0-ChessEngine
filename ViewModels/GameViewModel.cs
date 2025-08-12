@@ -9,7 +9,6 @@ using Avalonia.Controls;
 using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
 using L_0_Chess_Engine.Enums;
-using System.Linq;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -152,7 +151,8 @@ public partial class GameViewModel : ObservableObject
 
         if (_ai is not null)
         {
-            MakeAiMove();
+            RegisterMove(_ai.GenerateMove());
+            // MakeAiMove();
         }
     }
 
@@ -160,7 +160,11 @@ public partial class GameViewModel : ObservableObject
     {
         Board.MakeMove(move);
 
-        _selectedSquare!.IsSelected = false;
+        if (_selectedSquare != null)
+        {
+            _selectedSquare.IsSelected = false;
+        }
+
         _selectedSquare = null;
 
         IsWhiteTurn = !IsWhiteTurn;
@@ -241,7 +245,7 @@ public partial class GameViewModel : ObservableObject
     // This Function will probably be redundant later on
     private void MakeAiMove()
     {
-        Move move = _ai.GenerateMoves();
+        Move move = _ai.GenerateMove();
 
         Board.MakeMove(move);
         IsWhiteTurn = !IsWhiteTurn;
@@ -249,7 +253,7 @@ public partial class GameViewModel : ObservableObject
         UpdateGameState(move);
     }
 
-    private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(Difficulty);
+    private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(false, Difficulty);
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 

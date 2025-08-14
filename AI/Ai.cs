@@ -35,12 +35,7 @@ namespace L_0_Chess_Engine.AI
         {
             List<Move> moves = GenerateAllMoves();
             
-            (int eval, Move bestMove) = MiniMax(3, false);
-
-            if (bestMove == null)
-            {
-                Console.WriteLine("NULL AI MOVE");
-            }
+            (int eval, Move bestMove) = MiniMax(18, false);
 
             return bestMove;
         }
@@ -66,7 +61,9 @@ namespace L_0_Chess_Engine.AI
             return moves;
         }
 
-
+        
+        // This is Sebastian's implementation almost line by line, So it's unlikely that this function is wrong.
+        // But we might have to cross check anyways.
         private (int, Move) MiniMax(int depth, bool maximize)
         {
             if (depth == 0 || ChessBoard.Instance.IsCheckMate)
@@ -151,7 +148,7 @@ namespace L_0_Chess_Engine.AI
         }
 
         
-        
+        // We'll probably delete this all together later on
         private int EvaluateMove(Move move)
         {
             int score = 0;

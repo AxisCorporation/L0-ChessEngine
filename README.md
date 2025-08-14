@@ -98,16 +98,27 @@ The Development Cycles have been divided into various Stages.
 - [ ] AI Practical - @Everyone
 
 #### Stage 3.2
-- [ ] Bug Fixes
+- [X] Bug Fixes - Zain
 
 ### Stage 4
 **Deadline:** 3rd Aug 23:59 PST
 
-- [ ] Evaluation Basic - Isaac
-- [ ] Evaluation Detailed - Kalsoom
+- [X] Evaluation Basic - Isaac
+- [X] Evaluation Detailed - Kalsoom
 - [ ] MinMax Algorithm - Zain
 - [ ] Alpha Beta Pruning + Difficulty - Daud
-- [ ] Implementing Draw - Daud
+- [X] Implementing Draw - Daud
+#### Stage 4.1
+- [X] Bug Fixes - Zain
+- [X] MinMax Algorithm - Zain
+
+### Stage 5
+**Deadline - Passive Stage:** 18rd Aug 23:59 PST
+
+- [ ] Evaluation Function Sophistication
+- [ ] Bug Fixes
+  - [ ] Pawn Promotion
+  - [ ] Board Display
 
 ### Stage ω
 - [ ] A Reinforced Trained Engine
@@ -178,7 +189,7 @@ Chess:
 ## Permissions And Roles
 
 - Admin/Owner, CEO: Zain Farhan
-- Head Developer, Head Communications, Cult Leader: Daud Khawaja
+- Head Developer, Head Communications, Cult Leader, PTSD (Punctuation Trauma & Syntax Distress) Specialist: Daud Khawaja
 - Head Debt Collector, Head Communications: Haya Afareen
 - Head Zain Hater, Head Communications, Local Company Extrovert: Kalsoom Nawaz
 - Token Non LUMS Student, Head Communications that kalsoom thinks less of: Isaac Ashar

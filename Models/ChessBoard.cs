@@ -40,8 +40,13 @@ public class ChessBoard
         ResetBoard(); // Initialize the board
     }
 
-    public void MakeMove(Move move)
+    public bool MakeMove(Move move)
     {
+        // Move Validation
+        if (!move.IsValid || move.TargetsKing || ChessBoard.Instance.WouldCauseCheck(move))
+        {
+            return false;
+        }
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
         {
@@ -76,6 +81,8 @@ public class ChessBoard
 
         IsWhiteTurn = !IsWhiteTurn;
         GridUpdated?.Invoke();
+
+        return true;
     }
 
     public void ResetBoard()
@@ -263,7 +270,7 @@ public class ChessBoard
         if (destY == 0 || destY == 7)
         {
             pieceToMove = GetPieceFromPromotion();
-            pieceToMove.Coordinates = new(destX, destY);
+            pieceToMove.Coordinates = new(destX, destY); // This might be redundant as won't the Make move Function do this regardless?
         }
         else if (Math.Abs(destY - initY) == 2)
         {

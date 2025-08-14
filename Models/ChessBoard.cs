@@ -40,8 +40,13 @@ public class ChessBoard
         ResetBoard(); // Initialize the board
     }
 
-    public void MakeMove(Move move)
+    public bool MakeMove(Move move)
     {
+        // Move Validation
+        if (!move.IsValid || move.TargetsKing || ChessBoard.Instance.WouldCauseCheck(move))
+        {
+            return false;
+        }
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
         {
@@ -76,6 +81,8 @@ public class ChessBoard
 
         IsWhiteTurn = !IsWhiteTurn;
         GridUpdated?.Invoke();
+
+        return true;
     }
 
     public void ResetBoard()
@@ -225,24 +232,34 @@ public class ChessBoard
         return true;
     }
 
-    private void HypotheticalMove(Move move)
+    // These two functions don't work rn, will have to fix later
+    public void HypotheticalMove(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
-        ChessPiece pieceToMove = Grid[initX, initY];
-
-        if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
-        {
-            CheckSpecialPawnConditions(move, ref pieceToMove);
-        }
-
+        ChessPiece originalInit = Grid[initX, initY];
+        
+        // Applying move
+        Grid[destX, destY] = originalInit;
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-        Grid[destX, destY] = pieceToMove;
+        originalInit.Coordinates = new(destX, destY);
+    }
+    
+    public void UndoHypotheticalMove(Move move)
+    {
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
 
-        pieceToMove.Coordinates = new(destX, destY);
-
-        GridUpdated?.Invoke();
+        ChessPiece originalInit = Grid[destX, destY];
+        ChessPiece originalDest = move.DestPiece;
+        
+        // Undoing move
+        Grid[initX, initY] = originalInit;
+        Grid[destX, destY] = originalDest;
+        
+        originalDest.Coordinates = new(destX, destY);
+        originalInit.Coordinates = new(initX, initY);
     }
 
     private void CheckSpecialPawnConditions(Move move, ref ChessPiece pieceToMove)
@@ -253,7 +270,7 @@ public class ChessBoard
         if (destY == 0 || destY == 7)
         {
             pieceToMove = GetPieceFromPromotion();
-            pieceToMove.Coordinates = new(destX, destY);
+            pieceToMove.Coordinates = new(destX, destY); // This might be redundant as won't the Make move Function do this regardless?
         }
         else if (Math.Abs(destY - initY) == 2)
         {

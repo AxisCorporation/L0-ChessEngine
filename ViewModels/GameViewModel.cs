@@ -9,7 +9,6 @@ using Avalonia.Controls;
 using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
 using L_0_Chess_Engine.Enums;
-using System.Linq;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -37,7 +36,7 @@ public partial class GameViewModel : ObservableObject
 
     private ChessBoard Board { get; set; } = ChessBoard.Instance;
 
-    private Ai _ai;
+    private Ai? _ai = null;
     private Window? _promotionWindow;
 
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
@@ -121,51 +120,56 @@ public partial class GameViewModel : ObservableObject
         }
         else
         {
-            HandleMove(squareClicked);
+            Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
+            
+            // A bit of Redundancy, But I can't fix it without refactoring the whole thing
+            if (IsPawnPromotionMove(move.InitPiece, move.DestPiece))
+            {
+                ShowPawnPromotionDialog(IsWhiteTurn, () => RegisterMove(move));
+                return;
+            }
+
+            if (!RegisterMove(move))
+            {
+                return;
+            }
+            
+            // This is Temporary and WILL CRASH if the AI doesn't return a valid move
+            if (_ai is not null)
+            {
+                Move aiMove = _ai.GenerateMove();
+
+                if (IsPawnPromotionMove(aiMove.InitPiece, aiMove.DestPiece))
+                {
+                    ChessBoard.Instance.SetPromotedPieceType(PieceType.Black | PieceType.Queen);
+                }
+                
+                RegisterMove(aiMove);
+            }
         }
 
     }
 
-    private void HandleMove(SquareViewModel squareClicked)
+    private bool RegisterMove(Move move)
     {
-        Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
-
-        if (!move.IsValid || move.TargetsKing || ChessBoard.Instance.WouldCauseCheck(move))
+        
+        if (_selectedSquare is not null)
         {
             _selectedSquare.IsSelected = false;
-            _selectedSquare = null;
-
-            GameStateText = move.ErrorMessage != string.Empty ? move.ErrorMessage : "Invalid move!";
-            return;
         }
-
-
-        if (IsPawnPromotionMove(_selectedSquare.Piece, squareClicked.Piece))
-        {
-            ShowPawnPromotionDialog(_selectedSquare.Piece.IsWhite, () => RegisterMove(move));
-            return;
-        }
-        else
-        {
-            RegisterMove(move);
-        }
-
-        if (_ai is not null)
-        {
-            MakeAiMove();
-        }
-    }
-
-    private void RegisterMove(Move move)
-    {
-        Board.MakeMove(move);
-
-        _selectedSquare!.IsSelected = false;
+        
         _selectedSquare = null;
+
+        if (!Board.MakeMove(move))
+        {
+            return false;
+        }
 
         IsWhiteTurn = !IsWhiteTurn;
 
         UpdateGameState(move);
+        
+        return true;
     }
 
     private static bool IsPawnPromotionMove(ChessPiece initPiece, ChessPiece destPiece)
@@ -187,7 +191,7 @@ public partial class GameViewModel : ObservableObject
         viewModel.PieceSelected += () =>
         {
             _promotionWindow!.Close();
-            onPieceSelected?.Invoke();
+            onPieceSelected!.Invoke();
         };
 
         var window = new Window
@@ -230,26 +234,17 @@ public partial class GameViewModel : ObservableObject
         {
             return true;
         }
-        else if (_selectedSquare is not null)
+        
+        if (_selectedSquare is not null)
         {
             return true;
         }
 
         return false;
     }
+    
 
-    // This Function will probably be redundant later on
-    private void MakeAiMove()
-    {
-        Move move = _ai.GenerateMoves();
-
-        Board.MakeMove(move);
-        IsWhiteTurn = !IsWhiteTurn;
-
-        UpdateGameState(move);
-    }
-
-    private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(Difficulty);
+    private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(false, Difficulty);
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 

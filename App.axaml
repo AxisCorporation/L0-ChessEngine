@@ -8,4 +8,8 @@
         <FluentTheme />
     </Application.Styles>
              
+    <Application.Resources>
+        <FontFamily x:Key="BlockBlueprint">avares://L-0 Chess Engine/Assets/Fonts#BlockBlueprint</FontFamily>
+    </Application.Resources>
+             
 </Application>

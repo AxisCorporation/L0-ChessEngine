@@ -14,14 +14,15 @@
     </UserControl.Resources>
 
     <Border Background="#FF7D29" CornerRadius="20" Padding="30">
-        <Grid x:Name="Board" HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="auto, auto, auto" ColumnDefinitions="*, *">
+        
+        <Grid x:Name="Board" HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="auto, auto, auto" ColumnDefinitions="auto, auto">
 
             <StackPanel Grid.Row="0" HorizontalAlignment="Center"> 
                 <TextBlock Text="{Binding BlackTimerText}" FontSize="32" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
                 <TextBlock Text="{Binding TurnText}" FontSize="32" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
             </StackPanel>
 
-            <Grid Grid.Row="1" HorizontalAlignment="Center">
+            <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center">
 
                 <Grid ColumnDefinitions="* *" RowDefinitions="* *">
 
@@ -37,31 +38,31 @@
                         <TextBlock Text="1" Grid.Row="7" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
                     </Grid>
 
-                <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="Auto, Auto">
+                    <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="Auto, Auto">
 
-                <!-- The Chess Board -->
-                <ItemsControl ItemsSource="{Binding GridPieces}" Grid.Row="0" Grid.Column="1">
+                        <!-- The Chess Board -->
+                        <ItemsControl ItemsSource="{Binding GridPieces}" Grid.Row="0" Grid.Column="1">
 
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid Rows="8" Columns="8" Width="400" Height="400"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Rows="8" Columns="8" Width="400" Height="400"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Command="{Binding ClickCommand}" Padding="0" Background="Transparent" BorderThickness="0">
-                                <Border BorderBrush="Black" BorderThickness="1" Width="50" Height="50">
-                                    <Grid>
-                                        <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
-                                        <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsSelected}"></Rectangle>
-                                        <Image Source="{Binding Image}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Grid>
-                                </Border>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
+                        <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding ClickCommand}" Padding="0" Background="Transparent" BorderThickness="0">
+                                        <Border BorderBrush="Black" BorderThickness="1" Width="50" Height="50">
+                                            <Grid>
+                                                <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
+                                                <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsSelected}"></Rectangle>
+                                                <Image Source="{Binding Image}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
 
                         <!-- X Labels -->
                         <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="*,*,*,*,*,*,*,*">

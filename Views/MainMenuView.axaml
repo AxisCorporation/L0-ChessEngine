@@ -12,39 +12,39 @@
             <StackPanel x:Name="MainMenu" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
                 <!-- Title -->
                 <TextBlock Text="♔L-0 Chess♚"
-                           FontSize="32"
-                           FontWeight="Bold"
+                           FontFamily="{StaticResource BlockBlueprint}"
+                           FontSize="60"
                            Foreground="#ECF0F1"
                            HorizontalAlignment="Center"/>
 
                 <!-- Main Menu Options -->
                 <StackPanel x:Name="MainMenuOptions" Spacing="5" HorizontalAlignment="Center">
-                    <Button x:Name="PlayToggle" HorizontalContentAlignment="Center" Content="Play" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="10"/>
-                    <Button x:Name="CreditsButton" HorizontalContentAlignment="Center" Content="Credits" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="10"/>
-                    <Button x:Name="QuitButton" HorizontalContentAlignment="Center" Content="Quit" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="10"/>
+                    <Button x:Name="PlayToggle" HorizontalContentAlignment="Center" Content="Play" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="10" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                    <Button x:Name="CreditsButton" HorizontalContentAlignment="Center" Content="Credits" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="10" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                    <Button x:Name="QuitButton" HorizontalContentAlignment="Center" Content="Quit" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="10" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
                 </StackPanel>
 
                 <!-- Game Mode Selection -->
                 <StackPanel x:Name="GameModeOptions" Spacing="10" HorizontalAlignment="Center" IsVisible="False">
-                    <TextBlock Text="Game Mode" FontSize="28" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
-                    <Button x:Name="LocalGame" HorizontalContentAlignment="Center" Content="Local" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8"/>
-                    <Button x:Name="AiGame" HorizontalContentAlignment="Center" Content="AI" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8"/>
+                    <TextBlock Text="Game Mode" FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}"/>
+                    <Button x:Name="LocalGame" HorizontalContentAlignment="Center" Content="Local" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                    <Button x:Name="AiGame" HorizontalContentAlignment="Center" Content="AI" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
                 </StackPanel>
 
                 <!-- Difficulty Options -->
                 <StackPanel x:Name="DifficultyOptions" Spacing="10" HorizontalAlignment="Center" IsVisible="False">
-                    <TextBlock Text="AI Difficulty" FontSize="28" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
-                    <Button Content="Easy" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="PlayAIGame"/>
-                    <Button Content="Medium" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="PlayAIGame"/>
-                    <Button Content="Hard" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="PlayAIGame"/>
+                    <TextBlock Text="AI Difficulty" FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}"/>
+                    <Button Content="Easy" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="PlayAIGame" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                    <Button Content="Medium" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="PlayAIGame" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                    <Button Content="Hard" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="PlayAIGame" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
                 </StackPanel>
 
                 <!-- Time Control -->
-                <TextBlock Name="TimeOptionsText" Text="Time Options" FontSize="28" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
+                <TextBlock Name="TimeOptionsText" Text="Time Options" FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}"/>
                 <StackPanel x:Name="TimeOptions" Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center" IsVisible="False">
-                    <ToggleButton Content="5 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected"/>
-                    <ToggleButton Content="10 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected"/>
-                    <ToggleButton Content="15 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected"/>
+                    <ToggleButton Content="5 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                    <ToggleButton Content="10 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                    <ToggleButton Content="15 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
                 </StackPanel>
             </StackPanel>
 
@@ -52,6 +52,7 @@
             <Button x:Name="BackButton"
                     Content="Back"
                     Width="100"
+                    FontFamily="{StaticResource BlockBlueprint}"
                     IsVisible="False"
                     Background="#FEEBC8"
                     Foreground="Black"

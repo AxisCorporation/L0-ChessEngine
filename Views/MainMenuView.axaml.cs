@@ -14,7 +14,7 @@ public partial class MainMenuView : UserControl
     private AIDifficulty DifficultySelected { get; set; } 
 
     private bool _isNavigatingBack = false;
-    Stack<StackPanel> PanelHistory = [];
+    Stack<StackPanel> _panelHistory = [];
     private MainWindow? MainWindow { get; }
 
     private StackPanel? _currentPanel;
@@ -26,7 +26,7 @@ public partial class MainMenuView : UserControl
             {
                 if (!_isNavigatingBack)
                 {
-                    PanelHistory.Push(_currentPanel);
+                    _panelHistory.Push(_currentPanel);
                 }
                 _currentPanel.IsVisible = false;
             }
@@ -37,7 +37,7 @@ public partial class MainMenuView : UserControl
 
             if (isMain)
             {
-                PanelHistory.Clear();
+                _panelHistory.Clear();
             }
 
             BackButton.IsVisible = !isMain;
@@ -65,9 +65,9 @@ public partial class MainMenuView : UserControl
         BackButton.Click += (_, _) =>
         {
             _isNavigatingBack = true;
-            if (PanelHistory.Count != 0)
+            if (_panelHistory.Count != 0)
             {
-                CurrentPanel = PanelHistory.Pop();
+                CurrentPanel = _panelHistory.Pop();
             }
         };
     }
@@ -75,7 +75,7 @@ public partial class MainMenuView : UserControl
     
     private void TimeOptionSelected(object? sender, RoutedEventArgs e)
     {
-        ToggleButton button = (ToggleButton)sender!;
+        ToggleButton button = (ToggleButton) sender!;
 
         TimeSelected = button.Content switch
         {

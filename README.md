@@ -118,7 +118,14 @@ The Development Cycles have been divided into various Stages.
 - [ ] Evaluation Function Sophistication
 - [ ] Bug Fixes
   - [ ] Pawn Promotion
-  - [ ] Board Display
+  - [X] Board Display - Zain
+- [X] Alpha-Beta Pruning - Zain
+- [X] Difficulty Settings - Zain
+- [ ] Frontend
+  - [X] Font Change - Zain
+  - [ ] Displaying All Moves
+  - [ ] Game Over Screen
+  - [ ] Revamp of Main Game Screen
 
 ### Stage ω
 - [ ] A Reinforced Trained Engine

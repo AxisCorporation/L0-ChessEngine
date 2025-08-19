@@ -16,11 +16,13 @@ namespace L_0_Chess_Engine.AI
         // Used for assigning a value to each piece
         private readonly Dictionary<PieceType, int> ValueMap = [];
 
-        private bool white;
+        private bool _white;
+        private AIDifficulty _difficulty;
 
         public Ai(bool isWhite, AIDifficulty Difficulty)
         {
-            white = isWhite;
+            _white = isWhite;
+            _difficulty = Difficulty;
 
             // TODO: Initialize ValueMap with a respective value for each PieceType
             ValueMap[PieceType.Pawn] = 1;
@@ -33,9 +35,26 @@ namespace L_0_Chess_Engine.AI
 
         public Move GenerateMove()
         {
-            List<Move> moves = GenerateAllMoves();
-            
-            (int eval, Move bestMove) = MiniMax(18, false);
+            int eval;
+            Move bestMove;
+            switch (_difficulty)
+            {
+                case AIDifficulty.Easy:
+                    (eval, bestMove) = MiniMax(1, _white);
+                    break;
+
+                case AIDifficulty.Medium:
+                    (eval, bestMove) = MiniMax(4, _white);
+                    break;
+
+                case AIDifficulty.Hard:
+                    (eval, bestMove) = MiniMax(8, _white);
+                    break;
+
+                default:
+                    (eval, bestMove) = MiniMax(1, _white);
+                    break;
+            }   
 
             return bestMove;
         }
@@ -49,7 +68,7 @@ namespace L_0_Chess_Engine.AI
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if (Grid[x, y].IsWhite || Grid[x, y] == PieceType.Empty)
+                    if (Grid[x, y] == PieceType.Empty)
                     {
                         continue;
                     }
@@ -87,9 +106,29 @@ namespace L_0_Chess_Engine.AI
                         continue;
                     }
                     
-                    ChessBoard.Instance.HypotheticalMove(move);
+                    // ChessBoard.Instance.HypotheticalMove(move); Will work this when the function works
+                    
+                    // Simulating move
+                    (int initX, int initY) = move.InitPiece.Coordinates;
+                    (int destX, int destY) = move.DestPiece.Coordinates;
+
+                    ChessPiece originalInit = Grid[initX, initY];
+                    ChessPiece originalDest = Grid[destX, destY];
+
+                    // Applying move
+                    Grid[destX, destY] = originalInit;
+                    Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+                    originalInit.Coordinates = new(destX, destY);
+                    
                     (eval, _) = MiniMax(depth - 1, false);
-                    ChessBoard.Instance.UndoHypotheticalMove(move);
+                    
+                    // ChessBoard.Instance.UndoHypotheticalMove(move);
+                    
+                    // Undoing move
+                    Grid[initX, initY] = originalInit;
+                    Grid[destX, destY] = originalDest;
+                    originalInit.Coordinates = new(initX, initY);
+                    originalDest.Coordinates = new(destX, destY);
 
                     if (eval > maxEval)
                     {
@@ -147,83 +186,6 @@ namespace L_0_Chess_Engine.AI
 
         }
 
-        
-        // We'll probably delete this all together later on
-        private int EvaluateMove(Move move)
-        {
-            int score = 0;
-
-            // Simulating move
-            (int initX, int initY) = move.InitPiece.Coordinates;
-            (int destX, int destY) = move.DestPiece.Coordinates;
-
-            ChessPiece originalInit = Grid[initX, initY];
-            ChessPiece originalDest = Grid[destX, destY];
-
-            // Applying move
-            Grid[destX, destY] = originalInit;
-            Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-            originalInit.Coordinates = new(destX, destY);
-
-            // Gotta evaluate the board after move
-            for (int x = 0; x < 8; x++)
-            {
-                for (int y = 0; y < 8; y++)
-                {
-                    ChessPiece piece = Grid[x, y];
-                    if (piece.Type == PieceType.Empty) continue;
-
-                    PieceType baseType = piece.Type & ~PieceType.White & ~PieceType.Black;
-
-                    if (!ValueMap.TryGetValue(baseType, out int value))
-                        continue;
-
-                    int positionValue = 0;
-                    // Bonus for controlling center
-                    if ((x == 3 || x == 4) && (y == 3 || y == 4))
-                    {
-                        positionValue += 10; 
-                    }
-                    
-                    // Bonus for advancing pawns 
-                    if (baseType == PieceType.Pawn)
-                    {
-                        if (piece.IsWhite)
-                        {
-                            positionValue += y * 5;
-                        }
-                        else
-                        {
-                            positionValue += (7 - y) * 5;
-                        }
-                    }
-
-                    // Knight penalty for edge positions
-                    if (baseType == PieceType.Knight)
-                    {
-                        if (x == 0 || x == 7 || y == 0 || y == 7)
-                        {
-                            positionValue -= 10; 
-                        }
-                    }
-
-                    if (piece.IsWhite)
-                        score += value;
-                    else
-                        score -= value;
-                }
-            }
-
-            // Undoing move
-            Grid[initX, initY] = originalInit;
-            Grid[destX, destY] = originalDest;
-            originalInit.Coordinates = new(initX, initY);
-            originalDest.Coordinates = new(destX, destY);
-
-            score -= EvaluateBoardPosition();
-
-            return score; // Lower is better for bot
-        }
 
         private int EvaluateBoardPosition()
         {

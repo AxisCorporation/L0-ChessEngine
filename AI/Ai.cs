@@ -1,7 +1,5 @@
-
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using L_0_Chess_Engine.Enums;
 using L_0_Chess_Engine.Models;
 
@@ -16,11 +14,13 @@ namespace L_0_Chess_Engine.AI
         // Used for assigning a value to each piece
         private readonly Dictionary<PieceType, int> ValueMap = [];
 
-        private bool white;
+        private bool _white;
+        private AIDifficulty _difficulty;
 
         public Ai(bool isWhite, AIDifficulty Difficulty)
         {
-            white = isWhite;
+            _white = isWhite;
+            _difficulty = Difficulty;
 
             // TODO: Initialize ValueMap with a respective value for each PieceType
             ValueMap[PieceType.Pawn] = 1;
@@ -34,8 +34,63 @@ namespace L_0_Chess_Engine.AI
         public Move GenerateMove()
         {
             List<Move> moves = GenerateAllMoves();
-            
-            (int eval, Move bestMove) = MiniMax(18, false);
+
+            Move bestMove = null;
+            int bestScore = _white ? -1000 : 1000;
+
+            foreach (var move in moves)
+            {
+                if (move.InitPiece.IsWhite) continue;
+
+                int eval = 0;
+
+                // Simulating move
+                (int initX, int initY) = move.InitPiece.Coordinates;
+                (int destX, int destY) = move.DestPiece.Coordinates;
+
+                ChessPiece originalInit = Grid[initX, initY];
+                ChessPiece originalDest = Grid[destX, destY];
+
+                // Applying move
+                Grid[destX, destY] = originalInit;
+                Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+                originalInit.Coordinates = new(destX, destY);
+
+                switch (_difficulty)
+                {
+                    default:
+                    case AIDifficulty.Easy:
+                        eval = MiniMax(1, -1000, 1000, _white);
+                        break;
+
+                    case AIDifficulty.Medium:
+                        eval = MiniMax(4, -1000, 1000, _white);
+                        break;
+
+                    case AIDifficulty.Hard:
+                        eval = MiniMax(8, -1000, 1000, _white);
+                        break;
+
+                }
+
+                // Undoing move
+                Grid[initX, initY] = originalInit;
+                Grid[destX, destY] = originalDest;
+                originalInit.Coordinates = new(initX, initY);
+                originalDest.Coordinates = new(destX, destY);
+
+                if (_white && eval > bestScore)
+                {
+                    bestScore = eval;
+                    bestMove = move;
+                }
+                else if (!_white && eval < bestScore)
+                {
+                    bestScore = eval;
+                    bestMove = move;
+                }
+
+            }
 
             return bestMove;
         }
@@ -49,7 +104,7 @@ namespace L_0_Chess_Engine.AI
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if (Grid[x, y].IsWhite || Grid[x, y] == PieceType.Empty)
+                    if (Grid[x, y] == PieceType.Empty)
                     {
                         continue;
                     }
@@ -64,17 +119,16 @@ namespace L_0_Chess_Engine.AI
         
         // This is Sebastian's implementation almost line by line, So it's unlikely that this function is wrong.
         // But we might have to cross check anyways.
-        private (int, Move) MiniMax(int depth, bool maximize)
+        private int MiniMax(int depth, int alpha, int beta, bool maximize)
         {
             if (depth == 0 || ChessBoard.Instance.IsCheckMate)
             {
-                return (EvaluateBoardPosition(), null);
+                return EvaluateBoardPosition();
             }
             
             int eval;
             
             List<Move> moves = GenerateAllMoves();
-            Move bestMove = null;
 
             if (maximize)
             {
@@ -86,33 +140,9 @@ namespace L_0_Chess_Engine.AI
                     {
                         continue;
                     }
-                    
-                    ChessBoard.Instance.HypotheticalMove(move);
-                    (eval, _) = MiniMax(depth - 1, false);
-                    ChessBoard.Instance.UndoHypotheticalMove(move);
 
-                    if (eval > maxEval)
-                    {
-                        maxEval = eval;
-                        bestMove = move;
-                    }
-                }
-
-                return (maxEval, bestMove!);
-            }
-            else
-            {
-                int minEval = 1000;
-
-                foreach (var move in moves)
-                {
-                    if (move.InitPiece.IsWhite)
-                    {
-                        continue;
-                    }
-                    
                     // ChessBoard.Instance.HypotheticalMove(move); Will work this when the function works
-                    
+
                     // Simulating move
                     (int initX, int initY) = move.InitPiece.Coordinates;
                     (int destX, int destY) = move.DestPiece.Coordinates;
@@ -124,106 +154,78 @@ namespace L_0_Chess_Engine.AI
                     Grid[destX, destY] = originalInit;
                     Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
                     originalInit.Coordinates = new(destX, destY);
-                    
-                    (eval, _) = MiniMax(depth - 1, true);
-                    
+
+                    eval = MiniMax(depth - 1, alpha, beta, false);
+
                     // ChessBoard.Instance.UndoHypotheticalMove(move);
-                    
+
                     // Undoing move
                     Grid[initX, initY] = originalInit;
                     Grid[destX, destY] = originalDest;
                     originalInit.Coordinates = new(initX, initY);
                     originalDest.Coordinates = new(destX, destY);
+
+                    maxEval = Math.Max(maxEval, eval);
+
+                    alpha = Math.Max(alpha, eval);
                     
-                    if (eval < minEval)
+                    if (beta <= alpha)
                     {
-                        minEval = eval;
-                        bestMove = move;
+                        break;
                     }
                 }
 
-                return (minEval, bestMove!);
+                return maxEval;
             }
-
-        }
-
-        
-        // We'll probably delete this all together later on
-        private int EvaluateMove(Move move)
-        {
-            int score = 0;
-
-            // Simulating move
-            (int initX, int initY) = move.InitPiece.Coordinates;
-            (int destX, int destY) = move.DestPiece.Coordinates;
-
-            ChessPiece originalInit = Grid[initX, initY];
-            ChessPiece originalDest = Grid[destX, destY];
-
-            // Applying move
-            Grid[destX, destY] = originalInit;
-            Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-            originalInit.Coordinates = new(destX, destY);
-
-            // Gotta evaluate the board after move
-            for (int x = 0; x < 8; x++)
+            else
             {
-                for (int y = 0; y < 8; y++)
+                int minEval = 1000;
+
+                foreach (var move in moves)
                 {
-                    ChessPiece piece = Grid[x, y];
-                    if (piece.Type == PieceType.Empty) continue;
-
-                    PieceType baseType = piece.Type & ~PieceType.White & ~PieceType.Black;
-
-                    if (!ValueMap.TryGetValue(baseType, out int value))
+                    if (move.InitPiece.IsWhite)
+                    {
                         continue;
-
-                    int positionValue = 0;
-                    // Bonus for controlling center
-                    if ((x == 3 || x == 4) && (y == 3 || y == 4))
-                    {
-                        positionValue += 10; 
                     }
+
+                    // ChessBoard.Instance.HypotheticalMove(move); Will work this when the function works
+
+                    // Simulating move
+                    (int initX, int initY) = move.InitPiece.Coordinates;
+                    (int destX, int destY) = move.DestPiece.Coordinates;
+
+                    ChessPiece originalInit = Grid[initX, initY];
+                    ChessPiece originalDest = Grid[destX, destY];
+
+                    // Applying move
+                    Grid[destX, destY] = originalInit;
+                    Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
+                    originalInit.Coordinates = new(destX, destY);
+
+                    eval = MiniMax(depth - 1, alpha, beta, true);
+
+                    // ChessBoard.Instance.UndoHypotheticalMove(move);
+
+                    // Undoing move
+                    Grid[initX, initY] = originalInit;
+                    Grid[destX, destY] = originalDest;
+                    originalInit.Coordinates = new(initX, initY);
+                    originalDest.Coordinates = new(destX, destY);
+
+                    minEval = Math.Min(minEval, eval);
+                    beta = Math.Min(alpha, eval);
                     
-                    // Bonus for advancing pawns 
-                    if (baseType == PieceType.Pawn)
+                    if (beta <= alpha)
                     {
-                        if (piece.IsWhite)
-                        {
-                            positionValue += y * 5;
-                        }
-                        else
-                        {
-                            positionValue += (7 - y) * 5;
-                        }
+                        break;
                     }
-
-                    // Knight penalty for edge positions
-                    if (baseType == PieceType.Knight)
-                    {
-                        if (x == 0 || x == 7 || y == 0 || y == 7)
-                        {
-                            positionValue -= 10; 
-                        }
-                    }
-
-                    if (piece.IsWhite)
-                        score += value;
-                    else
-                        score -= value;
                 }
+
+                return minEval;
             }
 
-            // Undoing move
-            Grid[initX, initY] = originalInit;
-            Grid[destX, destY] = originalDest;
-            originalInit.Coordinates = new(initX, initY);
-            originalDest.Coordinates = new(destX, destY);
-
-            score -= EvaluateBoardPosition();
-
-            return score; // Lower is better for bot
         }
+
 
         private int EvaluateBoardPosition()
         {

@@ -14,6 +14,7 @@ namespace L_0_Chess_Engine.ViewModels;
 
 public partial class GameViewModel : ObservableObject
 {
+    private MainWindow _mainWindow;
     public bool GameRunning { get; set; }
     public TimeSpan WhiteTimer { get; set; }
 
@@ -34,7 +35,7 @@ public partial class GameViewModel : ObservableObject
     [ObservableProperty]
     private string? _gameStateText = "";
 
-    private ChessBoard Board { get; set; } = ChessBoard.Instance;
+    private ChessBoard Board { get; } = ChessBoard.Instance;
 
     private Move? _playerMove = null;
 
@@ -69,8 +70,10 @@ public partial class GameViewModel : ObservableObject
 
     private SquareViewModel? _selectedSquare;
 
-    public GameViewModel(int timeLimit, bool LoadAi, AIDifficulty Difficulty = AIDifficulty.Easy)
+    public GameViewModel(int timeLimit, bool LoadAi, AIDifficulty Difficulty, MainWindow MainWindow)
     {
+        _mainWindow = MainWindow;
+        
         WhiteTimer = TimeSpan.FromMinutes(timeLimit);
         BlackTimer = TimeSpan.FromMinutes(timeLimit);
 
@@ -153,8 +156,8 @@ public partial class GameViewModel : ObservableObject
             if (!RegisterMove(aiMove))
             {
                 Debug.WriteLine("AI attempted invalid move! Skipping turn.");
-                IsWhiteTurn = !IsWhiteTurn;
                 GameStateText = "AI Made Invalid Move!";
+                EndGame();
                 return;
             }
 
@@ -188,7 +191,6 @@ public partial class GameViewModel : ObservableObject
             if (IsPawnPromotionMove(_playerMove.InitPiece, _playerMove.DestPiece))
             {
                 ShowPawnPromotionDialog(IsWhiteTurn, async () => await ManageTurns());
-                return;
             }
             else await ManageTurns();
 
@@ -285,6 +287,10 @@ public partial class GameViewModel : ObservableObject
     private void EndGame()
     {
         // TODO
+        string gameOverText = IsWhiteTurn ? "Black Won!" : "White Won!";
+        var gameOverView =  new GameOverView(gameOverText, _mainWindow);
+        
+        gameOverView.Show();
     }
 
     private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(false, Difficulty);
@@ -293,6 +299,7 @@ public partial class GameViewModel : ObservableObject
 
     private void UpdateGameState(Move? move = null)
     {
+        Console.WriteLine($"Check: {Board.IsCheck} CheckMate: {Board.IsCheckMate}");
         if (Board.IsCheckMate)
         {
             GameStateText = AppendMove(IsWhiteTurn ? "White is in Checkmate!" : "Black is in Checkmate!", move);

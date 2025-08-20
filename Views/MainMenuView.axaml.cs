@@ -94,7 +94,7 @@ public partial class MainMenuView : UserControl
         }
     }
     
-    private void PlayGame(object? sender, RoutedEventArgs e) => MainWindow?.SetMainContent(new GameView(TimeSelected));
+    private void PlayGame(object? sender, RoutedEventArgs e) => MainWindow?.SetMainContent(new GameView(TimeSelected, MainWindow));
 
     private void PlayAIGame(object? sender, RoutedEventArgs e)
     {
@@ -108,7 +108,7 @@ public partial class MainMenuView : UserControl
             _ => AIDifficulty.Easy
         };
 
-        GameView game = new(TimeSelected, AiGame: true, Difficulty: DifficultySelected);
+        GameView game = new(TimeSelected, MainWindow, AiGame: true, Difficulty: DifficultySelected);
 
         MainWindow?.SetMainContent(game);
     }

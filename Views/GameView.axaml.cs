@@ -6,10 +6,10 @@ namespace L_0_Chess_Engine.Views;
 
 public partial class GameView : UserControl
 {
-    public GameView(int timeSetting, bool AiGame = false, AIDifficulty Difficulty = AIDifficulty.Easy)
+    public GameView(int timeSetting, MainWindow mainWindow, bool AiGame = false, AIDifficulty Difficulty = AIDifficulty.Easy)
     {
         InitializeComponent();
 
-        DataContext = new GameViewModel(timeSetting, AiGame, Difficulty);
+        DataContext = new GameViewModel(timeSetting, AiGame, Difficulty, mainWindow);
     }
 }

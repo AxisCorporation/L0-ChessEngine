@@ -1,0 +1,18 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="500"
+             x:Class="L_0_Chess_Engine.Views.GameOverView">
+    <Border Background="#FF7D29" CornerRadius="10" Padding="15">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock x:Name="GameOverText" FontFamily="{StaticResource BlockBlueprint}" FontSize="40"
+                       VerticalAlignment="Center" HorizontalAlignment="Center" Padding="20, 20, 20, 100">
+            </TextBlock>
+            <Button x:Name="MainMenuButton" HorizontalContentAlignment="Center" Content="Main Menu" Width="200"
+                    Background="#FEEBC8" Foreground="Black" CornerRadius="10"
+                    FontFamily="{StaticResource BlockBlueprint}" FontSize="20">
+            </Button>
+        </StackPanel>
+    </Border>
+</Window>

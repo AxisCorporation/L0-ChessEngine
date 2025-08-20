@@ -13,11 +13,11 @@ public class ChessBoard
     private PieceType _promotedPieceType = PieceType.Empty;
     
     public ChessPiece[,] Grid { get; set; }
-    public bool IsDraw { get; private set; }
+    public bool IsDraw { get => DrawScan(); }
 
-    public bool IsCheck { get; private set; }
+    public bool IsCheck { get => CheckScan(); }
 
-    public bool IsCheckMate { get; private set; }
+    public bool IsCheckMate { get => CheckMateScan(); }
 
     public bool IsWhiteTurn { get; set; }
 
@@ -75,9 +75,10 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
         pieceToMove.Coordinates = new(destX, destY);
-
-        IsCheck = CheckScan();
-        IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
+        
+        // I have no idea why, but this wasn't working, so I changed it for now.
+        // IsCheck = CheckScan();
+        // IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
 
         IsWhiteTurn = !IsWhiteTurn;
         GridUpdated?.Invoke();

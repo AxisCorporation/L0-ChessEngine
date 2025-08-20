@@ -124,13 +124,15 @@ The Development Cycles have been divided into various Stages.
 - [ ] Frontend
   - [X] Font Change - Zain
   - [ ] Displaying All Moves
-  - [ ] Game Over Screen
+  - [X] Game Over Screen - Zain
   - [ ] Revamp of Main Game Screen
 - [X] Implement Async or Multithreading for AI - Zain
 - [ ] AI Pawn Promotion Interface
 - [ ] Hypothetical Move Functions
 - [ ] Backend
   - [X] Implement Turn Manager - Zain
+- [ ] Basic SFX
+- [ ] Minor AI Optimizations
 
 
 ### Stage ω

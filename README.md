@@ -123,7 +123,7 @@ The Development Cycles have been divided into various Stages.
 - [X] Difficulty Settings - Zain
 - [ ] Frontend
   - [X] Font Change - Zain
-  - [ ] Displaying All Moves
+  - [X] Displaying All Moves - Zain
   - [X] Game Over Screen - Zain
   - [ ] Revamp of Main Game Screen
 - [X] Implement Async or Multithreading for AI - Zain

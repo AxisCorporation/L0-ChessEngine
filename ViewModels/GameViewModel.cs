@@ -20,7 +20,7 @@ public partial class GameViewModel : ObservableObject
     [ObservableProperty]
     private string _whiteTimerText;
 
-    public TimeSpan BlackTimer { get; set; } // Why is this Public?
+    private TimeSpan BlackTimer { get; set; } // Why is this Public?
 
     [ObservableProperty]
     private string _blackTimerText;
@@ -36,6 +36,20 @@ public partial class GameViewModel : ObservableObject
 
     private ChessBoard Board { get; set; } = ChessBoard.Instance;
 
+    private Move? _playerMove = null;
+
+    private bool _aiGame;
+    private bool _lockInput = false;
+
+    private bool LockInput
+    {
+        get => _lockInput;
+        set
+        {
+            _lockInput = value;
+            NotifyCanClickSquares();
+        }
+    }
     private Ai? _ai = null;
     private Window? _promotionWindow;
 
@@ -87,8 +101,10 @@ public partial class GameViewModel : ObservableObject
         if (LoadAi)
         {
             LoadAiModule(Difficulty);
+            _aiGame = true;
         }
 
+        // Don't like this syntax
         _ = UpdateTurnTimersAsync();
     }
 
@@ -107,8 +123,54 @@ public partial class GameViewModel : ObservableObject
         }
     }
 
+    private async Task ManageTurns()
+    {
+        if (_playerMove is not null)
+        {
+            // Resetting Selection
+            if (_selectedSquare is not null)
+            {
+                _selectedSquare.IsSelected = false;
+            }
 
-    private void OnSquareClick(SquareViewModel squareClicked)
+            _selectedSquare = null;
+
+            if (!RegisterMove(_playerMove))
+            {
+                Debug.WriteLine("Invalid player move, resetting selection.");
+                return;
+            }
+        }
+
+        if (_aiGame && !IsWhiteTurn)
+        {
+            LockInput = true;
+
+            Move aiMove = await Task.Run(() => _ai.GenerateMove());
+
+
+            LockInput = false;
+            if (!RegisterMove(aiMove))
+            {
+                Debug.WriteLine("AI attempted invalid move! Skipping turn.");
+                IsWhiteTurn = !IsWhiteTurn;
+                GameStateText = "AI Made Invalid Move!";
+                return;
+            }
+
+            // Loop Again?
+            // await ManageTurns();
+        }
+        
+        if (!GameRunning)
+        {
+            EndGame();
+        }
+        
+    }
+
+
+    private async Task OnSquareClick(SquareViewModel squareClicked)
     {
         Debug.WriteLine($"DEBUG: {squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
 
@@ -120,45 +182,22 @@ public partial class GameViewModel : ObservableObject
         }
         else
         {
-            Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
-            
+            _playerMove = new(_selectedSquare!.Piece, squareClicked.Piece);
+
             // A bit of Redundancy, But I can't fix it without refactoring the whole thing
-            if (IsPawnPromotionMove(move.InitPiece, move.DestPiece))
+            if (IsPawnPromotionMove(_playerMove.InitPiece, _playerMove.DestPiece))
             {
-                ShowPawnPromotionDialog(IsWhiteTurn, () => RegisterMove(move));
+                ShowPawnPromotionDialog(IsWhiteTurn, async () => await ManageTurns());
                 return;
             }
+            else await ManageTurns();
 
-            if (!RegisterMove(move))
-            {
-                return;
-            }
-            
-            // This is Temporary and WILL CRASH if the AI doesn't return a valid move
-            if (_ai is not null)
-            {
-                Move aiMove = _ai.GenerateMove();
-
-                if (IsPawnPromotionMove(aiMove.InitPiece, aiMove.DestPiece))
-                {
-                    ChessBoard.Instance.SetPromotedPieceType(PieceType.Black | PieceType.Queen);
-                }
-                
-                RegisterMove(aiMove);
-            }
         }
 
     }
 
     private bool RegisterMove(Move move)
     {
-        
-        if (_selectedSquare is not null)
-        {
-            _selectedSquare.IsSelected = false;
-        }
-        
-        _selectedSquare = null;
 
         if (!Board.MakeMove(move))
         {
@@ -214,7 +253,7 @@ public partial class GameViewModel : ObservableObject
     {
         foreach (var piece in GridPieces)
         {
-            ((RelayCommand)piece.ClickCommand!).NotifyCanExecuteChanged();
+            ((RelayCommand) piece.ClickCommand!).NotifyCanExecuteChanged();
         }
     }
 
@@ -225,7 +264,7 @@ public partial class GameViewModel : ObservableObject
             return false;
         }
 
-        if (_ai is not null && !IsWhiteTurn)
+        if (_lockInput)
         {
             return false;
         }
@@ -242,7 +281,11 @@ public partial class GameViewModel : ObservableObject
 
         return false;
     }
-    
+
+    private void EndGame()
+    {
+        // TODO
+    }
 
     private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(false, Difficulty);
 
@@ -255,22 +298,24 @@ public partial class GameViewModel : ObservableObject
             GameStateText = AppendMove(IsWhiteTurn ? "White is in Checkmate!" : "Black is in Checkmate!", move);
             GameRunning = false;
         }
-        else if (Board.IsCheck)
-        {
-            GameStateText = AppendMove(IsWhiteTurn ? "White is in Check!" : "Black is in Check!", move);
-        }
         else if (Board.IsDraw)
         {
             GameStateText = AppendMove("It's a Draw!", move);
             GameRunning = false;
         }
+        else if (Board.IsCheck)
+        {
+            GameStateText = AppendMove(IsWhiteTurn ? "White is in Check!" : "Black is in Check!", move);
+        }
         else if (WhiteTimer <= TimeSpan.Zero)
         {
             GameStateText = "Time's up for White - Black wins!";
+            GameRunning = false;
         }
         else if (BlackTimer <= TimeSpan.Zero)
         {
             GameStateText = "Time's up for Black - White wins!";
+            GameRunning = false;
         }
         else
         {
@@ -296,8 +341,6 @@ public partial class GameViewModel : ObservableObject
 
             if (WhiteTimer <= TimeSpan.Zero || BlackTimer <= TimeSpan.Zero)
             {
-                GameRunning = false;
-
                 NotifyCanClickSquares();
                 UpdateGameState();
             }

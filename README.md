@@ -126,11 +126,11 @@ The Development Cycles have been divided into various Stages.
   - [ ] Displaying All Moves
   - [ ] Game Over Screen
   - [ ] Revamp of Main Game Screen
-- [ ] Implement Async or Multithreading for AI
+- [X] Implement Async or Multithreading for AI - Zain
 - [ ] AI Pawn Promotion Interface
 - [ ] Hypothetical Move Functions
 - [ ] Backend
-  - [ ] Implement Turn Manager
+  - [X] Implement Turn Manager - Zain
 
 
 ### Stage ω

@@ -9,6 +9,7 @@ using Avalonia.Controls;
 using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
 using L_0_Chess_Engine.Enums;
+using System.Collections.Generic;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -131,10 +132,7 @@ public partial class GameViewModel : ObservableObject
         if (_playerMove is not null)
         {
             // Resetting Selection
-            if (_selectedSquare is not null)
-            {
-                _selectedSquare.IsSelected = false;
-            }
+            ResetHighlights();
 
             _selectedSquare = null;
 
@@ -180,7 +178,7 @@ public partial class GameViewModel : ObservableObject
         if (_selectedSquare is null)
         {
             _selectedSquare = squareClicked;
-            _selectedSquare.IsSelected = true;
+            HighlightSquare(squareClicked);
             NotifyCanClickSquares();
         }
         else
@@ -198,6 +196,28 @@ public partial class GameViewModel : ObservableObject
 
     }
 
+    private void HighlightSquare(SquareViewModel clickedSquare)
+    {
+        clickedSquare.IsSelected = true;
+
+        List<Move> moves = Move.GetPossibleMoves(clickedSquare.Piece);
+
+        foreach (Move move in moves)
+        {
+            (int col, int row) = move.DestPiece.Coordinates;
+
+            GridPieces[((7 - row) * 8) + col].IsSelected = true;
+        }
+    }
+
+    private void ResetHighlights()
+    {
+        for (int i = 0; i < 64; i++)
+        {
+            GridPieces[i].IsSelected = false;
+        }
+    }
+
     private bool RegisterMove(Move move)
     {
 
@@ -209,7 +229,7 @@ public partial class GameViewModel : ObservableObject
         IsWhiteTurn = !IsWhiteTurn;
 
         UpdateGameState(move);
-        
+
         return true;
     }
 

@@ -44,17 +44,7 @@ namespace L_0_Chess_Engine.AI
 
                 int eval = 0;
 
-                // Simulating move
-                (int initX, int initY) = move.InitPiece.Coordinates;
-                (int destX, int destY) = move.DestPiece.Coordinates;
-
-                ChessPiece originalInit = Grid[initX, initY];
-                ChessPiece originalDest = Grid[destX, destY];
-
-                // Applying move
-                Grid[destX, destY] = originalInit;
-                Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-                originalInit.Coordinates = new(destX, destY);
+                ChessBoard.Instance.HypotheticalMove(move);
 
                 switch (_difficulty)
                 {
@@ -73,11 +63,7 @@ namespace L_0_Chess_Engine.AI
 
                 }
 
-                // Undoing move
-                Grid[initX, initY] = originalInit;
-                Grid[destX, destY] = originalDest;
-                originalInit.Coordinates = new(initX, initY);
-                originalDest.Coordinates = new(destX, destY);
+                ChessBoard.Instance.UndoHypotheticalMove(move);
 
                 if (_white && eval > bestScore)
                 {
@@ -88,6 +74,7 @@ namespace L_0_Chess_Engine.AI
                 {
                     bestScore = eval;
                     bestMove = move;
+
                 }
 
             }
@@ -109,7 +96,7 @@ namespace L_0_Chess_Engine.AI
                         continue;
                     }
 
-                    moves.AddRange(Move.GetPossibleMoves(Grid[x, y]));
+                    moves.AddRange(Move.GeneratePieceMoves(Grid[x, y]));
                 }
             }
 
@@ -141,29 +128,11 @@ namespace L_0_Chess_Engine.AI
                         continue;
                     }
 
-                    // ChessBoard.Instance.HypotheticalMove(move); Will work this when the function works
-
-                    // Simulating move
-                    (int initX, int initY) = move.InitPiece.Coordinates;
-                    (int destX, int destY) = move.DestPiece.Coordinates;
-
-                    ChessPiece originalInit = Grid[initX, initY];
-                    ChessPiece originalDest = Grid[destX, destY];
-
-                    // Applying move
-                    Grid[destX, destY] = originalInit;
-                    Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-                    originalInit.Coordinates = new(destX, destY);
+                    ChessBoard.Instance.HypotheticalMove(move);
 
                     eval = MiniMax(depth - 1, alpha, beta, false);
 
-                    // ChessBoard.Instance.UndoHypotheticalMove(move);
-
-                    // Undoing move
-                    Grid[initX, initY] = originalInit;
-                    Grid[destX, destY] = originalDest;
-                    originalInit.Coordinates = new(initX, initY);
-                    originalDest.Coordinates = new(destX, destY);
+                    ChessBoard.Instance.UndoHypotheticalMove(move);
 
                     maxEval = Math.Max(maxEval, eval);
 
@@ -188,32 +157,14 @@ namespace L_0_Chess_Engine.AI
                         continue;
                     }
 
-                    // ChessBoard.Instance.HypotheticalMove(move); Will work this when the function works
-
-                    // Simulating move
-                    (int initX, int initY) = move.InitPiece.Coordinates;
-                    (int destX, int destY) = move.DestPiece.Coordinates;
-
-                    ChessPiece originalInit = Grid[initX, initY];
-                    ChessPiece originalDest = Grid[destX, destY];
-
-                    // Applying move
-                    Grid[destX, destY] = originalInit;
-                    Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
-                    originalInit.Coordinates = new(destX, destY);
+                    ChessBoard.Instance.HypotheticalMove(move);
 
                     eval = MiniMax(depth - 1, alpha, beta, true);
 
-                    // ChessBoard.Instance.UndoHypotheticalMove(move);
-
-                    // Undoing move
-                    Grid[initX, initY] = originalInit;
-                    Grid[destX, destY] = originalDest;
-                    originalInit.Coordinates = new(initX, initY);
-                    originalDest.Coordinates = new(destX, destY);
+                    ChessBoard.Instance.UndoHypotheticalMove(move);
 
                     minEval = Math.Min(minEval, eval);
-                    beta = Math.Min(alpha, eval);
+                    beta = Math.Min(beta, eval);
                     
                     if (beta <= alpha)
                     {

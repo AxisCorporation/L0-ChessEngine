@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
@@ -13,6 +14,9 @@ public partial class PawnPromotionViewModel : ObservableObject
 {
     private readonly bool _isWhite;
     private readonly PieceType _colorFlag;
+    private readonly TaskCompletionSource<PieceType> _tcs = new();
+    
+    public Task<PieceType> Completion => _tcs.Task;
     
     [ObservableProperty]
     private Bitmap _queenImage;
@@ -53,7 +57,12 @@ public partial class PawnPromotionViewModel : ObservableObject
     
     private void SelectPiece(PieceType pieceType)
     {
-        ChessBoard.Instance.SetPromotedPieceType(pieceType);
-        PieceSelected?.Invoke();
+        _tcs.TrySetResult(pieceType); // fulfill the dialog result
+    }
+
+    // Fallback if window is closed without choosing
+    public void EnsureDefaultIfNotChosen()
+    {
+        _tcs.TrySetResult(PieceType.Queen | _colorFlag);
     }
 }

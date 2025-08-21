@@ -39,6 +39,15 @@ public class ChessPiece
         Color = GetColor();
     }
 
+    public ChessPiece(ChessPiece other)
+    {
+        Type = other.Type;
+        Coordinates = other.Coordinates;
+        HasMoved = other.HasMoved;
+        IsValidPassantPlacement = other.IsValidPassantPlacement;
+        Color = other.Color;
+    }
+
     private PieceType GetColor()
     {
         PieceType mask = PieceType.White | PieceType.Black;

@@ -117,8 +117,9 @@ The Development Cycles have been divided into various Stages.
 
 - [ ] Evaluation Function Sophistication
 - [ ] Bug Fixes
-  - [ ] Pawn Promotion
+  - [X] Pawn Promotion - Zain
   - [X] Board Display - Zain
+  - [ ] AI Invalid Moves
 - [X] Alpha-Beta Pruning - Zain
 - [X] Difficulty Settings - Zain
 - [ ] Frontend
@@ -127,11 +128,12 @@ The Development Cycles have been divided into various Stages.
   - [X] Game Over Screen - Zain
   - [ ] Revamp of Main Game Screen
 - [X] Implement Async or Multithreading for AI - Zain
-- [ ] AI Pawn Promotion Interface
-- [ ] Hypothetical Move Functions
+- [X] AI Pawn Promotion Interface - Zain
+- [X] Hypothetical Move Functions - Zain
 - [ ] Backend
   - [X] Implement Turn Manager - Zain
 - [ ] Basic SFX
+- [ ] AI Randomization
 - [ ] Minor AI Optimizations
 
 

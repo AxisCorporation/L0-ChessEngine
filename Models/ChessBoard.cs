@@ -43,7 +43,7 @@ public class ChessBoard
     public bool MakeMove(Move move)
     {
         // Move Validation
-        if (!move.IsValid || move.TargetsKing || ChessBoard.Instance.WouldCauseCheck(move))
+        if (!move.IsValid || move.TargetsKing || WouldCauseCheck(move))
         {
             return false;
         }
@@ -75,12 +75,20 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
         pieceToMove.Coordinates = new(destX, destY);
+
+        if (move.IsPromotion)
+        {
+            Grid[destX, destY].Type = move.PromotionPiece;
+        }
         
         // I have no idea why, but this wasn't working, so I changed it for now.
         // IsCheck = CheckScan();
         // IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
 
         IsWhiteTurn = !IsWhiteTurn;
+
+        Move hypoMove = new Move(Grid[0, 1], Grid[0, 7], PieceType.Queen | PieceType.White);
+
         GridUpdated?.Invoke();
 
         return true;
@@ -120,7 +128,7 @@ public class ChessBoard
                 continue;
             }
 
-            moves.AddRange(from move in Move.GetPossibleMoves(square)
+            moves.AddRange(from move in Move.GeneratePieceMoves(square)
                            where !WouldCauseCheck(move)
                            select move);
         }
@@ -156,7 +164,7 @@ public class ChessBoard
                     continue;
                 }
 
-                List<Move> moves = [..from m in Move.GetPossibleMoves(Grid[x, y])
+                List<Move> moves = [..from m in Move.GeneratePieceMoves(Grid[x, y])
                                     where m.TargetsKing
                                     select m]; // Gets all moves for piece where it can threaten the king
 
@@ -189,7 +197,7 @@ public class ChessBoard
             }
         }
 
-        List<Move> kingMoves = Move.GetPossibleMoves(Grid[kingX, kingY]);
+        List<Move> kingMoves = Move.GeneratePieceMoves(Grid[kingX, kingY]);
 
         // Making all King Moves and Checking if it fixes Check
         foreach (var move in kingMoves)
@@ -214,7 +222,7 @@ public class ChessBoard
                     continue;
                 }
 
-                List<Move> moves = Move.GetPossibleMoves(Grid[X, Y]);
+                List<Move> moves = Move.GeneratePieceMoves(Grid[X, Y]);
 
                 foreach (var move in moves)
                 {
@@ -240,13 +248,18 @@ public class ChessBoard
         (int destX, int destY) = move.DestPiece.Coordinates;
 
         ChessPiece originalInit = Grid[initX, initY];
-        
+
         // Applying move
         Grid[destX, destY] = originalInit;
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         originalInit.Coordinates = new(destX, destY);
+        
+        if (move.IsPromotion)
+        {
+            originalInit.Type = move.PromotionPiece;
+        }
     }
-    
+
     public void UndoHypotheticalMove(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
@@ -254,13 +267,18 @@ public class ChessBoard
 
         ChessPiece originalInit = Grid[destX, destY];
         ChessPiece originalDest = move.DestPiece;
-        
+
         // Undoing move
         Grid[initX, initY] = originalInit;
         Grid[destX, destY] = originalDest;
-        
+
         originalDest.Coordinates = new(destX, destY);
         originalInit.Coordinates = new(initX, initY);
+        
+        if (move.IsPromotion)
+        {
+            originalInit.Type = PieceType.Pawn | (originalInit.IsWhite ? PieceType.White : PieceType.Black);
+        }
     }
 
     private void CheckSpecialPawnConditions(Move move, ref ChessPiece pieceToMove)
@@ -268,12 +286,7 @@ public class ChessBoard
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
-        if (destY == 0 || destY == 7)
-        {
-            pieceToMove = GetPieceFromPromotion();
-            pieceToMove.Coordinates = new(destX, destY); // This might be redundant as won't the Make move Function do this regardless?
-        }
-        else if (Math.Abs(destY - initY) == 2)
+        if (Math.Abs(destY - initY) == 2)
         {
             int PassantY = move.InitPiece.IsWhite ? destY - 1 : destY + 1;
             Grid[destX, PassantY].IsValidPassantPlacement = true;

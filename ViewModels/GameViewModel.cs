@@ -53,7 +53,6 @@ public partial class GameViewModel : ObservableObject
         }
     }
     private Ai? _ai = null;
-    private Window? _promotionWindow;
 
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
 
@@ -129,12 +128,26 @@ public partial class GameViewModel : ObservableObject
 
     private async Task ManageTurns()
     {
+        // Player Move
         if (_playerMove is not null)
         {
             // Resetting Selection
             ResetHighlights();
 
             _selectedSquare = null;
+            
+            // Check if it's a Pawn Promotion Move
+            
+            if (_playerMove.InitPiece.EqualsUncolored(PieceType.Pawn) && (_playerMove.DestPiece.Coordinates.Y == 7 || _playerMove.DestPiece.Coordinates.Y == 0) && _playerMove.IsValid)
+            {
+                LockInput = true;
+                // Ask player which piece they want
+                var promotionResult = await PawnPromotion(IsWhiteTurn);
+
+                // Replace old move with new move that includes promotion info
+                _playerMove = new Move(_playerMove.InitPiece, _playerMove.DestPiece, promotionResult);
+                LockInput = false;
+            }
 
             if (!RegisterMove(_playerMove))
             {
@@ -154,7 +167,8 @@ public partial class GameViewModel : ObservableObject
             if (!RegisterMove(aiMove))
             {
                 Debug.WriteLine("AI attempted invalid move! Skipping turn.");
-                GameStateText = "AI Made Invalid Move!";
+                Console.WriteLine($"Type: {aiMove.InitPiece.Type}");
+                GameStateText = "AI Made Invalid Move: " + AppendMove("", aiMove);
                 EndGame();
                 return;
             }
@@ -186,11 +200,7 @@ public partial class GameViewModel : ObservableObject
             _playerMove = new(_selectedSquare!.Piece, squareClicked.Piece);
 
             // A bit of Redundancy, But I can't fix it without refactoring the whole thing
-            if (IsPawnPromotionMove(_playerMove.InitPiece, _playerMove.DestPiece))
-            {
-                ShowPawnPromotionDialog(IsWhiteTurn, async () => await ManageTurns());
-            }
-            else await ManageTurns();
+            ManageTurns();
 
         }
 
@@ -200,7 +210,7 @@ public partial class GameViewModel : ObservableObject
     {
         clickedSquare.IsSelected = true;
 
-        List<Move> moves = Move.GetPossibleMoves(clickedSquare.Piece);
+        List<Move> moves = Move.GeneratePieceMoves(clickedSquare.Piece);
 
         foreach (Move move in moves)
         {
@@ -232,42 +242,21 @@ public partial class GameViewModel : ObservableObject
 
         return true;
     }
+    
 
-    private static bool IsPawnPromotionMove(ChessPiece initPiece, ChessPiece destPiece)
+    private async Task<PieceType> PawnPromotion(bool isWhite)
     {
-        // Check if the piece is a pawn
-        if (!initPiece.EqualsUncolored(PieceType.Pawn))
-        {
-            return false;
-        }
+        Window promotionView = new PawnPromotionView(isWhite);
+        PawnPromotionViewModel viewModel = (PawnPromotionViewModel) promotionView.DataContext!;
+        
+        // If user closes the window via “X”, pick a default (Queen)
+        promotionView.Closed += (_, __) => viewModel.EnsureDefaultIfNotChosen();
 
-        return destPiece.Coordinates.Y == 7 || destPiece.Coordinates.Y == 0;
-    }
-
-    private void ShowPawnPromotionDialog(bool isWhite, Action onPieceSelected)
-    {
-        var promotionView = new PawnPromotionView(isWhite);
-        var viewModel = (PawnPromotionViewModel)promotionView.DataContext!;
-
-        viewModel.PieceSelected += () =>
-        {
-            _promotionWindow!.Close();
-            onPieceSelected!.Invoke();
-        };
-
-        var window = new Window
-        {
-            Content = promotionView,
-            Width = 300,
-            Height = 150,
-            CanResize = false,
-            ShowInTaskbar = false,
-            Title = "Pawn Promotion"
-        };
-
-        _promotionWindow = window;
-
-        window.Show();
+        promotionView.Show(); // modeless (UI still responsive)
+        var piece = await viewModel.Completion; // wait for SelectPiece(...)
+        promotionView.Close(); // will no-op if already closed
+        
+        return piece;
     }
 
 
@@ -319,7 +308,6 @@ public partial class GameViewModel : ObservableObject
 
     private void UpdateGameState(Move? move = null)
     {
-        Console.WriteLine($"Check: {Board.IsCheck} CheckMate: {Board.IsCheckMate}");
         if (Board.IsCheckMate)
         {
             GameStateText = AppendMove(IsWhiteTurn ? "White is in Checkmate!" : "Black is in Checkmate!", move);

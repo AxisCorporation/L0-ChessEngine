@@ -75,12 +75,20 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
         pieceToMove.Coordinates = new(destX, destY);
+
+        if (move.IsPromotion)
+        {
+            Grid[destX, destY].Type = move.PromotionPiece;
+        }
         
         // I have no idea why, but this wasn't working, so I changed it for now.
         // IsCheck = CheckScan();
         // IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
 
         IsWhiteTurn = !IsWhiteTurn;
+
+        Move hypoMove = new Move(Grid[0, 1], Grid[0, 7], PieceType.Queen | PieceType.White);
+
         GridUpdated?.Invoke();
 
         return true;
@@ -240,13 +248,18 @@ public class ChessBoard
         (int destX, int destY) = move.DestPiece.Coordinates;
 
         ChessPiece originalInit = Grid[initX, initY];
-        
+
         // Applying move
         Grid[destX, destY] = originalInit;
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         originalInit.Coordinates = new(destX, destY);
+        
+        if (move.IsPromotion)
+        {
+            originalInit.Type = move.PromotionPiece;
+        }
     }
-    
+
     public void UndoHypotheticalMove(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
@@ -254,13 +267,18 @@ public class ChessBoard
 
         ChessPiece originalInit = Grid[destX, destY];
         ChessPiece originalDest = move.DestPiece;
-        
+
         // Undoing move
         Grid[initX, initY] = originalInit;
         Grid[destX, destY] = originalDest;
-        
+
         originalDest.Coordinates = new(destX, destY);
         originalInit.Coordinates = new(initX, initY);
+        
+        if (move.IsPromotion)
+        {
+            originalInit.Type = PieceType.Pawn | (originalInit.IsWhite ? PieceType.White : PieceType.Black);
+        }
     }
 
     private void CheckSpecialPawnConditions(Move move, ref ChessPiece pieceToMove)

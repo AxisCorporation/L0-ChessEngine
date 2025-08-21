@@ -141,7 +141,11 @@ public partial class GameViewModel : ObservableObject
             if (_playerMove.InitPiece.EqualsUncolored(PieceType.Pawn) && (_playerMove.DestPiece.Coordinates.Y == 7 || _playerMove.DestPiece.Coordinates.Y == 0) && _playerMove.IsValid)
             {
                 LockInput = true;
-                _playerMove.InitPiece.Type = await PawnPromotion(IsWhiteTurn);
+                // Ask player which piece they want
+                var promotionResult = await PawnPromotion(IsWhiteTurn);
+
+                // Replace old move with new move that includes promotion info
+                _playerMove = new Move(_playerMove.InitPiece, _playerMove.DestPiece, promotionResult);
                 LockInput = false;
             }
 
@@ -163,7 +167,8 @@ public partial class GameViewModel : ObservableObject
             if (!RegisterMove(aiMove))
             {
                 Debug.WriteLine("AI attempted invalid move! Skipping turn.");
-                GameStateText = "AI Made Invalid Move!";
+                Console.WriteLine($"Type: {aiMove.InitPiece.Type}");
+                GameStateText = "AI Made Invalid Move: " + AppendMove("", aiMove);
                 EndGame();
                 return;
             }
@@ -303,7 +308,6 @@ public partial class GameViewModel : ObservableObject
 
     private void UpdateGameState(Move? move = null)
     {
-        Console.WriteLine($"Check: {Board.IsCheck} CheckMate: {Board.IsCheckMate}");
         if (Board.IsCheckMate)
         {
             GameStateText = AppendMove(IsWhiteTurn ? "White is in Checkmate!" : "Black is in Checkmate!", move);

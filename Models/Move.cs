@@ -8,15 +8,19 @@ namespace L_0_Chess_Engine.Models;
 /// <param name="destination">Destination Coordinate</param>
 /// <param name="initPiece">Piece that belongs at the starting coordinate</param>
 /// <param name="destPiece">Piece that belongs at the end coordinate</param>
-public class Move(ChessPiece initPiece, ChessPiece destPiece)
+public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotionPiece = PieceType.Empty)
 {
     public bool IsValid { get => IsValidMove(); }
 
     // The message to be displayed when a move is invalidated
     public string ErrorMessage { get; set; } = "";
 
-    public ChessPiece InitPiece { get; set; } = initPiece;
-    public ChessPiece DestPiece { get; set; } = destPiece;
+    public ChessPiece InitPiece { get; } = new ChessPiece(initPiece);
+    public ChessPiece DestPiece { get; } = new ChessPiece(destPiece);
+
+    public PieceType PromotionPiece { get; } = promotionPiece;
+    
+    public bool IsPromotion => PromotionPiece != PieceType.Empty;
 
     public bool TargetsKing
     {
@@ -34,17 +38,9 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
 
     public bool IsEnPassant { get; set; }
     public bool IsCastling { get; set; }
-
-    /// <summary>
-    /// Takes in an uncolored piecetype, and returns a function that takes in a Move object,
-    /// and returns true if the move is valid
-    /// </summary>
+    
     private static readonly Dictionary<PieceType, Func<Move, bool>> ValidationMap = [];
-
-    /// <summary>
-    /// Takes in an uncolored piecetype, and returns a coordinate object that 
-    /// represents the absolute units that the piece is allowed to move
-    /// </summary>
+    
     private static readonly Dictionary<PieceType, Coordinate> AuraMap = [];
 
     static Move()
@@ -62,8 +58,10 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
         AuraMap[PieceType.Rook] = new(8, 8);
         AuraMap[PieceType.Bishop] = new(8, 8);
         AuraMap[PieceType.Queen] = new(8, 8);
-        AuraMap[PieceType.King] = new(2, 1);
+        AuraMap[PieceType.King] = new(1, 1);
     }
+
+    
 
     public bool IsValidMove()
     {
@@ -72,18 +70,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
 
         return ValidationMap[type](this);
     }
-
-    /// <summary> Helper function for checking the bare minimum requirements of a valid move. </summary>
-    /// <returns>False if
-    /// <list type="bullet">
-    /// <item> 
-    /// <description> Initial coordinates are equal to destination </description> 
-    /// </item>
-    /// <item>
-    /// <description> Destination grid piece is not empty, and is the same color as the initial piece </description>
-    /// </item>
-    /// </list>
-    /// </returns>
+    
     private static bool IsValidGenericMove(Move move)
     {
         // False if the player just sets the piece back down in order to avoid turn skipping
@@ -339,6 +326,26 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
                 if (type == PieceType.Rook && dX != 0 && dY != 0) // skip any diagonal moves for rook - automatically invalid
                 {
                     continue;
+                }
+                
+                if ((piece.Type == (PieceType.Pawn | PieceType.White) && totalY == 7 && dY == 1) || (piece.Type == (PieceType.Pawn | PieceType.Black) && totalY == 0 && dY == -1))
+                {
+                    
+                    Move moveKnight = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black));
+                    Move moveBishop = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black));
+                    Move moveRook = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black));
+                    Move moveQueen = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black));
+                    
+                    if (moveKnight.IsValid)
+                    {
+                        validMoves.Add(moveKnight);
+                        validMoves.Add(moveBishop);
+                        validMoves.Add(moveRook);
+                        validMoves.Add(moveQueen);
+                    }
+                    
+                    continue;
+                    
                 }
 
                 Move move = new(piece, ChessBoard.Instance.Grid[totalX, totalY]);

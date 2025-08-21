@@ -88,6 +88,7 @@ namespace L_0_Chess_Engine.AI
                 {
                     bestScore = eval;
                     bestMove = move;
+                    Console.WriteLine($"AI - Type: {bestMove.InitPiece.Type} | To: {bestMove.DestPiece.Coordinates}");
                 }
 
             }

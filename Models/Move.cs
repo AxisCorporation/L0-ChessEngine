@@ -332,9 +332,9 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
                 {
                     
                     Move moveKnight = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black));
-                    Move moveBishop = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black));
-                    Move moveRook = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black));
-                    Move moveQueen = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black));
+                    Move moveBishop = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Bishop | (piece.IsWhite ? PieceType.White : PieceType.Black));
+                    Move moveRook = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Rook | (piece.IsWhite ? PieceType.White : PieceType.Black));
+                    Move moveQueen = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Queen | (piece.IsWhite ? PieceType.White : PieceType.Black));
                     
                     if (moveKnight.IsValid)
                     {

@@ -62,7 +62,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
         AuraMap[PieceType.Rook] = new(8, 8);
         AuraMap[PieceType.Bishop] = new(8, 8);
         AuraMap[PieceType.Queen] = new(8, 8);
-        AuraMap[PieceType.King] = new(1, 1);
+        AuraMap[PieceType.King] = new(2, 1);
     }
 
     public bool IsValidMove()
@@ -316,7 +316,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
         return false;
     }
 
-    public static List<Move> GetPossibleMoves(ChessPiece piece)
+    public static List<Move> GeneratePieceMoves(ChessPiece piece)
     {
         PieceType type = piece.Type ^ piece.Color;
 
@@ -341,6 +341,37 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
                     continue;
                 }
 
+                // if (type == PieceType.Pawn && (totalY == 7 || totalY == 0))
+                // {
+                //     ChessPiece copy = piece;
+                //     
+                //     copy.Type = PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black);
+                //     
+                //     Move moveK = new(copy, ChessBoard.Instance.Grid[totalX, totalY]);
+                //     
+                //     copy.Type = PieceType.Bishop | (piece.IsWhite ? PieceType.White : PieceType.Black);
+                //     
+                //     Move moveB = new(copy, ChessBoard.Instance.Grid[totalX, totalY]);
+                //     
+                //     copy.Type = PieceType.Rook | (piece.IsWhite ? PieceType.White : PieceType.Black);
+                //     
+                //     Move moveR = new(copy, ChessBoard.Instance.Grid[totalX, totalY]);
+                //     
+                //     copy.Type = PieceType.Queen | (piece.IsWhite ? PieceType.White : PieceType.Black);
+                //     
+                //     Move moveQ = new(copy, ChessBoard.Instance.Grid[totalX, totalY]);
+                //     
+                //     validMoves.Add(moveK);
+                //     validMoves.Add(moveB);
+                //     validMoves.Add(moveR);
+                //     validMoves.Add(moveQ);
+                //     
+                //     piece.Type = PieceType.Pawn | (piece.IsWhite ? PieceType.White : PieceType.Black);
+                //     
+                //     continue;
+                //     
+                // }
+                
                 Move move = new(piece, ChessBoard.Instance.Grid[totalX, totalY]);
 
                 if (move.IsValid)

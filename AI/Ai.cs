@@ -109,7 +109,7 @@ namespace L_0_Chess_Engine.AI
                         continue;
                     }
 
-                    moves.AddRange(Move.GetPossibleMoves(Grid[x, y]));
+                    moves.AddRange(Move.GeneratePieceMoves(Grid[x, y]));
                 }
             }
 

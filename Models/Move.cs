@@ -341,37 +341,6 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece)
                     continue;
                 }
 
-                // if (type == PieceType.Pawn && (totalY == 7 || totalY == 0))
-                // {
-                //     ChessPiece copy = piece;
-                //     
-                //     copy.Type = PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black);
-                //     
-                //     Move moveK = new(copy, ChessBoard.Instance.Grid[totalX, totalY]);
-                //     
-                //     copy.Type = PieceType.Bishop | (piece.IsWhite ? PieceType.White : PieceType.Black);
-                //     
-                //     Move moveB = new(copy, ChessBoard.Instance.Grid[totalX, totalY]);
-                //     
-                //     copy.Type = PieceType.Rook | (piece.IsWhite ? PieceType.White : PieceType.Black);
-                //     
-                //     Move moveR = new(copy, ChessBoard.Instance.Grid[totalX, totalY]);
-                //     
-                //     copy.Type = PieceType.Queen | (piece.IsWhite ? PieceType.White : PieceType.Black);
-                //     
-                //     Move moveQ = new(copy, ChessBoard.Instance.Grid[totalX, totalY]);
-                //     
-                //     validMoves.Add(moveK);
-                //     validMoves.Add(moveB);
-                //     validMoves.Add(moveR);
-                //     validMoves.Add(moveQ);
-                //     
-                //     piece.Type = PieceType.Pawn | (piece.IsWhite ? PieceType.White : PieceType.Black);
-                //     
-                //     continue;
-                //     
-                // }
-                
                 Move move = new(piece, ChessBoard.Instance.Grid[totalX, totalY]);
 
                 if (move.IsValid)

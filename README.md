@@ -114,6 +114,7 @@ The Development Cycles have been divided into various Stages.
 
 ### Stage 5
 **Deadline - Passive Stage:** 18rd Aug 23:59 PST
+***Passive Deadline:** N/A
 
 - [ ] Evaluation Function Sophistication
 - [ ] Bug Fixes
@@ -133,7 +134,8 @@ The Development Cycles have been divided into various Stages.
 - [ ] Backend
   - [X] Implement Turn Manager - Zain
 - [ ] Basic SFX
-- [ ] AI Randomization
+- [X] AI Randomization - Zain
+- [ ] Code Cleanup
 - [ ] Minor AI Optimizations
 
 

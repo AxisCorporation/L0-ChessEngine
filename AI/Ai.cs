@@ -35,54 +35,62 @@ namespace L_0_Chess_Engine.AI
         {
             List<Move> moves = GenerateAllMoves();
 
-            Move bestMove = null;
-            int bestScore = _white ? -1000 : 1000;
+            List<Move> bestMoves = new();
+            int bestScore = _white ? int.MinValue : int.MaxValue;
+
+            Random rng = new Random();
 
             foreach (var move in moves)
             {
-                if (move.InitPiece.IsWhite) continue;
+                if (move.InitPiece.IsWhite != _white) continue;
 
                 int eval = 0;
 
                 ChessBoard.Instance.HypotheticalMove(move);
 
-                switch (_difficulty)
+                eval = _difficulty switch
                 {
-                    default:
-                    case AIDifficulty.Easy:
-                        eval = MiniMax(1, -1000, 1000, _white);
-                        break;
+                    AIDifficulty.Easy => MiniMax(1, int.MinValue, int.MaxValue, !_white),
+                    AIDifficulty.Medium => MiniMax(4, int.MinValue, int.MaxValue, !_white),
+                    AIDifficulty.Hard => MiniMax(8, int.MinValue, int.MaxValue, !_white),
+                    _ => MiniMax(2, int.MinValue, int.MaxValue, !_white)
+                };
 
-                    case AIDifficulty.Medium:
-                        eval = MiniMax(4, -1000, 1000, _white);
-                        break;
-
-                    case AIDifficulty.Hard:
-                        eval = MiniMax(8, -1000, 1000, _white);
-                        break;
-
-                }
 
                 ChessBoard.Instance.UndoHypotheticalMove(move);
 
-                if (_white && eval > bestScore)
+                if (_white)
                 {
-                    bestScore = eval;
-                    bestMove = move;
+                    if (eval > bestScore)
+                    {
+                        bestScore = eval;
+                        bestMoves.Clear();
+                        bestMoves.Add(move);
+                    }
+                    else if (eval == bestScore)
+                    {
+                        bestMoves.Add(move);
+                    }
                 }
-                else if (!_white && eval < bestScore)
+                else
                 {
-                    bestScore = eval;
-                    bestMove = move;
-
+                    if (eval < bestScore)
+                    {
+                        bestScore = eval;
+                        bestMoves.Clear();
+                        bestMoves.Add(move);
+                    }
+                    else if (eval == bestScore)
+                    {
+                        bestMoves.Add(move);
+                    }
                 }
 
             }
 
-            return bestMove;
+            return bestMoves.Count > 0 ? bestMoves[rng.Next(bestMoves.Count)] : null;;
         }
 
-        // Function only here for hot fix, will optimize later
         public List<Move> GenerateAllMoves()
         {
             List<Move> moves = [];
@@ -91,7 +99,7 @@ namespace L_0_Chess_Engine.AI
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if (Grid[x, y] == PieceType.Empty)
+                    if (Grid[x, y].Type == PieceType.Empty)
                     {
                         continue;
                     }
@@ -99,6 +107,13 @@ namespace L_0_Chess_Engine.AI
                     moves.AddRange(Move.GeneratePieceMoves(Grid[x, y]));
                 }
             }
+
+            return moves;
+        }
+
+        private List<Move> OrderMoves(List<Move> moves)
+        {
+            // TODO
 
             return moves;
         }
@@ -112,14 +127,14 @@ namespace L_0_Chess_Engine.AI
             {
                 return EvaluateBoardPosition();
             }
-            
+
             int eval;
-            
-            List<Move> moves = GenerateAllMoves();
+
+            List<Move> moves = OrderMoves(GenerateAllMoves());
 
             if (maximize)
             {
-                int maxEval = -1000;
+                int maxEval = int.MinValue;
 
                 foreach (var move in moves)
                 {
@@ -137,7 +152,7 @@ namespace L_0_Chess_Engine.AI
                     maxEval = Math.Max(maxEval, eval);
 
                     alpha = Math.Max(alpha, eval);
-                    
+
                     if (beta <= alpha)
                     {
                         break;
@@ -148,7 +163,7 @@ namespace L_0_Chess_Engine.AI
             }
             else
             {
-                int minEval = 1000;
+                int minEval = int.MaxValue;
 
                 foreach (var move in moves)
                 {
@@ -165,7 +180,7 @@ namespace L_0_Chess_Engine.AI
 
                     minEval = Math.Min(minEval, eval);
                     beta = Math.Min(beta, eval);
-                    
+
                     if (beta <= alpha)
                     {
                         break;

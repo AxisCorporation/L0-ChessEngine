@@ -200,7 +200,7 @@ public partial class GameViewModel : ObservableObject
             _playerMove = new(_selectedSquare!.Piece, squareClicked.Piece);
 
             // A bit of Redundancy, But I can't fix it without refactoring the whole thing
-            ManageTurns();
+            await ManageTurns();
 
         }
 

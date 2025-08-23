@@ -38,7 +38,7 @@
                         <TextBlock Text="1" Grid.Row="7" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
                     </Grid>
 
-                    <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="auto, auto" ColumnDefinitions="auto, *" HorizontalAlignment="Center">
+                    <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="auto, auto" ColumnDefinitions="auto, *">
 
                         <!-- The Chess Board -->
                         <ItemsControl ItemsSource="{Binding GridPieces}" Grid.Row="0" Grid.Column="0">
@@ -64,7 +64,7 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <Border CornerRadius="5" Background="#f25a0f" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
+                        <Border CornerRadius="10" Background="#f25a0f" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
                             <Grid Width="100" RowDefinitions="auto, auto">
                                 <TextBlock Text="Moves" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" 
                                 VerticalAlignment="Top" HorizontalAlignment="Center"/>

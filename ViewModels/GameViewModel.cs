@@ -39,6 +39,7 @@ public partial class GameViewModel : ObservableObject
     private ChessBoard Board { get; } = ChessBoard.Instance;
 
     private Move? _playerMove = null;
+    PieceType Winner; // .White or .Black (not my favorite implementation)
 
     private bool _aiGame;
     private bool _lockInput = false;
@@ -239,9 +240,9 @@ public partial class GameViewModel : ObservableObject
 
         IsWhiteTurn = !IsWhiteTurn;
 
-        UpdateGameState(move);
-        MovesCN.Add(MoveToCN(move));
+        UpdateGameState();
 
+        MovesCN.Add(MoveToCN(move));
         return true;
     }
 
@@ -308,36 +309,23 @@ public partial class GameViewModel : ObservableObject
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 
-    private void UpdateGameState(Move? move = null)
+    private void UpdateGameState()
     {
-        if (Board.IsCheckMate)
+        if (Board.IsCheckMate || Board.IsDraw)
         {
-            GameStateText = AppendMove(IsWhiteTurn ? "White is in Checkmate!" : "Black is in Checkmate!", move);
             GameRunning = false;
         }
-        else if (Board.IsDraw)
-        {
-            GameStateText = AppendMove("It's a Draw!", move);
-            GameRunning = false;
-        }
-        else if (Board.IsCheck)
-        {
-            GameStateText = AppendMove(IsWhiteTurn ? "White is in Check!" : "Black is in Check!", move);
-        }
+
         else if (WhiteTimer <= TimeSpan.Zero)
         {
-            GameStateText = "Time's up for White - Black wins!";
+            Winner = PieceType.White;
             GameRunning = false;
         }
         else if (BlackTimer <= TimeSpan.Zero)
         {
-            GameStateText = "Time's up for Black - White wins!";
-            GameRunning = false;
+            Winner = PieceType.Black;
         }
-        else
-        {
-            GameStateText = AppendMove("", move);
-        }
+
     }
 
     private async Task UpdateTurnTimersAsync()
@@ -364,7 +352,7 @@ public partial class GameViewModel : ObservableObject
         }
     }
 
-    private static string AppendMove(string Message, Move? move)
+    private static string AppendMove(string Message, Move? move) // debug
     {
         if (!string.IsNullOrWhiteSpace(Message))
         {
@@ -389,13 +377,22 @@ public partial class GameViewModel : ObservableObject
         };
 
         ChessNotation += $"{pieceChar}";
-        
+
         if (move.DestPiece != PieceType.Empty)
         {
             ChessNotation += 'x';
         }
 
-        ChessNotation += $"{ Move.CoordinateToString(move.DestPiece.Coordinates).ToLower()}";
+        ChessNotation += $"{Move.CoordinateToString(move.DestPiece.Coordinates).ToLower()}";
+
+        if (Board.IsCheckMate)
+        {
+            ChessNotation += '#';
+        }
+        else if (Board.IsCheck)
+        {
+            ChessNotation += '+';
+        }
 
         return ChessNotation;
     }

@@ -13,11 +13,11 @@ public class ChessBoard
     private PieceType _promotedPieceType = PieceType.Empty;
     
     public ChessPiece[,] Grid { get; set; }
-    public bool IsDraw { get => DrawScan(); }
+    public bool IsDraw { get; private set; }
 
-    public bool IsCheck { get => CheckScan(); }
+    public bool IsCheck { get; private set; }
 
-    public bool IsCheckMate { get => CheckMateScan(); }
+    public bool IsCheckMate { get; private set; }
 
     public bool IsWhiteTurn { get; set; }
 
@@ -80,10 +80,14 @@ public class ChessBoard
         {
             Grid[destX, destY].Type = move.PromotionPiece;
         }
-        
-        // I have no idea why, but this wasn't working, so I changed it for now.
-        // IsCheck = CheckScan();
-        // IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
+
+        IsDraw = DrawScan();
+
+        if (!IsDraw)
+        {
+            IsCheck = CheckScan();
+            IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
+        }
 
         IsWhiteTurn = !IsWhiteTurn;
 
@@ -148,30 +152,40 @@ public class ChessBoard
 
         return count;
     }
-    // After making a move, it checks if the opposite team is in check
-    private bool CheckScan()
+
+    // After making a move, it checks the king of the opposing team to see if its in check
+    private bool CheckScan(bool OpposingTeam = true)
     {
-        PieceType oppositeColour = IsWhiteTurn ? PieceType.Black : PieceType.White;
+        PieceType Color;
+
+        if (OpposingTeam)
+        {
+            Color = IsWhiteTurn ? PieceType.Black : PieceType.White;
+        }
+        else
+        {
+            Color = IsWhiteTurn ? PieceType.White : PieceType.Black;
+        }
 
         for (int x = 0; x < 8; x++)
-        {
-            for (int y = 0; y < 8; y++)
             {
-                if (Grid[x, y].Type == PieceType.Empty || Grid[x, y].Color != oppositeColour)
+                for (int y = 0; y < 8; y++)
                 {
-                    continue;
-                }
+                    if (Grid[x, y].Type == PieceType.Empty || Grid[x, y].Color == Color)
+                    {
+                        continue;
+                    }
 
-                List<Move> moves = [..from m in Move.GeneratePieceMoves(Grid[x, y])
+                    List<Move> moves = [..from m in Move.GeneratePieceMoves(Grid[x, y])
                                     where m.TargetsKing
                                     select m]; // Gets all moves for piece where it can threaten the king
 
-                if (moves.Count != 0)
-                {
-                    return true;
+                    if (moves.Count != 0)
+                    {
+                        return true;
+                    }
                 }
             }
-        }
 
         return false;
     }
@@ -334,7 +348,7 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         originalInit.Coordinates = new(destX, destY);
 
-        bool causesCheck = CheckScan(); // Will return true if king is in check
+        bool causesCheck = CheckScan(false); // Will return true if king is in check
 
         // Undo move
         Grid[initX, initY] = originalInit;

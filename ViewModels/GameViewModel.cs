@@ -55,6 +55,8 @@ public partial class GameViewModel : ObservableObject
     private Ai? _ai = null;
 
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
+    public ObservableCollection<string> MovesCN { get; set; } = []; // A collection of all moves played in proper chess notation
+
 
     private bool _isWhiteTurn;
     public bool IsWhiteTurn
@@ -73,7 +75,7 @@ public partial class GameViewModel : ObservableObject
     public GameViewModel(int timeLimit, bool LoadAi, AIDifficulty Difficulty, MainWindow MainWindow)
     {
         _mainWindow = MainWindow;
-        
+
         WhiteTimer = TimeSpan.FromMinutes(timeLimit);
         BlackTimer = TimeSpan.FromMinutes(timeLimit);
 
@@ -107,7 +109,7 @@ public partial class GameViewModel : ObservableObject
             _aiGame = true;
         }
 
-        // Don't like this syntax
+        // Don't like this syntax 
         _ = UpdateTurnTimersAsync();
     }
 
@@ -135,9 +137,9 @@ public partial class GameViewModel : ObservableObject
             ResetHighlights();
 
             _selectedSquare = null;
-            
+
             // Check if it's a Pawn Promotion Move
-            
+
             if (_playerMove.InitPiece.EqualsUncolored(PieceType.Pawn) && (_playerMove.DestPiece.Coordinates.Y == 7 || _playerMove.DestPiece.Coordinates.Y == 0) && _playerMove.IsValid)
             {
                 LockInput = true;
@@ -176,12 +178,12 @@ public partial class GameViewModel : ObservableObject
             // Loop Again?
             // await ManageTurns();
         }
-        
+
         if (!GameRunning)
         {
             EndGame();
         }
-        
+
     }
 
 
@@ -230,7 +232,6 @@ public partial class GameViewModel : ObservableObject
 
     private bool RegisterMove(Move move)
     {
-
         if (!Board.MakeMove(move))
         {
             return false;
@@ -239,23 +240,24 @@ public partial class GameViewModel : ObservableObject
         IsWhiteTurn = !IsWhiteTurn;
 
         UpdateGameState(move);
+        MovesCN.Add(MoveToCN(move));
 
         return true;
     }
-    
+
 
     private async Task<PieceType> PawnPromotion(bool isWhite)
     {
         Window promotionView = new PawnPromotionView(isWhite);
-        PawnPromotionViewModel viewModel = (PawnPromotionViewModel) promotionView.DataContext!;
-        
+        PawnPromotionViewModel viewModel = (PawnPromotionViewModel)promotionView.DataContext!;
+
         // If user closes the window via “X”, pick a default (Queen)
         promotionView.Closed += (_, __) => viewModel.EnsureDefaultIfNotChosen();
 
         promotionView.Show(); // modeless (UI still responsive)
         var piece = await viewModel.Completion; // wait for SelectPiece(...)
         promotionView.Close(); // will no-op if already closed
-        
+
         return piece;
     }
 
@@ -264,7 +266,7 @@ public partial class GameViewModel : ObservableObject
     {
         foreach (var piece in GridPieces)
         {
-            ((RelayCommand) piece.ClickCommand!).NotifyCanExecuteChanged();
+            ((RelayCommand)piece.ClickCommand!).NotifyCanExecuteChanged();
         }
     }
 
@@ -284,7 +286,7 @@ public partial class GameViewModel : ObservableObject
         {
             return true;
         }
-        
+
         if (_selectedSquare is not null)
         {
             return true;
@@ -297,8 +299,8 @@ public partial class GameViewModel : ObservableObject
     {
         // TODO
         string gameOverText = IsWhiteTurn ? "Black Won!" : "White Won!";
-        var gameOverView =  new GameOverView(gameOverText, _mainWindow);
-        
+        var gameOverView = new GameOverView(gameOverText, _mainWindow);
+
         gameOverView.Show();
     }
 
@@ -367,8 +369,34 @@ public partial class GameViewModel : ObservableObject
         if (!string.IsNullOrWhiteSpace(Message))
         {
             Message = Message.Insert(0, "- ");
-        }        
+        }
 
-        return move is not null ? $"{move.GeneratePieceMovedMessage()} {Message}" : Message; 
+        return move is not null ? $"{move.GeneratePieceMovedMessage()} {Message}" : Message;
+    }
+
+    private string MoveToCN(Move move)
+    {
+        string ChessNotation = $"{MovesCN.Count}. ";
+        char? pieceChar = (move.InitPiece.Type ^ move.InitPiece.Color) switch
+        {
+            PieceType.Knight => 'N',
+            PieceType.Bishop => 'B',
+            PieceType.Rook => 'R',
+            PieceType.Queen => 'Q',
+            PieceType.King => 'K',
+
+            _ => null // Pawn has no abbreviation
+        };
+
+        ChessNotation += $"{pieceChar}";
+        
+        if (move.DestPiece != PieceType.Empty)
+        {
+            ChessNotation += 'x';
+        }
+
+        ChessNotation += $"{ Move.CoordinateToString(move.DestPiece.Coordinates).ToLower()}";
+
+        return ChessNotation;
     }
 }

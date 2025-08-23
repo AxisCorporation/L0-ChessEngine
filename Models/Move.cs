@@ -360,7 +360,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
         return validMoves;
     }
 
-    private static string CoordinateToString(Coordinate coordinate)
+    public static string CoordinateToString(Coordinate coordinate)
     {
         char column = ' ';
         int row = coordinate.Y + 1;

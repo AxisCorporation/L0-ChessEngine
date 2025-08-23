@@ -87,8 +87,6 @@ public class ChessBoard
 
         IsWhiteTurn = !IsWhiteTurn;
 
-        Move hypoMove = new Move(Grid[0, 1], Grid[0, 7], PieceType.Queen | PieceType.White);
-
         GridUpdated?.Invoke();
 
         return true;

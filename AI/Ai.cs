@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using L_0_Chess_Engine.Enums;
 using L_0_Chess_Engine.Models;
 
@@ -115,7 +116,42 @@ namespace L_0_Chess_Engine.AI
         {
             // TODO
 
-            return moves;
+            return moves.OrderByDescending(EvaluateMove).ToList();
+        }
+
+        private int EvaluateMove(Move move)
+        {
+            int score = 0;
+
+            PieceType initType = move.InitPiece.Type & ~PieceType.White & ~PieceType.Black;
+            int initValue = ValueMap.TryGetValue(initType, out var iv) ? iv : 0;
+
+            PieceType destType = move.IsEnPassant ? PieceType.Pawn : move.DestPiece.Type & ~PieceType.White & ~PieceType.Black;
+            int destValue = ValueMap.TryGetValue(initType, out var dv) ? dv : 0;
+
+            (int destX, int destY) = move.DestPiece.Coordinates;
+
+            if (destType != PieceType.Empty)
+            {
+                score += 1000 + 100 * destValue - 10 * initValue;
+            }
+
+            bool isPromotion = move.IsPromotion;
+            PieceType promotionBase = move.PromotionPiece & ~PieceType.White & ~PieceType.Black;
+
+            if (isPromotion)
+            {
+                int promoVal = ValueMap.TryGetValue(promotionBase, out var pv) ? pv : 0;
+                score += 800 + 10 * promoVal;
+            }
+
+            int toCenter = Math.Min(Math.Abs(destX - 3), Math.Abs(destX - 4)) + Math.Min(Math.Abs(destY - 3), Math.Abs(destY - 4));
+
+            score += 4 - toCenter;
+
+            if (initType == PieceType.Pawn) score += 1;
+
+            return score;
         }
 
         
@@ -128,9 +164,13 @@ namespace L_0_Chess_Engine.AI
                 return EvaluateBoardPosition();
             }
 
-            int eval;
+            var sideMoves = new List<Move>();
+            foreach (var m in GenerateAllMoves())
+                if (m.InitPiece.IsWhite == maximize) sideMoves.Add(m);
 
-            List<Move> moves = OrderMoves(GenerateAllMoves());
+            List<Move> moves = OrderMoves(sideMoves);
+
+            int eval;
 
             if (maximize)
             {
@@ -138,10 +178,6 @@ namespace L_0_Chess_Engine.AI
 
                 foreach (var move in moves)
                 {
-                    if (!move.InitPiece.IsWhite)
-                    {
-                        continue;
-                    }
 
                     ChessBoard.Instance.HypotheticalMove(move);
 
@@ -167,10 +203,6 @@ namespace L_0_Chess_Engine.AI
 
                 foreach (var move in moves)
                 {
-                    if (move.InitPiece.IsWhite)
-                    {
-                        continue;
-                    }
 
                     ChessBoard.Instance.HypotheticalMove(move);
 

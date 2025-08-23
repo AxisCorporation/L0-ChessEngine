@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using L_0_Chess_Engine.Enums;
 using L_0_Chess_Engine.Models;
 
@@ -28,7 +29,7 @@ namespace L_0_Chess_Engine.AI
             ValueMap[PieceType.Bishop] = 3;
             ValueMap[PieceType.Rook] = 5;
             ValueMap[PieceType.Queen] = 9;
-            ValueMap[PieceType.King] = 100; // Will Probably Change this Later
+            ValueMap[PieceType.King] = 10; // Will Probably Change this Later
         }
 
         public Move GenerateMove()
@@ -44,6 +45,11 @@ namespace L_0_Chess_Engine.AI
             {
                 if (move.InitPiece.IsWhite != _white) continue;
 
+                if (!move.IsValid)
+                {
+                    Console.WriteLine($"DEBUG1 - Type: {move.InitPiece.Type} From: {move.InitPiece.Coordinates} To: {move.DestPiece.Coordinates}");
+                }
+
                 int eval = 0;
 
                 ChessBoard.Instance.HypotheticalMove(move);
@@ -51,13 +57,15 @@ namespace L_0_Chess_Engine.AI
                 eval = _difficulty switch
                 {
                     AIDifficulty.Easy => MiniMax(1, int.MinValue, int.MaxValue, !_white),
-                    AIDifficulty.Medium => MiniMax(4, int.MinValue, int.MaxValue, !_white),
-                    AIDifficulty.Hard => MiniMax(8, int.MinValue, int.MaxValue, !_white),
+                    AIDifficulty.Medium => MiniMax(2, int.MinValue, int.MaxValue, !_white),
+                    AIDifficulty.Hard => MiniMax(4, int.MinValue, int.MaxValue, !_white),
                     _ => MiniMax(2, int.MinValue, int.MaxValue, !_white)
                 };
 
 
                 ChessBoard.Instance.UndoHypotheticalMove(move);
+                
+                Console.WriteLine($"DEBUG 2 - Type: {move.InitPiece.Type} From: {move.InitPiece.Coordinates} To: {move.DestPiece.Coordinates}");
 
                 if (_white)
                 {
@@ -65,11 +73,11 @@ namespace L_0_Chess_Engine.AI
                     {
                         bestScore = eval;
                         bestMoves.Clear();
-                        bestMoves.Add(move);
+                        bestMoves.Add(new Move(move.InitPiece, move.DestPiece, move.PromotionPiece));
                     }
                     else if (eval == bestScore)
                     {
-                        bestMoves.Add(move);
+                        bestMoves.Add(new Move(move.InitPiece, move.DestPiece, move.PromotionPiece));
                     }
                 }
                 else
@@ -78,17 +86,24 @@ namespace L_0_Chess_Engine.AI
                     {
                         bestScore = eval;
                         bestMoves.Clear();
-                        bestMoves.Add(move);
+                        bestMoves.Add(new Move(move.InitPiece, move.DestPiece, move.PromotionPiece));
                     }
                     else if (eval == bestScore)
                     {
-                        bestMoves.Add(move);
+                        bestMoves.Add(new Move(move.InitPiece, move.DestPiece, move.PromotionPiece));
                     }
                 }
 
             }
+            
+            Console.WriteLine("-----------");
 
-            return bestMoves.Count > 0 ? bestMoves[rng.Next(bestMoves.Count)] : null;;
+            foreach (var move in bestMoves)
+            {
+                Console.WriteLine($"DEBUG 3 - Type: {move.InitPiece.Type} From: {move.InitPiece.Coordinates} To: {move.DestPiece.Coordinates}");
+            }
+
+            return bestMoves.Count > 0 ? bestMoves[rng.Next(bestMoves.Count)] : null;
         }
 
         public List<Move> GenerateAllMoves()
@@ -115,7 +130,42 @@ namespace L_0_Chess_Engine.AI
         {
             // TODO
 
-            return moves;
+            return moves.OrderByDescending(EvaluateMove).ToList();
+        }
+
+        private int EvaluateMove(Move move)
+        {
+            int score = 0;
+
+            PieceType initType = move.InitPiece.Type & ~PieceType.White & ~PieceType.Black;
+            int initValue = ValueMap.TryGetValue(initType, out var iv) ? iv : 0;
+
+            PieceType destType = move.IsEnPassant ? PieceType.Pawn : move.DestPiece.Type & ~PieceType.White & ~PieceType.Black;
+            int destValue = ValueMap.TryGetValue(initType, out var dv) ? dv : 0;
+
+            (int destX, int destY) = move.DestPiece.Coordinates;
+
+            if (destType != PieceType.Empty)
+            {
+                score += 1000 + 100 * destValue - 10 * initValue;
+            }
+
+            bool isPromotion = move.IsPromotion;
+            PieceType promotionBase = move.PromotionPiece & ~PieceType.White & ~PieceType.Black;
+
+            if (isPromotion)
+            {
+                int promoVal = ValueMap.TryGetValue(promotionBase, out var pv) ? pv : 0;
+                score += 800 + 10 * promoVal;
+            }
+
+            int toCenter = Math.Min(Math.Abs(destX - 3), Math.Abs(destX - 4)) + Math.Min(Math.Abs(destY - 3), Math.Abs(destY - 4));
+
+            score += 4 - toCenter;
+
+            if (initType == PieceType.Pawn) score += 1;
+
+            return score;
         }
 
         
@@ -128,9 +178,13 @@ namespace L_0_Chess_Engine.AI
                 return EvaluateBoardPosition();
             }
 
-            int eval;
+            var sideMoves = new List<Move>();
+            foreach (var m in GenerateAllMoves())
+                if (m.InitPiece.IsWhite == maximize) sideMoves.Add(m);
 
-            List<Move> moves = OrderMoves(GenerateAllMoves());
+            List<Move> moves = OrderMoves(sideMoves);
+
+            int eval;
 
             if (maximize)
             {
@@ -138,10 +192,6 @@ namespace L_0_Chess_Engine.AI
 
                 foreach (var move in moves)
                 {
-                    if (!move.InitPiece.IsWhite)
-                    {
-                        continue;
-                    }
 
                     ChessBoard.Instance.HypotheticalMove(move);
 
@@ -167,10 +217,6 @@ namespace L_0_Chess_Engine.AI
 
                 foreach (var move in moves)
                 {
-                    if (move.InitPiece.IsWhite)
-                    {
-                        continue;
-                    }
 
                     ChessBoard.Instance.HypotheticalMove(move);
 
@@ -196,13 +242,26 @@ namespace L_0_Chess_Engine.AI
         private int EvaluateBoardPosition()
         {
             int score = 0;
+            
+            if (ChessBoard.Instance.IsCheckMate)
+            {
+                return ChessBoard.Instance.IsWhiteTurn ? int.MinValue : int.MaxValue;
+            }
+            else if (ChessBoard.Instance.IsDraw)
+            {
+                return 0;
+            }
+            else if (ChessBoard.Instance.IsCheck)
+            {
+                score += ChessBoard.Instance.IsWhiteTurn ? -20 : 20;
+            }
 
-            // Gotta evaluate the board after move
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
                 {
                     ChessPiece piece = Grid[x, y];
+
                     if (piece.Type == PieceType.Empty) continue;
 
                     PieceType baseType = piece.Type & ~PieceType.White & ~PieceType.Black;
@@ -210,13 +269,26 @@ namespace L_0_Chess_Engine.AI
                     if (!ValueMap.TryGetValue(baseType, out int value))
                         continue;
 
+                    if (piece.IsWhite)
+                        score += value;
+                    else
+                        score -= value;
+
                     int positionValue = 0;
+
                     // Bonus for controlling center
                     if ((x == 3 || x == 4) && (y == 3 || y == 4))
                     {
-                        positionValue += 10; 
+                        if (piece.IsWhite)
+                        {
+                            positionValue += 10;
+                        }
+                        else
+                        {
+                            positionValue -= 10;
+                        }
                     }
-                    
+
                     // Bonus for advancing pawns 
                     if (baseType == PieceType.Pawn)
                     {
@@ -226,7 +298,7 @@ namespace L_0_Chess_Engine.AI
                         }
                         else
                         {
-                            positionValue += (7 - y) * 5;
+                            positionValue -= (7 - y) * 5;
                         }
                     }
 
@@ -235,14 +307,19 @@ namespace L_0_Chess_Engine.AI
                     {
                         if (x == 0 || x == 7 || y == 0 || y == 7)
                         {
-                            positionValue -= 10; 
+                            if (piece.IsWhite)
+                            {
+                                positionValue += 10;
+                            }
+                            else
+                            {
+                                positionValue -= 10;
+                            }
                         }
                     }
 
-                    if (piece.IsWhite)
-                        score += value;
-                    else
-                        score -= value;
+                    score += positionValue;
+
                 }
             }
 

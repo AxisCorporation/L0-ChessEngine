@@ -100,7 +100,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
         (int destX, int destY) = move.DestPiece.Coordinates;
 
         bool IsValidDiagonal = Math.Abs(destX - initX) == 1;
-        bool IsValidForward = destX == initX && move.DestPiece == PieceType.Empty;
+        bool IsValidForward = destX == initX && move.DestPiece.Type == PieceType.Empty;
 
         if (move.InitPiece.IsWhite)
         {

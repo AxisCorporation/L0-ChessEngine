@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Avalonia.Controls.Platform;
 using L_0_Chess_Engine.Enums;
 
 namespace L_0_Chess_Engine.Models;
@@ -13,11 +12,11 @@ public class ChessBoard
     private PieceType _promotedPieceType = PieceType.Empty;
     
     public ChessPiece[,] Grid { get; set; }
-    public bool IsDraw { get => DrawScan(); }
+    public bool IsDraw { get; private set; }
 
-    public bool IsCheck { get => CheckScan(); }
+    public bool IsCheck { get; private set; }
 
-    public bool IsCheckMate { get => CheckMateScan(); }
+    public bool IsCheckMate { get; private set; }
 
     public bool IsWhiteTurn { get; set; }
 
@@ -81,13 +80,13 @@ public class ChessBoard
             Grid[destX, destY].Type = move.PromotionPiece;
         }
         
-        // I have no idea why, but this wasn't working, so I changed it for now.
-        // IsCheck = CheckScan();
-        // IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
 
         IsWhiteTurn = !IsWhiteTurn;
 
-        Move hypoMove = new Move(Grid[0, 1], Grid[0, 7], PieceType.Queen | PieceType.White);
+        // I have no idea why, but this wasn't working, so I changed it for now.
+        IsCheck = CheckScan();
+        IsDraw = !IsCheck && DrawScan();
+        IsCheckMate = IsCheck && !IsDraw && CheckMateScan(); // CheckmateScan is only called if game is in check
 
         GridUpdated?.Invoke();
 
@@ -343,11 +342,6 @@ public class ChessBoard
         Grid[destX, destY] = originalDest;
         originalInit.Coordinates = new(initX, initY);
         originalDest.Coordinates = new(destX, destY); // if needed
-
-        // if (causesCheck)
-        // {
-        //     move.ErrorMessage = "Cannot move into check!";
-        // }
         
         return causesCheck;
     }

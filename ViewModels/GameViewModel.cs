@@ -11,6 +11,7 @@ using L_0_Chess_Engine.AI;
 using L_0_Chess_Engine.Enums;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -222,7 +223,7 @@ public partial class GameViewModel : ObservableObject
             {
                 continue;
             }
-            
+
             (int col, int row) = move.DestPiece.Coordinates;
 
             GridPieces[((7 - row) * 8) + col].IsHighlighted = true;
@@ -239,13 +240,19 @@ public partial class GameViewModel : ObservableObject
 
     private bool RegisterMove(Move move)
     {
+        if (!move.IsValid)
+        {
+            return false;
+        }
+
+        UpdateMoveList(move);
+
         if (!Board.MakeMove(move))
         {
             return false;
         }
 
         UpdateGameState();
-        UpdateMoveList(move);
 
         IsWhiteTurn = !IsWhiteTurn;
         return true;
@@ -315,7 +322,7 @@ public partial class GameViewModel : ObservableObject
 
     private void UpdateGameState()
     {
-        if (Board.IsCheckMate || Board.IsDraw)
+        if (Board.IsDraw)
         {
             GameRunning = false;
         }
@@ -330,6 +337,20 @@ public partial class GameViewModel : ObservableObject
             Winner = PieceType.Black;
         }
 
+        // I hate this implementation but its ok
+        string LastMove = MovesCN[^1][^1] == ' ' ? MovesCN[^1][..(MovesCN[^1].Length - 3)] : MovesCN[^1];
+
+        if (Board.IsCheck)
+        {
+            LastMove += '+';
+        }
+        else if (Board.IsCheckMate)
+        {
+            LastMove += '#';
+            GameRunning = false;
+        }
+
+        MovesCN[^1] = MovesCN[^1][^1] == ' ' ? LastMove + " | " : LastMove; 
     }
 
     private async Task UpdateTurnTimersAsync()
@@ -382,13 +403,16 @@ public partial class GameViewModel : ObservableObject
     {
         StringBuilder moveCN = new();
 
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
+
         if (move.IsCastling)
         {
-            if (move.DestPiece.Coordinates.X > move.InitPiece.Coordinates.X) // Queenside
+            if (destX > initX) // Kingside
             {
                 moveCN.Append("O-O");
             }
-            else if (move.DestPiece.Coordinates.X < move.InitPiece.Coordinates.X) // Kingside
+            else if (destX < destY) // Queenside
             {
                 moveCN.Append("O-O-O");
             }
@@ -409,21 +433,48 @@ public partial class GameViewModel : ObservableObject
 
         moveCN.Append($"{pieceChar}");
 
+        // If a piece of the same type can also move onto the same square, we must additionally denote its file, or its rank if the file is the same
+        // This block of code is extremely intensive just to calculate an extra character, we can remove it if needed
+        foreach (var piece in Board.Grid)
+        {
+            if (piece.Color != move.InitPiece.Color || piece.Coordinates == move.InitPiece.Coordinates || !piece.EqualsUncolored(move.InitPiece.Type ^ move.InitPiece.Color))
+            {
+                Debug.WriteLine("Continuing");
+                continue;
+            }
+
+            bool isAmbiguous = (from moves in Move.GeneratePieceMoves(piece)
+                                where moves.DestPiece.Coordinates == move.DestPiece.Coordinates
+                                select moves).Any();
+
+            if (!isAmbiguous)
+            {
+                continue;
+            }
+
+            if (piece.Coordinates.X != initX)
+            {
+                moveCN.Append(char.ToLower(Move.CoordinateToString(move.InitPiece.Coordinates)[0])); // This gets the file/column
+            }
+            else if (piece.Coordinates.X == initX)
+            {
+                moveCN.Append(Move.CoordinateToString(move.InitPiece.Coordinates)[1]); // This gets the row/rank
+            }
+            else
+            {
+                Debug.WriteLine($"Piece coordinates: {piece.Coordinates} | Coordinates of moving object: {move.InitPiece.Coordinates}");
+                moveCN.Append(Move.CoordinateToString(move.InitPiece.Coordinates));
+            }
+
+            break;
+        }
+
         if (move.DestPiece != PieceType.Empty)
         {
             moveCN.Append('x');
         }
 
         moveCN.Append($"{Move.CoordinateToString(move.DestPiece.Coordinates).ToLower()}");
-
-        if (Board.IsCheckMate)
-        {
-            moveCN.Append('#');
-        }
-        else if (Board.IsCheck)
-        {
-            moveCN.Append('+');
-        }
 
         return moveCN.ToString();
     }

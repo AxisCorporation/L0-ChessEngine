@@ -44,10 +44,11 @@ public class ChessBoard
     public bool MakeMove(Move move)
     {
         // Move Validation
-        if (!move.IsValid || move.TargetsKing || WouldCauseCheck(move))
+        if (move.TargetsKing || WouldCauseCheck(move))
         {
             return false;
         }
+
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
         {

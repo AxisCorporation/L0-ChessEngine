@@ -81,7 +81,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
         }
 
         // Cannot capture same team
-        if (move.DestPiece != PieceType.Empty && (move.DestPiece.Color == move.InitPiece.Color))
+        if (move.DestPiece.Type != PieceType.Empty && (move.DestPiece.Color == move.InitPiece.Color))
         {
             move.ErrorMessage = "Path obstructed!";
             return false;
@@ -101,33 +101,33 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
         (int destX, int destY) = move.DestPiece.Coordinates;
 
         bool IsValidDiagonal = Math.Abs(destX - initX) == 1;
-        bool IsValidForward = destX == initX && move.DestPiece == PieceType.Empty;
+        bool IsValidForward = destX == initX && move.DestPiece.Type == PieceType.Empty;
 
         if (move.InitPiece.IsWhite)
         {
             if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= destY == initY + 1 || (destY == initY + 2 && ChessBoard.Instance.Grid[initX, initY + 1] == PieceType.Empty);
+                IsValidForward &= destY == initY + 1 || (destY == initY + 2 && ChessBoard.Instance.Grid[initX, initY + 1].Type == PieceType.Empty);
             }
             else
             {
                 IsValidForward &= destY == initY + 1;
             }
 
-            IsValidDiagonal &= destY == initY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
+            IsValidDiagonal &= destY == initY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece.Type != PieceType.Empty);
         }
         else
         {
             if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= destY == initY - 1 || (destY == initY - 2 && ChessBoard.Instance.Grid[initX, initY - 1] == PieceType.Empty);
+                IsValidForward &= destY == initY - 1 || (destY == initY - 2 && ChessBoard.Instance.Grid[initX, initY - 1].Type == PieceType.Empty);
             }
             else
             {
                 IsValidForward &= destY == initY - 1;
             }
 
-            IsValidDiagonal &= destY == initY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece != PieceType.Empty);
+            IsValidDiagonal &= destY == initY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece.Type != PieceType.Empty);
 
         }
 
@@ -332,10 +332,10 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
                 if ((piece.Type == (PieceType.Pawn | PieceType.White) && totalY == 7 && dY == 1) || (piece.Type == (PieceType.Pawn | PieceType.Black) && totalY == 0 && dY == -1))
                 {
                     
-                    Move moveKnight = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | (piece.IsWhite ? PieceType.White : PieceType.Black));
-                    Move moveBishop = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Bishop | (piece.IsWhite ? PieceType.White : PieceType.Black));
-                    Move moveRook = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Rook | (piece.IsWhite ? PieceType.White : PieceType.Black));
-                    Move moveQueen = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Queen | (piece.IsWhite ? PieceType.White : PieceType.Black));
+                    Move moveKnight = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Knight | piece.Color);
+                    Move moveBishop = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Bishop | piece.Color);
+                    Move moveRook = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Rook | piece.Color);
+                    Move moveQueen = new(piece, ChessBoard.Instance.Grid[totalX, totalY], PieceType.Queen | piece.Color);
                     
                     if (moveKnight.IsValid)
                     {

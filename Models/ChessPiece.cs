@@ -4,7 +4,7 @@ using L_0_Chess_Engine.Enums;
 namespace L_0_Chess_Engine.Models;
 
 
-public record Coordinate(int X, int Y);
+public record struct Coordinate(int X, int Y);
 
 public class ChessPiece 
 {
@@ -61,7 +61,7 @@ public class ChessPiece
         }
     }
     
-    public bool EqualsUncolored(PieceType type) => IsWhite ? (Type ^ PieceType.White) == type : (Type ^ PieceType.Black) == type; 
+    public bool EqualsUncolored(PieceType type) => (Type ^ Color) == type; 
 
     public static bool operator ==(ChessPiece A, PieceType B) => A.Type == B;
     

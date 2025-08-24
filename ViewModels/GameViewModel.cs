@@ -10,6 +10,8 @@ using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
 using L_0_Chess_Engine.Enums;
 using System.Collections.Generic;
+using System.Text;
+using System.Linq;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -39,6 +41,7 @@ public partial class GameViewModel : ObservableObject
     private ChessBoard Board { get; } = ChessBoard.Instance;
 
     private Move? _playerMove = null;
+    PieceType Winner; // PieceType.White or .Black (not my favorite implementation)
 
     private bool _aiGame;
     private bool _lockInput = false;
@@ -55,6 +58,8 @@ public partial class GameViewModel : ObservableObject
     private Ai? _ai = null;
 
     public ObservableCollection<SquareViewModel> GridPieces { get; set; } = [];
+    public ObservableCollection<string> MovesCN { get; set; } = []; // A collection of all moves played in proper chess notation
+
 
     private bool _isWhiteTurn;
     public bool IsWhiteTurn
@@ -73,7 +78,7 @@ public partial class GameViewModel : ObservableObject
     public GameViewModel(int timeLimit, bool LoadAi, AIDifficulty Difficulty, MainWindow MainWindow)
     {
         _mainWindow = MainWindow;
-        
+
         WhiteTimer = TimeSpan.FromMinutes(timeLimit);
         BlackTimer = TimeSpan.FromMinutes(timeLimit);
 
@@ -97,9 +102,7 @@ public partial class GameViewModel : ObservableObject
             }
         }
 
-        Board.GridUpdated += UpdateGrid;
-        GameRunning = true;
-        IsWhiteTurn = true;
+
 
         if (LoadAi)
         {
@@ -107,7 +110,11 @@ public partial class GameViewModel : ObservableObject
             _aiGame = true;
         }
 
-        // Don't like this syntax
+        Board.GridUpdated += UpdateGrid;
+
+        IsWhiteTurn = true;
+        GameRunning = true;
+
         _ = UpdateTurnTimersAsync();
     }
 
@@ -135,9 +142,8 @@ public partial class GameViewModel : ObservableObject
             ResetHighlights();
 
             _selectedSquare = null;
-            
+
             // Check if it's a Pawn Promotion Move
-            
             if (_playerMove.InitPiece.EqualsUncolored(PieceType.Pawn) && (_playerMove.DestPiece.Coordinates.Y == 7 || _playerMove.DestPiece.Coordinates.Y == 0) && _playerMove.IsValid)
             {
                 LockInput = true;
@@ -176,12 +182,12 @@ public partial class GameViewModel : ObservableObject
             // Loop Again?
             // await ManageTurns();
         }
-        
+
         if (!GameRunning)
         {
             EndGame();
         }
-        
+
     }
 
 
@@ -201,22 +207,26 @@ public partial class GameViewModel : ObservableObject
 
             // A bit of Redundancy, But I can't fix it without refactoring the whole thing
             await ManageTurns();
-
         }
 
     }
 
     private void HighlightSquare(SquareViewModel clickedSquare)
     {
-        clickedSquare.IsSelected = true;
+        clickedSquare.IsHighlighted = true;
 
         List<Move> moves = Move.GeneratePieceMoves(clickedSquare.Piece);
 
         foreach (Move move in moves)
         {
+            if (Board.WouldCauseCheck(move))
+            {
+                continue;
+            }
+
             (int col, int row) = move.DestPiece.Coordinates;
 
-            GridPieces[((7 - row) * 8) + col].IsSelected = true;
+            GridPieces[((7 - row) * 8) + col].IsHighlighted = true;
         }
     }
 
@@ -224,47 +234,51 @@ public partial class GameViewModel : ObservableObject
     {
         for (int i = 0; i < 64; i++)
         {
-            GridPieces[i].IsSelected = false;
+            GridPieces[i].IsHighlighted = false;
         }
     }
 
     private bool RegisterMove(Move move)
     {
+        if (!move.IsValid)
+        {
+            return false;
+        }
+
+        UpdateMoveList(move);
 
         if (!Board.MakeMove(move))
         {
             return false;
         }
 
+        UpdateGameState();
+
         IsWhiteTurn = !IsWhiteTurn;
-
-        UpdateGameState(move);
-
         return true;
     }
-    
 
-    private async Task<PieceType> PawnPromotion(bool isWhite)
+
+    private static async Task<PieceType> PawnPromotion(bool isWhite)
     {
         Window promotionView = new PawnPromotionView(isWhite);
-        PawnPromotionViewModel viewModel = (PawnPromotionViewModel) promotionView.DataContext!;
-        
+        PawnPromotionViewModel viewModel = (PawnPromotionViewModel)promotionView.DataContext!;
+
         // If user closes the window via “X”, pick a default (Queen)
         promotionView.Closed += (_, __) => viewModel.EnsureDefaultIfNotChosen();
 
         promotionView.Show(); // modeless (UI still responsive)
         var piece = await viewModel.Completion; // wait for SelectPiece(...)
         promotionView.Close(); // will no-op if already closed
-        
+
         return piece;
     }
-
 
     private void NotifyCanClickSquares()
     {
         foreach (var piece in GridPieces)
         {
-            ((RelayCommand) piece.ClickCommand!).NotifyCanExecuteChanged();
+            ((RelayCommand)piece.ClickCommand!).NotifyCanExecuteChanged();
         }
     }
 
@@ -280,11 +294,11 @@ public partial class GameViewModel : ObservableObject
             return false;
         }
 
-        if (_selectedSquare is null && squareClicked.Piece != PieceType.Empty && squareClicked.Piece.IsWhite == IsWhiteTurn)
+        if (_selectedSquare is null && squareClicked.Piece.Type != PieceType.Empty && squareClicked.Piece.IsWhite == IsWhiteTurn)
         {
             return true;
         }
-        
+
         if (_selectedSquare is not null)
         {
             return true;
@@ -297,8 +311,8 @@ public partial class GameViewModel : ObservableObject
     {
         // TODO
         string gameOverText = IsWhiteTurn ? "Black Won!" : "White Won!";
-        var gameOverView =  new GameOverView(gameOverText, _mainWindow);
-        
+        var gameOverView = new GameOverView(gameOverText, _mainWindow);
+
         gameOverView.Show();
     }
 
@@ -306,36 +320,37 @@ public partial class GameViewModel : ObservableObject
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
 
-    private void UpdateGameState(Move? move = null)
+    private void UpdateGameState()
     {
-        if (Board.IsCheckMate)
+        if (Board.IsDraw)
         {
-            GameStateText = AppendMove(IsWhiteTurn ? "White is in Checkmate!" : "Black is in Checkmate!", move);
             GameRunning = false;
         }
-        else if (Board.IsDraw)
-        {
-            GameStateText = AppendMove("It's a Draw!", move);
-            GameRunning = false;
-        }
-        else if (Board.IsCheck)
-        {
-            GameStateText = AppendMove(IsWhiteTurn ? "White is in Check!" : "Black is in Check!", move);
-        }
+
         else if (WhiteTimer <= TimeSpan.Zero)
         {
-            GameStateText = "Time's up for White - Black wins!";
+            Winner = PieceType.White;
             GameRunning = false;
         }
         else if (BlackTimer <= TimeSpan.Zero)
         {
-            GameStateText = "Time's up for Black - White wins!";
+            Winner = PieceType.Black;
+        }
+
+        // I hate this implementation but its ok
+        string LastMove = MovesCN[^1][^1] == ' ' ? MovesCN[^1][..(MovesCN[^1].Length - 3)] : MovesCN[^1];
+
+        if (Board.IsCheckMate)
+        {
+            LastMove += '#';
             GameRunning = false;
         }
-        else
+        else if (Board.IsCheck)
         {
-            GameStateText = AppendMove("", move);
+            LastMove += '+';
         }
+
+        MovesCN[^1] = MovesCN[^1][^1] == ' ' ? LastMove + " | " : LastMove; 
     }
 
     private async Task UpdateTurnTimersAsync()
@@ -362,13 +377,105 @@ public partial class GameViewModel : ObservableObject
         }
     }
 
-    private static string AppendMove(string Message, Move? move)
+    private static string AppendMove(string Message, Move? move) // debug
     {
         if (!string.IsNullOrWhiteSpace(Message))
         {
             Message = Message.Insert(0, "- ");
-        }        
+        }
 
-        return move is not null ? $"{move.GeneratePieceMovedMessage()} {Message}" : Message; 
+        return move is not null ? $"{move.GeneratePieceMovedMessage()} {Message}" : Message;
+    }
+
+    private void UpdateMoveList(Move move)
+    {
+        if (!IsWhiteTurn)
+        {
+            MovesCN[^1] += $"{MoveToCN(move)}";
+        }
+        else
+        {
+            MovesCN.Add($"{MovesCN.Count + 1}. {MoveToCN(move)} | ");
+        }
+    }
+
+    private string MoveToCN(Move move)
+    {
+        StringBuilder moveCN = new();
+
+        (int initX, int initY) = move.InitPiece.Coordinates;
+        (int destX, int destY) = move.DestPiece.Coordinates;
+
+        if (move.IsCastling)
+        {
+            if (destX > initX) // Kingside
+            {
+                moveCN.Append("O-O");
+            }
+            else if (destX < destY) // Queenside
+            {
+                moveCN.Append("O-O-O");
+            }
+
+            return moveCN.ToString();
+        }
+
+        char? pieceChar = (move.InitPiece.Type ^ move.InitPiece.Color) switch
+        {
+            PieceType.Knight => 'N',
+            PieceType.Bishop => 'B',
+            PieceType.Rook => 'R',
+            PieceType.Queen => 'Q',
+            PieceType.King => 'K',
+
+            _ => null // Pawn has no abbreviation
+        };
+
+        moveCN.Append($"{pieceChar}");
+
+        // If a piece of the same type can also move onto the same square, we must additionally denote its file, or its rank if the file is the same
+        // This block of code is extremely intensive just to calculate an extra character, we can remove it if needed
+        foreach (var piece in Board.Grid)
+        {
+            if (piece.Color != move.InitPiece.Color || piece.Coordinates == move.InitPiece.Coordinates || !piece.EqualsUncolored(move.InitPiece.Type ^ move.InitPiece.Color))
+            {
+                Debug.WriteLine("Continuing");
+                continue;
+            }
+
+            bool isAmbiguous = (from moves in Move.GeneratePieceMoves(piece)
+                                where moves.DestPiece.Coordinates == move.DestPiece.Coordinates
+                                select moves).Any();
+
+            if (!isAmbiguous)
+            {
+                continue;
+            }
+
+            if (piece.Coordinates.X != initX)
+            {
+                moveCN.Append(char.ToLower(Move.CoordinateToString(move.InitPiece.Coordinates)[0])); // This gets the file/column
+            }
+            else if (piece.Coordinates.X == initX)
+            {
+                moveCN.Append(Move.CoordinateToString(move.InitPiece.Coordinates)[1]); // This gets the row/rank
+            }
+            else
+            {
+                Debug.WriteLine($"Piece coordinates: {piece.Coordinates} | Coordinates of moving object: {move.InitPiece.Coordinates}");
+                moveCN.Append(Move.CoordinateToString(move.InitPiece.Coordinates));
+            }
+
+            break;
+        }
+
+        if (move.DestPiece.Type != PieceType.Empty)
+        {
+            moveCN.Append('x');
+        }
+
+        moveCN.Append($"{Move.CoordinateToString(move.DestPiece.Coordinates).ToLower()}");
+
+        return moveCN.ToString();
     }
 }

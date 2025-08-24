@@ -18,11 +18,11 @@
         <Grid x:Name="Board" HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="auto, auto, auto" ColumnDefinitions="auto, auto">
 
             <StackPanel Grid.Row="0" HorizontalAlignment="Center"> 
-                <TextBlock Text="{Binding BlackTimerText}" FontSize="32" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding TurnText}" FontSize="32" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding BlackTimerText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding TurnText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
             </StackPanel>
 
-            <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center">
+            <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center" >
 
                 <Grid ColumnDefinitions="* *" RowDefinitions="* *">
 
@@ -38,10 +38,10 @@
                         <TextBlock Text="1" Grid.Row="7" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
                     </Grid>
 
-                    <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="Auto, Auto">
+                    <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="auto, auto" ColumnDefinitions="auto, *">
 
                         <!-- The Chess Board -->
-                        <ItemsControl ItemsSource="{Binding GridPieces}" Grid.Row="0" Grid.Column="1">
+                        <ItemsControl ItemsSource="{Binding GridPieces}" Grid.Row="0" Grid.Column="0">
 
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -55,7 +55,7 @@
                                         <Border BorderBrush="Black" BorderThickness="1" Width="50" Height="50">
                                             <Grid>
                                                 <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
-                                                <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsSelected}"></Rectangle>
+                                                <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsHighlighted}"></Rectangle>
                                                 <Image Source="{Binding Image}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Grid>
                                         </Border>
@@ -63,6 +63,17 @@
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
+
+                        <Border CornerRadius="10" Background="#f25a0f" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
+                            <Grid Width="150" Height="400" RowDefinitions="auto, *">
+                                <TextBlock Text="Moves" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" 
+                                VerticalAlignment="Top" HorizontalAlignment="Center"/>
+
+                                <ScrollViewer VerticalAlignment="Top" Grid.Row="1" Margin="10" x:Name="MovesScroller" VerticalScrollBarVisibility="Hidden">
+                                    <ItemsControl ItemsSource="{Binding MovesCN}" FontSize="20" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </Border>
 
                         <!-- X Labels -->
                         <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="*,*,*,*,*,*,*,*">
@@ -80,8 +91,7 @@
             </Grid>
 
             <StackPanel Grid.Row="2" HorizontalAlignment="Center">
-                <TextBlock Text="{Binding GameStateText}" FontSize="32" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
-                <TextBlock Text="{Binding WhiteTimerText}" FontSize="32" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding WhiteTimerText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
             </StackPanel>
             
         </Grid>

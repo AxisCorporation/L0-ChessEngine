@@ -20,7 +20,7 @@ public partial class SquareViewModel : ObservableObject
     private bool _isLightSquare;
     
     [ObservableProperty]
-    private bool _isSelected;
+    private bool _isHighlighted;
     
     public ICommand? ClickCommand { get; set; }
 

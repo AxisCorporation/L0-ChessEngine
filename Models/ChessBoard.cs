@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using L_0_Chess_Engine.Enums;
+using Avalonia.Controls;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -42,10 +43,11 @@ public class ChessBoard
     public bool MakeMove(Move move)
     {
         // Move Validation
-        if (!move.IsValid || move.TargetsKing || WouldCauseCheck(move))
+        if (move.TargetsKing || WouldCauseCheck(move))
         {
             return false;
         }
+
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
         {
@@ -79,14 +81,16 @@ public class ChessBoard
         {
             Grid[destX, destY].Type = move.PromotionPiece;
         }
-        
 
         IsWhiteTurn = !IsWhiteTurn;
 
-        // I have no idea why, but this wasn't working, so I changed it for now.
-        IsCheck = CheckScan();
-        IsDraw = !IsCheck && DrawScan();
-        IsCheckMate = IsCheck && !IsDraw && CheckMateScan(); // CheckmateScan is only called if game is in check
+        IsDraw = DrawScan();
+
+        if (!IsDraw)
+        {
+            IsCheck = CheckScan();
+            IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
+        }
 
         GridUpdated?.Invoke();
 
@@ -149,29 +153,29 @@ public class ChessBoard
 
         return count;
     }
-    // After making a move, it checks if the opposite team is in check
+
+    // After making a move, it checks the king of the opposing team to see if its in check
     private bool CheckScan()
     {
-        PieceType oppositeColour = IsWhiteTurn ? PieceType.Black : PieceType.White;
+        PieceType Color = IsWhiteTurn ? PieceType.White : PieceType.Black;
 
-        for (int x = 0; x < 8; x++)
+        foreach (var piece in Grid)
         {
-            for (int y = 0; y < 8; y++)
+
+            if (piece.Type == PieceType.Empty || piece.Color == Color)
             {
-                if (Grid[x, y].Type == PieceType.Empty || Grid[x, y].Color != oppositeColour)
-                {
-                    continue;
-                }
-
-                List<Move> moves = [..from m in Move.GeneratePieceMoves(Grid[x, y])
-                                    where m.TargetsKing
-                                    select m]; // Gets all moves for piece where it can threaten the king
-
-                if (moves.Count != 0)
-                {
-                    return true;
-                }
+                continue;
             }
+
+            List<Move> moves = [..from m in Move.GeneratePieceMoves(piece)
+                            where m.TargetsKing
+                            select m]; // Gets all moves for piece where it can threaten the king
+
+            if (moves.Count != 0)
+            {
+                return true;
+            }
+            
         }
 
         return false;
@@ -179,65 +183,23 @@ public class ChessBoard
 
     private bool CheckMateScan()
     {
-        PieceType colour = IsWhiteTurn ? PieceType.White : PieceType.Black;
+        PieceType colorInCheck = IsWhiteTurn ? PieceType.White : PieceType.Black;
+        List<Move> validMoves = [];
 
-        if (!IsCheck) return false;
-
-        (int kingX, int kingY) = (0, 0);
-
-        for (int X = 0; X < 8; X++)
+        foreach (var piece in Grid)
         {
-            for (int Y = 0; Y < 8; Y++)
+            if (piece.Color != colorInCheck || piece.Type == PieceType.Empty)
             {
-                if (Grid[X, Y].Type == (PieceType.King ^ colour))
-                {
-                    (kingX, kingY) = Grid[X, Y].Coordinates;
-                }
-            }
-        }
-
-        List<Move> kingMoves = Move.GeneratePieceMoves(Grid[kingX, kingY]);
-
-        // Making all King Moves and Checking if it fixes Check
-        foreach (var move in kingMoves)
-        {
-            bool checkRemoved = !WouldCauseCheck(move);
-
-            if (checkRemoved)
-            {
-                return false;
+                continue;
             }
 
+            validMoves.AddRange(from move in Move.GeneratePieceMoves(piece)
+                                where
+                                !WouldCauseCheck(move)
+                                select move);
         }
 
-        // Checking if ANY other Piece can remove check
-
-        for (int X = 0; X < 8; X++)
-        {
-            for (int Y = 0; Y < 8; Y++)
-            {
-                if ((Grid[X, Y].Type & colour) == 0)
-                {
-                    continue;
-                }
-
-                List<Move> moves = Move.GeneratePieceMoves(Grid[X, Y]);
-
-                foreach (var move in moves)
-                {
-
-                    bool checkRemoved = !WouldCauseCheck(move);
-
-                    if (checkRemoved)
-                    {
-                        return false;
-                    }
-                    
-                }
-            }
-        }
-
-        return true;
+        return validMoves.Count == 0;
     }
 
     // These two functions don't work rn, will have to fix later

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using Avalonia.Controls.Platform;
 using L_0_Chess_Engine.Enums;
 using Avalonia.Controls;
 
@@ -82,7 +81,6 @@ public class ChessBoard
         {
             Grid[destX, destY].Type = move.PromotionPiece;
         }
-
 
         IsWhiteTurn = !IsWhiteTurn;
 
@@ -306,11 +304,6 @@ public class ChessBoard
         Grid[destX, destY] = originalDest;
         originalInit.Coordinates = new(initX, initY);
         originalDest.Coordinates = new(destX, destY); // if needed
-
-        // if (causesCheck)
-        // {
-        //     move.ErrorMessage = "Cannot move into check!";
-        // }
         
         return causesCheck;
     }

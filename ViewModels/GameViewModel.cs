@@ -173,7 +173,7 @@ public partial class GameViewModel : ObservableObject
             if (!RegisterMove(aiMove))
             {
                 Debug.WriteLine("AI attempted invalid move! Skipping turn.");
-                Console.WriteLine($"Type: {aiMove.InitPiece.Type}");
+                Console.WriteLine($"Type: {aiMove.InitPiece.Type} From: {aiMove.InitPiece.Coordinates} To: {aiMove.DestPiece.Coordinates}");
                 GameStateText = "AI Made Invalid Move: " + AppendMove("", aiMove);
                 EndGame();
                 return;

@@ -1,6 +1,5 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using Avalonia.Controls;
+using L_0_Chess_Engine.Models;
 
 namespace L_0_Chess_Engine.Views;
 
@@ -21,6 +20,7 @@ public partial class GameOverView : Window
         MainMenuButton.Click += (_, _) =>
         {
             mainWindow!.SetMainContent(new MainMenuView(mainWindow));
+            ChessBoard.Instance.ResetBoard();
             Close();
         };
     }

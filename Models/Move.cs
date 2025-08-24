@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Avalonia.Controls;
 using L_0_Chess_Engine.Enums;
 
 namespace L_0_Chess_Engine.Models;
@@ -106,7 +107,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
         {
             if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= destY == initY + 1 || destY == initY + 2;
+                IsValidForward &= destY == initY + 1 || (destY == initY + 2 && ChessBoard.Instance.Grid[destX, destY + 1] == PieceType.Empty);
             }
             else
             {
@@ -119,7 +120,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
         {
             if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= destY == initY - 1 || destY == initY - 2;
+                IsValidForward &= destY == initY - 1 || (destY == initY - 2 && ChessBoard.Instance.Grid[destX, destY - 1] == PieceType.Empty);
             }
             else
             {
@@ -287,7 +288,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
             if (ChessBoard.Instance.IsCheck)
                 return false;
 
-            int[] kingPath = isKingSide ? new[] { InitX + 1, InitX + 2 } : new[] { InitX - 1, InitX - 2 };
+            int[] kingPath = isKingSide ? [InitX + 1, InitX + 2] : [InitX - 1, InitX - 2];
 
             foreach (int x in kingPath)
             {
@@ -380,4 +381,5 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
 
         return $"({InitPiece.Color}) {piece} to {destination}";
     }
+    
 }

@@ -55,7 +55,7 @@
                                         <Border BorderBrush="Black" BorderThickness="1" Width="50" Height="50">
                                             <Grid>
                                                 <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
-                                                <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsSelected}"></Rectangle>
+                                                <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsHighlighted}"></Rectangle>
                                                 <Image Source="{Binding Image}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             </Grid>
                                         </Border>
@@ -65,11 +65,11 @@
                         </ItemsControl>
 
                         <Border CornerRadius="10" Background="#f25a0f" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
-                            <Grid Width="100" RowDefinitions="auto, auto">
+                            <Grid Width="150" RowDefinitions="auto, auto">
                                 <TextBlock Text="Moves" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" 
                                 VerticalAlignment="Top" HorizontalAlignment="Center"/>
 
-                                <ScrollViewer VerticalAlignment="Bottom" Grid.Row="1" Margin="5">
+                                <ScrollViewer VerticalAlignment="Bottom" Grid.Row="1" Margin="10">
                                     <ItemsControl ItemsSource="{Binding MovesCN}" FontSize="20" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"/>
                                 </ScrollViewer>
                             </Grid>

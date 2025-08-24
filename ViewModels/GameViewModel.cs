@@ -10,6 +10,7 @@ using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
 using L_0_Chess_Engine.Enums;
 using System.Collections.Generic;
+using System.Text;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -39,7 +40,7 @@ public partial class GameViewModel : ObservableObject
     private ChessBoard Board { get; } = ChessBoard.Instance;
 
     private Move? _playerMove = null;
-    PieceType Winner; // .White or .Black (not my favorite implementation)
+    PieceType Winner; // PieceType.White or .Black (not my favorite implementation)
 
     private bool _aiGame;
     private bool _lockInput = false;
@@ -140,7 +141,6 @@ public partial class GameViewModel : ObservableObject
             _selectedSquare = null;
 
             // Check if it's a Pawn Promotion Move
-
             if (_playerMove.InitPiece.EqualsUncolored(PieceType.Pawn) && (_playerMove.DestPiece.Coordinates.Y == 7 || _playerMove.DestPiece.Coordinates.Y == 0) && _playerMove.IsValid)
             {
                 LockInput = true;
@@ -204,14 +204,13 @@ public partial class GameViewModel : ObservableObject
 
             // A bit of Redundancy, But I can't fix it without refactoring the whole thing
             await ManageTurns();
-
         }
 
     }
 
     private void HighlightSquare(SquareViewModel clickedSquare)
     {
-        clickedSquare.IsSelected = true;
+        clickedSquare.IsHighlighted = true;
 
         List<Move> moves = Move.GeneratePieceMoves(clickedSquare.Piece);
 
@@ -219,7 +218,7 @@ public partial class GameViewModel : ObservableObject
         {
             (int col, int row) = move.DestPiece.Coordinates;
 
-            GridPieces[((7 - row) * 8) + col].IsSelected = true;
+            GridPieces[((7 - row) * 8) + col].IsHighlighted = true;
         }
     }
 
@@ -227,7 +226,7 @@ public partial class GameViewModel : ObservableObject
     {
         for (int i = 0; i < 64; i++)
         {
-            GridPieces[i].IsSelected = false;
+            GridPieces[i].IsHighlighted = false;
         }
     }
 
@@ -237,17 +236,16 @@ public partial class GameViewModel : ObservableObject
         {
             return false;
         }
+        
+        UpdateGameState();
+        UpdateMoveList(move);
 
         IsWhiteTurn = !IsWhiteTurn;
-
-        UpdateGameState();
-
-        MovesCN.Add(MoveToCN(move));
         return true;
     }
 
 
-    private async Task<PieceType> PawnPromotion(bool isWhite)
+    private static async Task<PieceType> PawnPromotion(bool isWhite)
     {
         Window promotionView = new PawnPromotionView(isWhite);
         PawnPromotionViewModel viewModel = (PawnPromotionViewModel)promotionView.DataContext!;
@@ -261,7 +259,6 @@ public partial class GameViewModel : ObservableObject
 
         return piece;
     }
-
 
     private void NotifyCanClickSquares()
     {
@@ -362,9 +359,36 @@ public partial class GameViewModel : ObservableObject
         return move is not null ? $"{move.GeneratePieceMovedMessage()} {Message}" : Message;
     }
 
+    private void UpdateMoveList(Move move)
+    {
+        if (!IsWhiteTurn)
+        {
+            MovesCN[^1] += $"{MoveToCN(move)}";
+        }
+        else
+        {
+            MovesCN.Add($"{MovesCN.Count + 1}. {MoveToCN(move)} | ");
+        }
+    }
+
     private string MoveToCN(Move move)
     {
-        string ChessNotation = $"{MovesCN.Count}. ";
+        StringBuilder moveCN = new();
+
+        if (move.IsCastling)
+        {
+            if (move.DestPiece.Coordinates.X > move.InitPiece.Coordinates.X) // Queenside
+            {
+                moveCN.Append("O-O");
+            }
+            else if (move.DestPiece.Coordinates.X < move.InitPiece.Coordinates.X) // Kingside
+            {
+                moveCN.Append("O-O-O");
+            }
+
+            return moveCN.ToString();
+        }
+
         char? pieceChar = (move.InitPiece.Type ^ move.InitPiece.Color) switch
         {
             PieceType.Knight => 'N',
@@ -376,24 +400,24 @@ public partial class GameViewModel : ObservableObject
             _ => null // Pawn has no abbreviation
         };
 
-        ChessNotation += $"{pieceChar}";
+        moveCN.Append($"{pieceChar}");
 
         if (move.DestPiece != PieceType.Empty)
         {
-            ChessNotation += 'x';
+            moveCN.Append('x');
         }
 
-        ChessNotation += $"{Move.CoordinateToString(move.DestPiece.Coordinates).ToLower()}";
+        moveCN.Append($"{Move.CoordinateToString(move.DestPiece.Coordinates).ToLower()}");
 
         if (Board.IsCheckMate)
         {
-            ChessNotation += '#';
+            moveCN.Append('#');
         }
         else if (Board.IsCheck)
         {
-            ChessNotation += '+';
+            moveCN.Append('+');
         }
 
-        return ChessNotation;
+        return moveCN.ToString();
     }
 }

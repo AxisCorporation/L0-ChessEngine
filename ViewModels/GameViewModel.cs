@@ -261,13 +261,10 @@ public partial class GameViewModel : ObservableObject
         {
             return false;
         }
-
+        
         UpdateMoveList(move);
 
-        if (!Board.MakeMove(move))
-        {
-            return false;
-        }
+        Board.MakeMove(move);
 
         UpdateGameState();
 

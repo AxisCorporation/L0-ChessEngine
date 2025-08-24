@@ -107,7 +107,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
         {
             if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= destY == initY + 1 || (destY == initY + 2 && ChessBoard.Instance.Grid[destX, destY + 1] == PieceType.Empty);
+                IsValidForward &= destY == initY + 1 || (destY == initY + 2 && ChessBoard.Instance.Grid[initX, initY + 1] == PieceType.Empty);
             }
             else
             {
@@ -120,7 +120,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
         {
             if (!move.InitPiece.HasMoved)
             {
-                IsValidForward &= destY == initY - 1 || (destY == initY - 2 && ChessBoard.Instance.Grid[destX, destY - 1] == PieceType.Empty);
+                IsValidForward &= destY == initY - 1 || (destY == initY - 2 && ChessBoard.Instance.Grid[initX, initY - 1] == PieceType.Empty);
             }
             else
             {

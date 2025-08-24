@@ -11,5 +11,7 @@ public partial class GameView : UserControl
         InitializeComponent();
 
         DataContext = new GameViewModel(timeSetting, AiGame, Difficulty, mainWindow);
+
+        (DataContext as GameViewModel)!.MovesCN.CollectionChanged += (_, _) => MovesScroller.ScrollToEnd();
     }
 }

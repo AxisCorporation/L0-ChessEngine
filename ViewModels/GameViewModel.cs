@@ -101,9 +101,7 @@ public partial class GameViewModel : ObservableObject
             }
         }
 
-        Board.GridUpdated += UpdateGrid;
-        GameRunning = true;
-        IsWhiteTurn = true;
+
 
         if (LoadAi)
         {
@@ -111,7 +109,11 @@ public partial class GameViewModel : ObservableObject
             _aiGame = true;
         }
 
-        // Don't like this syntax 
+        Board.GridUpdated += UpdateGrid;
+
+        IsWhiteTurn = true;
+        GameRunning = true;
+
         _ = UpdateTurnTimersAsync();
     }
 
@@ -236,7 +238,7 @@ public partial class GameViewModel : ObservableObject
         {
             return false;
         }
-        
+
         UpdateGameState();
         UpdateMoveList(move);
 

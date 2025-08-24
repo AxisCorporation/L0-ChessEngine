@@ -218,6 +218,11 @@ public partial class GameViewModel : ObservableObject
 
         foreach (Move move in moves)
         {
+            if (Board.WouldCauseCheck(move))
+            {
+                continue;
+            }
+            
             (int col, int row) = move.DestPiece.Coordinates;
 
             GridPieces[((7 - row) * 8) + col].IsHighlighted = true;

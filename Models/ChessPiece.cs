@@ -62,14 +62,4 @@ public class ChessPiece
     }
     
     public bool EqualsUncolored(PieceType type) => (Type ^ Color) == type; 
-
-    public static bool operator ==(ChessPiece A, PieceType B) => A.Type == B;
-    
-    public static bool operator !=(ChessPiece A, PieceType B) => A.Type != B;
-    
-
-    public static bool operator ==(PieceType A, ChessPiece B) => B == A;
-    
-    public static bool operator !=(PieceType A, ChessPiece B) => B != A;
-    
 }

@@ -294,7 +294,7 @@ public partial class GameViewModel : ObservableObject
             return false;
         }
 
-        if (_selectedSquare is null && squareClicked.Piece != PieceType.Empty && squareClicked.Piece.IsWhite == IsWhiteTurn)
+        if (_selectedSquare is null && squareClicked.Piece.Type != PieceType.Empty && squareClicked.Piece.IsWhite == IsWhiteTurn)
         {
             return true;
         }
@@ -340,14 +340,14 @@ public partial class GameViewModel : ObservableObject
         // I hate this implementation but its ok
         string LastMove = MovesCN[^1][^1] == ' ' ? MovesCN[^1][..(MovesCN[^1].Length - 3)] : MovesCN[^1];
 
-        if (Board.IsCheck)
-        {
-            LastMove += '+';
-        }
-        else if (Board.IsCheckMate)
+        if (Board.IsCheckMate)
         {
             LastMove += '#';
             GameRunning = false;
+        }
+        else if (Board.IsCheck)
+        {
+            LastMove += '+';
         }
 
         MovesCN[^1] = MovesCN[^1][^1] == ' ' ? LastMove + " | " : LastMove; 
@@ -469,7 +469,7 @@ public partial class GameViewModel : ObservableObject
             break;
         }
 
-        if (move.DestPiece != PieceType.Empty)
+        if (move.DestPiece.Type != PieceType.Empty)
         {
             moveCN.Append('x');
         }

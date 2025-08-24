@@ -15,7 +15,7 @@
 
     <Border Background="#FF7D29" CornerRadius="20" Padding="30">
         
-        <Grid x:Name="Board" HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="auto, auto, auto" ColumnDefinitions="auto, auto">
+        <Grid x:Name="Board" HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="auto, auto, auto, *" ColumnDefinitions="auto, auto">
 
             <StackPanel Grid.Row="0" HorizontalAlignment="Center"> 
                 <TextBlock Text="{Binding BlackTimerText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
@@ -28,14 +28,14 @@
 
                     <!-- Y Labels -->
                     <Grid RowDefinitions="*,*,*,*,*,*,*,*" Height="400" Grid.Row="0" Grid.Column="0">
-                        <TextBlock Text="8" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                        <TextBlock Text="7" Grid.Row="1" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                        <TextBlock Text="6" Grid.Row="2" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                        <TextBlock Text="5" Grid.Row="3" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                        <TextBlock Text="4" Grid.Row="4" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                        <TextBlock Text="3" Grid.Row="5" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                        <TextBlock Text="2" Grid.Row="6" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                        <TextBlock Text="1" Grid.Row="7" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
+                        <TextBlock Text="8" Grid.Row="0" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                        <TextBlock Text="7" Grid.Row="1" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                        <TextBlock Text="6" Grid.Row="2" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                        <TextBlock Text="5" Grid.Row="3" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                        <TextBlock Text="4" Grid.Row="4" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                        <TextBlock Text="3" Grid.Row="5" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                        <TextBlock Text="2" Grid.Row="6" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                        <TextBlock Text="1" Grid.Row="7" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
                     </Grid>
 
                     <Grid Grid.Row="0" Grid.Column="1" RowDefinitions="auto, auto" ColumnDefinitions="auto, *">
@@ -75,8 +75,8 @@
                             </Grid>
                         </Border>
 
-                        <Border x:Name="PawnPromotionPanel" Background="#F25A0F" CornerRadius="10" Grid.Row="0" Grid.Column="0" 
-                                Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
+                        <!-- Pawn Promotion Panel -->
+                        <Border x:Name="PawnPromotionPanel" Background="#F25A0F" CornerRadius="10" Grid.Row="0" Grid.Column="0" Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
                             <Grid Width="280" Height="150" RowDefinitions="auto, *">
                                 <TextBlock Text="Promote Your Pawn!" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"
                                             Grid.Row="0"/>
@@ -100,16 +100,26 @@
                                 </UniformGrid>
                             </Grid>
                         </Border>
+
+                        <!-- Game Over Panel -->
+                        <Border x:Name="GameOver" Background="#F25A0F" CornerRadius="10" Grid.Row="0" Grid.Column="0" Width="300" Height="200" IsVisible="{Binding GameOver}">
+                            <Grid Width="280" Height="160" HorizontalAlignment="Center" RowDefinitions="auto, *">
+                                <TextBlock Grid.Row="0" Text="{Binding GameOverText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center" TextAlignment="Center"/>
+                                <Button Grid.Row="1" x:Name="GameOverButton" Content="Return to Main Menu" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" FontFamily="{StaticResource BlockBlueprint}"
+                                FontSize="20" Foreground="Black" CornerRadius="8"/>
+                            </Grid>
+                        </Border>
+
                         <!-- X Labels -->
-                        <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="*,*,*,*,*,*,*,*">
-                            <TextBlock Text="A" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                            <TextBlock Text="B" Grid.Column="1" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                            <TextBlock Text="C" Grid.Column="2" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                            <TextBlock Text="D" Grid.Column="3" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                            <TextBlock Text="E" Grid.Column="4" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                            <TextBlock Text="F" Grid.Column="5" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                            <TextBlock Text="G" Grid.Column="6" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
-                            <TextBlock Text="H" Grid.Column="7" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>
+                        <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="*,*,*,*,*,*,*,*" >
+                            <TextBlock Text="A" Grid.Column="0" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="B" Grid.Column="1" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="C" Grid.Column="2" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="D" Grid.Column="3" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="E" Grid.Column="4" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="F" Grid.Column="5" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="G" Grid.Column="6" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="H" Grid.Column="7" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
                         </Grid> 
                     </Grid>
                 </Grid>
@@ -118,7 +128,21 @@
             <StackPanel Grid.Row="2" HorizontalAlignment="Center">
                 <TextBlock Text="{Binding WhiteTimerText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
             </StackPanel>
-            
+
+            <Button x:Name="MainMenuButton"
+                    Content="Quit"
+                    Width="100"
+                    FontFamily="{StaticResource BlockBlueprint}"
+                    IsVisible="True"
+                    Background="#FEEBC8"
+                    Foreground="Black"
+                    CornerRadius="10"
+                    HorizontalAlignment="Center"
+					HorizontalContentAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Margin="0,20"
+                    Grid.Row="3">
+            </Button>
         </Grid>
     </Border>
 </UserControl>

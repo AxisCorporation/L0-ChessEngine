@@ -30,33 +30,39 @@ public partial class GameViewModel : ObservableObject
     private Bitmap _pawnPromotionQueen;
     [ObservableProperty]
     private bool _pawnPromotionActive = false;
+    [ObservableProperty]
+    private string _blackTimerText;
+    [ObservableProperty]
+    private string? _turnText;
+    [ObservableProperty]
+    private string _whiteTimerText;
+    [ObservableProperty]
+    private string _gameOverText;
+
+    private bool _gameOver;
+    public bool GameOver
+    {
+        get => _gameOver;
+        set
+        {
+            _gameOver = value;
+            GenerateGameOverText();
+            OnPropertyChanged(nameof(GameOver));
+        }
+    }
 
     private PieceType _promotionPiece;
 
-    private MainWindow _mainWindow;
-    public bool GameRunning { get; set; }
     public TimeSpan WhiteTimer { get; set; }
 
-    [ObservableProperty]
-    private string _whiteTimerText;
+    public bool IsWhiteWinner = true;
 
-    private TimeSpan BlackTimer { get; set; } 
-
-    [ObservableProperty]
-    private string _blackTimerText;
-
-    [ObservableProperty]
-    private string? _turnText;
+    private TimeSpan BlackTimer { get; set; }
 
     private readonly string _timeFormat = @"m\:ss";
 
-    // This is a Temp Variable
-    [ObservableProperty]
-    private string? _gameStateText = "";
-
     private ChessBoard Board { get; } = ChessBoard.Instance;
 
-    PieceType Winner; // PieceType.White or .Black (not my favorite implementation)
 
     private bool _lockInput = false;
 
@@ -89,10 +95,8 @@ public partial class GameViewModel : ObservableObject
 
     private SquareViewModel? _selectedSquare;
 
-    public GameViewModel(int timeLimit, bool LoadAi, AIDifficulty Difficulty, MainWindow MainWindow)
+    public GameViewModel(int timeLimit, bool LoadAi, AIDifficulty Difficulty)
     {
-        _mainWindow = MainWindow;
-
         WhiteTimer = TimeSpan.FromMinutes(timeLimit);
         BlackTimer = TimeSpan.FromMinutes(timeLimit);
 
@@ -117,7 +121,6 @@ public partial class GameViewModel : ObservableObject
         }
 
 
-
         if (LoadAi)
         {
             LoadAiModule(Difficulty);
@@ -126,7 +129,7 @@ public partial class GameViewModel : ObservableObject
         Board.GridUpdated += UpdateGrid;
 
         IsWhiteTurn = true;
-        GameRunning = true;
+        GameOver = false;
 
         _ = UpdateTurnTimersAsync();
     }
@@ -158,14 +161,14 @@ public partial class GameViewModel : ObservableObject
 
             // Check if it's a Pawn Promotion Move
             if (move.InitPiece.EqualsUncolored(PieceType.Pawn) && (move.DestPiece.Coordinates.Y == 7 || move.DestPiece.Coordinates.Y == 0) && move.IsValid)
-            {                
+            {
                 PawnPromotion(); // sets _promotionPiece
 
                 while (PawnPromotionActive)
                 {
                     await Task.Delay(50);
                 }
-                
+
                 // Replace old move with new move that includes promotion info
                 move = new Move(move.InitPiece, move.DestPiece, _promotionPiece);
             }
@@ -185,11 +188,6 @@ public partial class GameViewModel : ObservableObject
             RegisterMove(aiMove);
 
             LockInput = false;
-        }
-
-        if (!GameRunning)
-        {
-            EndGame();
         }
     }
 
@@ -300,12 +298,12 @@ public partial class GameViewModel : ObservableObject
 
     private bool CanClickSquare(SquareViewModel squareClicked)
     {
-        if (!GameRunning)
+        if (GameOver)
         {
             return false;
         }
 
-        if (_lockInput)
+        if (LockInput)
         {
             return false;
         }
@@ -323,15 +321,6 @@ public partial class GameViewModel : ObservableObject
         return false;
     }
 
-    private void EndGame()
-    {
-        // TODO
-        string gameOverText = IsWhiteTurn ? "Black Won!" : "White Won!";
-        var gameOverView = new GameOverView(gameOverText, _mainWindow);
-
-        gameOverView.Show();
-    }
-
     private void LoadAiModule(AIDifficulty Difficulty) => _ai = new Ai(false, Difficulty);
 
     private void UpdateTurnText() => TurnText = IsWhiteTurn ? "White's turn!" : "Black's turn!";
@@ -340,17 +329,17 @@ public partial class GameViewModel : ObservableObject
     {
         if (Board.IsDraw)
         {
-            GameRunning = false;
+            GameOver = true;
         }
         else if (WhiteTimer <= TimeSpan.Zero)
         {
-            Winner = PieceType.Black;
-            GameRunning = false;
+            IsWhiteWinner = false;
+            GameOver = true;
         }
         else if (BlackTimer <= TimeSpan.Zero)
         {
-            Winner = PieceType.White;
-            GameRunning = false;
+            IsWhiteWinner = true;
+            GameOver = true;
         }
 
         // I hate this implementation but its ok
@@ -358,20 +347,22 @@ public partial class GameViewModel : ObservableObject
 
         if (Board.IsCheckMate)
         {
+            IsWhiteWinner = !IsWhiteTurn; // If game ends and its black's turn, white wins and vice versa
+
             LastMove += '#';
-            GameRunning = false;
+            GameOver = true;
         }
         else if (Board.IsCheck)
         {
             LastMove += '+';
         }
 
-        MovesCN[^1] = MovesCN[^1][^1] == ' ' ? LastMove + " | " : LastMove; 
+        MovesCN[^1] = MovesCN[^1][^1] == ' ' ? LastMove + " | " : LastMove;
     }
 
     private async Task UpdateTurnTimersAsync()
     {
-        while (GameRunning)
+        while (!GameOver)
         {
             await Task.Delay(100);
             if (IsWhiteTurn)
@@ -493,5 +484,21 @@ public partial class GameViewModel : ObservableObject
         moveCN.Append($"{Move.CoordinateToString(move.DestPiece.Coordinates).ToLower()}");
 
         return moveCN.ToString();
+    }
+
+    private void GenerateGameOverText()
+    {
+        StringBuilder gameOver = new("Game over!\n");
+
+        if (Board.IsDraw)
+        {
+            gameOver.Append("1/2-1/2");
+        }
+        else
+        {
+            gameOver.Append(IsWhiteWinner ? "1-0" : "0-1"); 
+        }
+
+        GameOverText = gameOver.ToString();
     }
 }

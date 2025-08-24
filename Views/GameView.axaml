@@ -64,7 +64,7 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
-                        <Border CornerRadius="10" Background="#f25a0f" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
+                        <Border CornerRadius="10" Background="#F25A0F" Grid.Row="0" Grid.Column="1" Margin="10,0,0,0">
                             <Grid Width="150" Height="400" RowDefinitions="auto, *">
                                 <TextBlock Text="Moves" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" 
                                 VerticalAlignment="Top" HorizontalAlignment="Center"/>
@@ -75,6 +75,31 @@
                             </Grid>
                         </Border>
 
+                        <Border x:Name="PawnPromotionPanel" Background="#F25A0F" CornerRadius="10" Grid.Row="0" Grid.Column="0" 
+                                Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
+                            <Grid Width="280" Height="150" RowDefinitions="auto, *">
+                                <TextBlock Text="Promote Your Pawn!" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"
+                                            Grid.Row="0"/>
+
+                                <UniformGrid Grid.Row="1" Rows="1" Columns="4" ColumnSpacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Button x:Name="Rook" Command="{Binding PromotionCommand}" CommandParameter="Rook" Width="60" Height="60">
+                                        <Image Source="{Binding PawnPromotionRook}"/>
+                                    </Button>
+
+                                    <Button x:Name="Bishop" Command="{Binding PromotionCommand}" CommandParameter="Bishop" Width="60" Height="60">
+                                        <Image Source="{Binding PawnPromotionBishop}"/>
+                                    </Button>
+
+                                    <Button x:Name="Knight" Command="{Binding PromotionCommand}" CommandParameter="Knight" Width="60" Height="60">
+                                        <Image Source="{Binding PawnPromotionKnight}"/>
+                                    </Button>
+
+                                    <Button x:Name="Queen" Command="{Binding PromotionCommand}" CommandParameter="Queen" Width="60" Height="60">
+                                        <Image Source="{Binding PawnPromotionQueen}"/>
+                                    </Button>
+                                </UniformGrid>
+                            </Grid>
+                        </Border>
                         <!-- X Labels -->
                         <Grid Grid.Row="1" Grid.Column="0" ColumnDefinitions="*,*,*,*,*,*,*,*">
                             <TextBlock Text="A" HorizontalAlignment="Center" Foreground="#36454F" FontWeight="Bold"/>

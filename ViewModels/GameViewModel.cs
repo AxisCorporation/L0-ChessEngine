@@ -13,10 +13,26 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+
 namespace L_0_Chess_Engine.ViewModels;
 
 public partial class GameViewModel : ObservableObject
 {
+    [ObservableProperty]
+    private Bitmap _pawnPromotionRook;
+    [ObservableProperty]
+    private Bitmap _pawnPromotionKnight;
+    [ObservableProperty]
+    private Bitmap _pawnPromotionBishop;
+    [ObservableProperty]
+    private Bitmap _pawnPromotionQueen;
+    [ObservableProperty]
+    private bool _pawnPromotionActive = false;
+
+    private PieceType _promotionPiece;
+
     private MainWindow _mainWindow;
     public bool GameRunning { get; set; }
     public TimeSpan WhiteTimer { get; set; }
@@ -24,7 +40,7 @@ public partial class GameViewModel : ObservableObject
     [ObservableProperty]
     private string _whiteTimerText;
 
-    private TimeSpan BlackTimer { get; set; } // Why is this Public?
+    private TimeSpan BlackTimer { get; set; } 
 
     [ObservableProperty]
     private string _blackTimerText;
@@ -40,10 +56,8 @@ public partial class GameViewModel : ObservableObject
 
     private ChessBoard Board { get; } = ChessBoard.Instance;
 
-    private Move? _playerMove = null;
     PieceType Winner; // PieceType.White or .Black (not my favorite implementation)
 
-    private bool _aiGame;
     private bool _lockInput = false;
 
     private bool LockInput
@@ -107,7 +121,6 @@ public partial class GameViewModel : ObservableObject
         if (LoadAi)
         {
             LoadAiModule(Difficulty);
-            _aiGame = true;
         }
 
         Board.GridUpdated += UpdateGrid;
@@ -133,10 +146,10 @@ public partial class GameViewModel : ObservableObject
         }
     }
 
-    private async Task ManageTurns()
+    private async Task ManageTurns(Move move)
     {
         // Player Move
-        if (_playerMove is not null)
+        if (move is not null)
         {
             // Resetting Selection
             ResetHighlights();
@@ -144,52 +157,41 @@ public partial class GameViewModel : ObservableObject
             _selectedSquare = null;
 
             // Check if it's a Pawn Promotion Move
-            if (_playerMove.InitPiece.EqualsUncolored(PieceType.Pawn) && (_playerMove.DestPiece.Coordinates.Y == 7 || _playerMove.DestPiece.Coordinates.Y == 0) && _playerMove.IsValid)
-            {
-                LockInput = true;
-                // Ask player which piece they want
-                var promotionResult = await PawnPromotion(IsWhiteTurn);
+            if (move.InitPiece.EqualsUncolored(PieceType.Pawn) && (move.DestPiece.Coordinates.Y == 7 || move.DestPiece.Coordinates.Y == 0) && move.IsValid)
+            {                
+                PawnPromotion(); // sets _promotionPiece
 
+                while (PawnPromotionActive)
+                {
+                    await Task.Delay(50);
+                }
+                
                 // Replace old move with new move that includes promotion info
-                _playerMove = new Move(_playerMove.InitPiece, _playerMove.DestPiece, promotionResult);
-                LockInput = false;
+                move = new Move(move.InitPiece, move.DestPiece, _promotionPiece);
             }
 
-            if (!RegisterMove(_playerMove))
+            if (!RegisterMove(move))
             {
                 Debug.WriteLine("Invalid player move, resetting selection.");
                 return;
             }
         }
 
-        if (_aiGame && !IsWhiteTurn)
+        if (_ai is not null && !IsWhiteTurn)
         {
             LockInput = true;
 
-            Move aiMove = await Task.Run(() => _ai.GenerateMove());
-
+            Move aiMove = await Task.Run(_ai.GenerateMove);
+            RegisterMove(aiMove);
 
             LockInput = false;
-            if (!RegisterMove(aiMove))
-            {
-                Debug.WriteLine("AI attempted invalid move! Skipping turn.");
-                Console.WriteLine($"Type: {aiMove.InitPiece.Type} From: {aiMove.InitPiece.Coordinates} To: {aiMove.DestPiece.Coordinates}");
-                GameStateText = "AI Made Invalid Move: " + AppendMove("", aiMove);
-                EndGame();
-                return;
-            }
-
-            // Loop Again?
-            // await ManageTurns();
         }
 
         if (!GameRunning)
         {
             EndGame();
         }
-
     }
-
 
     private async Task OnSquareClick(SquareViewModel squareClicked)
     {
@@ -203,12 +205,29 @@ public partial class GameViewModel : ObservableObject
         }
         else
         {
-            _playerMove = new(_selectedSquare!.Piece, squareClicked.Piece);
+            Move move = new(_selectedSquare!.Piece, squareClicked.Piece);
 
             // A bit of Redundancy, But I can't fix it without refactoring the whole thing
-            await ManageTurns();
+            await ManageTurns(move);
         }
+    }
 
+    [RelayCommand]
+    private void Promotion(string Option)
+    {
+        _promotionPiece = IsWhiteTurn ? PieceType.White : PieceType.Black;
+
+        _promotionPiece |= Option switch
+        {
+            "Rook" => PieceType.Rook,
+            "Bishop" => PieceType.Bishop,
+            "Knight" => PieceType.Knight,
+
+            _ => PieceType.Queen
+        };
+
+        PawnPromotionActive = false;
+        LockInput = false;
     }
 
     private void HighlightSquare(SquareViewModel clickedSquare)
@@ -240,7 +259,7 @@ public partial class GameViewModel : ObservableObject
 
     private bool RegisterMove(Move move)
     {
-        if (!move.IsValid)
+        if (!move.IsValid || Board.WouldCauseCheck(move) || move.TargetsKing)
         {
             return false;
         }
@@ -259,19 +278,16 @@ public partial class GameViewModel : ObservableObject
     }
 
 
-    private static async Task<PieceType> PawnPromotion(bool isWhite)
+    private void PawnPromotion()
     {
-        Window promotionView = new PawnPromotionView(isWhite);
-        PawnPromotionViewModel viewModel = (PawnPromotionViewModel)promotionView.DataContext!;
+        char colorPrefix = IsWhiteTurn ? 'W' : 'B';
+        PawnPromotionBishop = new(AssetLoader.Open(new Uri($"avares://L-0 Chess Engine/Assets/Images/{colorPrefix}_Bishop.png")));
+        PawnPromotionKnight = new(AssetLoader.Open(new Uri($"avares://L-0 Chess Engine/Assets/Images/{colorPrefix}_Knight.png")));
+        PawnPromotionRook = new(AssetLoader.Open(new Uri($"avares://L-0 Chess Engine/Assets/Images/{colorPrefix}_Rook.png")));
+        PawnPromotionQueen = new(AssetLoader.Open(new Uri($"avares://L-0 Chess Engine/Assets/Images/{colorPrefix}_Queen.png")));
 
-        // If user closes the window via “X”, pick a default (Queen)
-        promotionView.Closed += (_, __) => viewModel.EnsureDefaultIfNotChosen();
-
-        promotionView.Show(); // modeless (UI still responsive)
-        var piece = await viewModel.Completion; // wait for SelectPiece(...)
-        promotionView.Close(); // will no-op if already closed
-
-        return piece;
+        PawnPromotionActive = true;
+        LockInput = true;
     }
 
     private void NotifyCanClickSquares()

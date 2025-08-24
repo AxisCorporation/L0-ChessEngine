@@ -343,7 +343,7 @@ public partial class GameViewModel : ObservableObject
         }
 
         // I hate this implementation but its ok
-        string LastMove = MovesCN[^1][^1] == ' ' ? MovesCN[^1][..(MovesCN[^1].Length - 3)] : MovesCN[^1];
+        string LastMove = MovesCN[^1][^1] == ' ' ? MovesCN[^1][..(MovesCN[^1].Length - 1)] : MovesCN[^1];
 
         if (Board.IsCheckMate)
         {
@@ -357,7 +357,7 @@ public partial class GameViewModel : ObservableObject
             LastMove += '+';
         }
 
-        MovesCN[^1] = MovesCN[^1][^1] == ' ' ? LastMove + " | " : LastMove;
+        MovesCN[^1] = MovesCN[^1][^1] == ' ' ? LastMove + ' ' : LastMove;
     }
 
     private async Task UpdateTurnTimersAsync()
@@ -396,13 +396,13 @@ public partial class GameViewModel : ObservableObject
 
     private void UpdateMoveList(Move move)
     {
-        if (!IsWhiteTurn)
+        if (IsWhiteTurn)
         {
-            MovesCN[^1] += $"{MoveToCN(move)}";
+            MovesCN.Add($"{MovesCN.Count + 1}. {MoveToCN(move)} ");
         }
         else
         {
-            MovesCN.Add($"{MovesCN.Count + 1}. {MoveToCN(move)} | ");
+            MovesCN[^1] += $"| {MoveToCN(move)}";
         }
     }
 

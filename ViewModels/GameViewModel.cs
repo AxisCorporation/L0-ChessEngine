@@ -326,15 +326,15 @@ public partial class GameViewModel : ObservableObject
         {
             GameRunning = false;
         }
-
         else if (WhiteTimer <= TimeSpan.Zero)
         {
-            Winner = PieceType.White;
+            Winner = PieceType.Black;
             GameRunning = false;
         }
         else if (BlackTimer <= TimeSpan.Zero)
         {
-            Winner = PieceType.Black;
+            Winner = PieceType.White;
+            GameRunning = false;
         }
 
         // I hate this implementation but its ok

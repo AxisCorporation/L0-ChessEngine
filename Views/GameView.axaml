@@ -15,127 +15,159 @@
 
     <Border Background="#FF7D29" Padding="30">
         
-        <StackPanel VerticalAlignment="Center">
-            <!-- Player 2 -->
-            <Grid HorizontalAlignment="Center" RowDefinitions="Auto" ColumnDefinitions="100, 100">
-                <!-- Profile Pic -->
-                <Border Background="Beige" BorderThickness="25" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <Image Source="avares://L-0 Chess Engine/Assets/Images/User_Profile.png" Width="32" Height="32"></Image>
-                </Border>
-                
-                <TextBlock Text="{Binding BlackTimerText}" FontSize="32" FontWeight="Bold"
-                           FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Right"
-                           Grid.Column="1"/>
-            </Grid>
+        <Grid>
             
-            <!-- Board -->
-            <Grid RowDefinitions="Auto, auto" ColumnDefinitions="Auto, Auto, Auto" HorizontalAlignment="Center" >
+        
+            <StackPanel VerticalAlignment="Center" Spacing="10">
                 
-                <!-- Y Labels -->
-                <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="*,*,*,*,*,*,*,*">
-                    <TextBlock Text="8" Grid.Row="0" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="7" Grid.Row="1" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="6" Grid.Row="2" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="5" Grid.Row="3" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="4" Grid.Row="4" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="3" Grid.Row="5" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="2" Grid.Row="6" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="1" Grid.Row="7" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                <!-- Player 2 -->
+                <Grid HorizontalAlignment="Center" RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="5" Width="400">
+                    <!-- Profile Pic -->
+                    <Border Background="Beige" BorderBrush="Black" BorderThickness="2"
+                            CornerRadius="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"
+                            Padding="5">
+                        
+                        <Image Source="avares://L-0 Chess Engine/Assets/Images/User_Profile.png" Width="32" Height="32"></Image>
+                    </Border>
+                    
+                    <TextBlock Text="Player 2" FontSize="20" FontWeight="Regular"
+                               FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Left"
+                               Grid.Column="1"/>
+                    
+                    <Border Grid.Column="2" Background="#A5000000" CornerRadius="5" HorizontalAlignment="Right" VerticalAlignment="Center" Height="25" Padding="5, 2">
+                        <TextBlock Text="{Binding BlackTimerText}" FontSize="24" FontWeight="Regular" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   FontFamily="{StaticResource BlockBlueprint}" Foreground="White"/>
+                    </Border>
+                    
                 </Grid>
                 
-                <!-- The Chess Board -->
-                <ItemsControl Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" ItemsSource="{Binding GridPieces}">
-                
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Rows="8" Columns="8" Width="400" Height="400">
-                            </UniformGrid>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Command="{Binding ClickCommand}" Padding="0" Background="Transparent" BorderThickness="0">
-                
-                                <Border BorderBrush="Black" BorderThickness="1" Width="50" Height="50">
-                                    <Grid>
-                                        <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
-                                        <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsHighlighted}"></Rectangle>
-                                        <Image Source="{Binding Image}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Grid>
-                                </Border>
-                
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                
-                </ItemsControl>
-                
-                <!-- X Labels -->
-                <Grid Grid.Column="1" Grid.Row="1" ColumnDefinitions="*,*,*,*,*,*,*,*">
-                    <TextBlock Text="A" Grid.Column="0" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="B" Grid.Column="1" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="C" Grid.Column="2" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="D" Grid.Column="3" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="E" Grid.Column="4" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="F" Grid.Column="5" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="G" Grid.Column="6" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                    <TextBlock Text="H" Grid.Column="7" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
-                </Grid>
-                
-                <!-- Move History Panel -->
-                <Border CornerRadius="10" Background="#F25A0F" Grid.Row="0" Grid.Column="2" Margin="10,0,0,0">
-                    <Grid Width="150" Height="400" RowDefinitions="auto, *">
-                        <TextBlock Text="Moves" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" 
-                                   VerticalAlignment="Top" HorizontalAlignment="Center"/>
-
-                        <ScrollViewer VerticalAlignment="Top" Grid.Row="1" Margin="10" x:Name="MovesScroller" VerticalScrollBarVisibility="Hidden">
-                            <ItemsControl ItemsSource="{Binding MovesCN}" FontSize="20" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"/>
-                        </ScrollViewer>
+                <!-- Board -->
+                <Grid RowDefinitions="Auto" ColumnDefinitions="*, Auto, *">
+                    
+                    
+                    
+                    <!-- The Chess Board -->
+                    <Grid Grid.Column="1" RowDefinitions="Auto, Auto" ColumnDefinitions="Auto, Auto" HorizontalAlignment="Center">
+                        <!-- Y Labels -->
+                        <Grid Grid.Row="0" Grid.Column="0" RowDefinitions="*,*,*,*,*,*,*,*">
+                            <TextBlock Text="8" Grid.Row="0" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="7" Grid.Row="1" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="6" Grid.Row="2" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="5" Grid.Row="3" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="4" Grid.Row="4" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="3" Grid.Row="5" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="2" Grid.Row="6" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="1" Grid.Row="7" Height="50" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                        </Grid>
+                        
+                        <ItemsControl Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" ItemsSource="{Binding GridPieces}">
+                        
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <UniformGrid Rows="8" Columns="8" Width="400" Height="400">
+                                    </UniformGrid>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button Command="{Binding ClickCommand}" Padding="0" Background="Transparent" BorderThickness="0">
+                        
+                                        <Border BorderBrush="Black" BorderThickness="1" Width="50" Height="50">
+                                            <Grid>
+                                                <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
+                                                <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsHighlighted}"></Rectangle>
+                                                <Image Source="{Binding Image}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                        
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        
+                        </ItemsControl>
+                        
+                        <!-- X Labels -->
+                        <Grid Grid.Column="1" Grid.Row="1" ColumnDefinitions="*,*,*,*,*,*,*,*">
+                            <TextBlock Text="A" Grid.Column="0" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="B" Grid.Column="1" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="C" Grid.Column="2" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="D" Grid.Column="3" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="E" Grid.Column="4" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="F" Grid.Column="5" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="G" Grid.Column="6" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                            <TextBlock Text="H" Grid.Column="7" HorizontalAlignment="Center" Foreground="#24302F" FontSize="16" FontFamily="{StaticResource BlockBlueprint}"/>
+                        </Grid>
+                        
                     </Grid>
-                </Border>
+                    
+                    <!-- Move History Panel -->
+                    <Border Grid.Column="2" Width="200" HorizontalAlignment="Left"
+                            CornerRadius="10" BorderBrush="Black" BorderThickness="2" Background="#F25A0F"
+                            Margin="10,0,0,0">
+                        
+                        <Grid Width="150" Height="400" RowDefinitions="auto, *">
+                            <TextBlock Text="Moves" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" 
+                                       VerticalAlignment="Top" HorizontalAlignment="Center"/>
+
+                            <ScrollViewer VerticalAlignment="Top" Grid.Row="1" Margin="10" x:Name="MovesScroller" VerticalScrollBarVisibility="Hidden">
+                                <ItemsControl ItemsSource="{Binding MovesCN}" FontSize="20" FontWeight="Light" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"/>
+                            </ScrollViewer>
+                        </Grid>
+                    </Border>
+                    
+                </Grid>
                 
-            </Grid>
-            
-            
-            
-            <!-- Player 1 -->
-            <Grid HorizontalAlignment="Center" RowDefinitions="Auto" ColumnDefinitions="100, 100">
-                <!-- Profile Pic -->
-                <Border Background="Beige" BorderThickness="25" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left">
-                    <Image Source="avares://L-0 Chess Engine/Assets/Images/User_Profile.png" Width="32" Height="32"></Image>
-                </Border>
                 
-                <TextBlock Text="{Binding WhiteTimerText}" FontSize="32" FontWeight="Bold"
-                           FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Right"
-                           Grid.Column="1"/>
-            </Grid>
-            
-            <TextBlock Text="{Binding TurnText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
-            
-            <!-- Exit Button -->
-            <Button x:Name="MainMenuButton"
-                    Content="Main Menu"
-                    Width="100"
-                    FontFamily="{StaticResource BlockBlueprint}"
-                    IsVisible="True"
-                    Background="#FEEBC8"
-                    Foreground="Black"
-                    CornerRadius="10"
-                    HorizontalAlignment="Center"
-                    HorizontalContentAlignment="Center"
-                    VerticalAlignment="Bottom"
-                    Margin="0,20">
-            </Button>
-            
+                
+                <!-- Player 1 -->
+                <Grid HorizontalAlignment="Center" RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="5" Width="400">
+                    <!-- Profile Pic -->
+                    <Border Background="Beige" BorderBrush="Black" BorderThickness="2"
+                            CornerRadius="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"
+                            Padding="5">
+                        
+                        <Image Source="avares://L-0 Chess Engine/Assets/Images/User_Profile.png" Width="32" Height="32"></Image>
+                    </Border>
+                    
+                    <TextBlock Text="Player 1" FontSize="20" FontWeight="Regular"
+                               FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Left"
+                               Grid.Column="1"/>
+                    
+                    <Border Grid.Column="2" Background="#C8FFFFFF" CornerRadius="5" HorizontalAlignment="Right" VerticalAlignment="Center" Height="25" Padding="5, 2">
+                        <TextBlock Text="{Binding WhiteTimerText}" FontSize="24" FontWeight="Regular" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                   FontFamily="{StaticResource BlockBlueprint}" Foreground="Black"/>
+                    </Border>
+                    
+                </Grid>
+                
+                <!-- Turn Text -->
+                <TextBlock Text="{Binding TurnText}" FontSize="32" FontWeight="Regular" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
+                
+                <!-- Exit Button -->
+                <Button x:Name="MainMenuButton"
+                        Content="Main Menu"
+                        FontSize="18"
+                        FontFamily="{StaticResource BlockBlueprint}"
+                        IsVisible="True"
+                        Background="#FEEBC8"
+                        Foreground="Black"
+                        CornerRadius="10"
+                        HorizontalAlignment="Center"
+                        HorizontalContentAlignment="Center"
+                        VerticalAlignment="Bottom"
+                        Margin="0,20">
+                </Button>
+                
+            </StackPanel>
             
             <!-- Pawn Promotion Panel -->
-            <Border x:Name="PawnPromotionPanel" Background="#F25A0F" CornerRadius="10" Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
-                <Grid Width="280" Height="150" RowDefinitions="auto, *">
-                    <TextBlock Text="Promote Your Pawn!" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"
-                               Grid.Row="0"/>
+            <Border x:Name="PawnPromotionPanel" BorderBrush="Black" BorderThickness="1" Background="#F25A0F" CornerRadius="10" Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
+                <StackPanel Width="280" Height="150">
+                    <TextBlock Text="Promote Your Pawn!" HorizontalAlignment="Center" FontSize="28"
+                               FontWeight="Regular" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"/>
 
-                    <UniformGrid Grid.Row="1" Rows="1" Columns="4" ColumnSpacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <UniformGrid Rows="1" Columns="4" ColumnSpacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
                         <Button x:Name="Rook" Command="{Binding PromotionCommand}" CommandParameter="Rook" Width="60" Height="60">
                             <Image Source="{Binding PawnPromotionRook}"/>
                         </Button>
@@ -152,19 +184,23 @@
                             <Image Source="{Binding PawnPromotionQueen}"/>
                         </Button>
                     </UniformGrid>
-                </Grid>
+                    
+                </StackPanel>
             </Border>
             
             <!-- Game Over Panel -->
-            <Border x:Name="GameOver" Background="#F25A0F" CornerRadius="10" Width="300" Height="180" IsVisible="{Binding GameOver}">
-                <Grid Width="280" Height="160" HorizontalAlignment="Center" RowDefinitions="auto, *">
-                    <TextBlock Grid.Row="0" Text="{Binding GameOverText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center" TextAlignment="Center"/>
-                    <Button Grid.Row="1" x:Name="GameOverButton" Content="Return to Main Menu" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" FontFamily="{StaticResource BlockBlueprint}"
+            <Border x:Name="GameOver" BorderBrush="Black" BorderThickness="1" Background="#F25A0F" CornerRadius="10" Width="300" Height="180" IsVisible="{Binding GameOver}">
+                <StackPanel Width="280" Height="160" HorizontalAlignment="Center" Spacing="20">
+                    
+                    <TextBlock  Text="{Binding GameOverText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center" TextAlignment="Center"/>
+                    <Button x:Name="GameOverButton" Content="Return to Main Menu" HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                            Width="200" Background="#FEEBC8" FontFamily="{StaticResource BlockBlueprint}"
                             FontSize="20" Foreground="Black" CornerRadius="8"/>
-                </Grid>
+                    
+                </StackPanel>
             </Border>
             
-        </StackPanel>
+        </Grid>
         
     </Border>
 </UserControl>

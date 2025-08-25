@@ -207,8 +207,7 @@ Chess:
 
 ## Permissions And Roles
 
-- Admin/Owner, CEO: Zain Farhan
-- Head Developer, Head Communications, Cult Leader, PTSD (Punctuation Trauma & Syntax Distress) Specialist: Daud Khawaja
-- Head Debt Collector, Head Communications: Haya Afareen
-- Head Zain Hater, Head Communications, Local Company Extrovert: Kalsoom Nawaz
-- Token Non LUMS Student, Head Communications that kalsoom thinks less of: Isaac Ashar
+- Admin/Lead Dev: Zain Farhan
+- Head Developer: Daud Khawaja
+- HR: Haya Afareen
+- Developers: Kalsoom Nawaz, Isaac Ashar

@@ -7,7 +7,7 @@
              d:DesignHeight="450"
              x:Class="L_0_Chess_Engine.Views.MainMenuView">
 
-    <Border Background="#FF7D29" CornerRadius="20" Padding="30">
+    <Border Background="#FF7D29" Padding="30">
         <Grid>
             <StackPanel x:Name="MainMenu" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
                 <!-- Title -->

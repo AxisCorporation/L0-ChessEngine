@@ -40,14 +40,8 @@ public class ChessBoard
         ResetBoard(); // Initialize the board
     }
 
-    public bool MakeMove(Move move)
+    public void MakeMove(Move move)
     {
-        // Move Validation
-        if (move.TargetsKing || WouldCauseCheck(move))
-        {
-            return false;
-        }
-
         // Reset all valid En Passant moves
         for (int i = 0; i < 8; i++)
         {
@@ -93,8 +87,6 @@ public class ChessBoard
         }
 
         GridUpdated?.Invoke();
-
-        return true;
     }
 
     public void ResetBoard()

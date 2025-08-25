@@ -12,7 +12,6 @@ public partial class MainWindow : Window
         var menuView = new MainMenuView(this);
         SetMainContent(menuView);
     }
-    
+
     public void SetMainContent(UserControl control) => MainContent.Content = control;
-    
 }

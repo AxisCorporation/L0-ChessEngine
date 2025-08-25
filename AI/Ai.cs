@@ -45,6 +45,8 @@ namespace L_0_Chess_Engine.AI
             {
                 if (move.InitPiece.IsWhite != _white) continue;
 
+                if (ChessBoard.Instance.WouldCauseCheck(move)) continue;
+
                 if (!move.IsValid)
                 {
                     Console.WriteLine($"DEBUG1 - Type: {move.InitPiece.Type} From: {move.InitPiece.Coordinates} To: {move.DestPiece.Coordinates}");

@@ -13,7 +13,7 @@
         <local:BoolToBorderBrushConverter x:Key="HighlightSquareConverter"></local:BoolToBorderBrushConverter>
     </UserControl.Resources>
 
-    <Border Background="#FF7D29" CornerRadius="20" Padding="30">
+    <Border Background="#FF7D29" Padding="30">
         
         <Grid x:Name="Board" HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="auto, auto, auto, *" ColumnDefinitions="auto, auto">
 
@@ -102,7 +102,7 @@
                         </Border>
 
                         <!-- Game Over Panel -->
-                        <Border x:Name="GameOver" Background="#F25A0F" CornerRadius="10" Grid.Row="0" Grid.Column="0" Width="300" Height="200" IsVisible="{Binding GameOver}">
+                        <Border x:Name="GameOver" Background="#F25A0F" CornerRadius="10" Grid.Row="0" Grid.Column="0" Width="300" Height="180" IsVisible="{Binding GameOver}">
                             <Grid Width="280" Height="160" HorizontalAlignment="Center" RowDefinitions="auto, *">
                                 <TextBlock Grid.Row="0" Text="{Binding GameOverText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center" TextAlignment="Center"/>
                                 <Button Grid.Row="1" x:Name="GameOverButton" Content="Return to Main Menu" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Width="200" Background="#FEEBC8" FontFamily="{StaticResource BlockBlueprint}"

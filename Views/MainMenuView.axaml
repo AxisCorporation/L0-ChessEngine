@@ -24,6 +24,40 @@
                     <Button x:Name="QuitButton" HorizontalContentAlignment="Center" Content="Quit" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="10" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
                 </StackPanel>
 
+                <StackPanel x:Name="CreditsPanel" Spacing="5" HorizontalAlignment="Center" IsVisible="False">
+                    <TextBlock FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
+                        Lead Dev/CEO:
+                        <LineBreak/>
+                        Zain Farhan 
+                        <LineBreak/>
+                        -----------
+                        <LineBreak/>
+                        Head Dev:
+                        <LineBreak/>
+                        Daud Khawaja 
+                        <LineBreak/>
+                        -----------
+                        <LineBreak/>
+                        Developers:
+                        <LineBreak/>
+                        Kalsoom Nawaz 
+                        <LineBreak/>
+                        Isaac Ashar 
+                        <LineBreak/>
+                        -----------
+                        <LineBreak/>
+                        HR:
+                        <LineBreak/>
+                        Haya Afareen 
+                        <LineBreak/>
+                        -----------
+                        <LineBreak/>
+                        Chess Pieces:
+                        <LineBreak/>
+                        Dani Maccari (Itch.IO)
+                    </TextBlock>
+                </StackPanel>
+
                 <!-- Game Mode Selection -->
                 <StackPanel x:Name="GameModeOptions" Spacing="10" HorizontalAlignment="Center" IsVisible="False">
                     <TextBlock Text="Game Mode" FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}"/>
@@ -40,12 +74,14 @@
                 </StackPanel>
 
                 <!-- Time Control -->
+                <Grid x:Name="TimeOptions" IsVisible="False" RowDefinitions="auto, auto" RowSpacing="5">
                 <TextBlock Name="TimeOptionsText" Text="Time Options" FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}"/>
-                <StackPanel x:Name="TimeOptions" Orientation="Horizontal" Spacing="5" HorizontalAlignment="Center" IsVisible="False">
-                    <ToggleButton Content="5 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
-                    <ToggleButton Content="10 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
-                    <ToggleButton Content="15 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
-                </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Spacing="5">
+                        <ToggleButton Content="5 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                        <ToggleButton Content="10 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                        <ToggleButton Content="15 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                    </StackPanel>
+                </Grid>
             </StackPanel>
 
             <!-- Back Button (outside the main stack for fixed bottom positioning) -->

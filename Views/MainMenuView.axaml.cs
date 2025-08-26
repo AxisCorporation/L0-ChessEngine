@@ -5,13 +5,14 @@ using System;
 using Avalonia.Controls.Primitives;
 using System.Collections.Generic;
 using L_0_Chess_Engine.Enums;
+using System.Diagnostics;
 
 namespace L_0_Chess_Engine.Views;
 
 public partial class MainMenuView : UserControl
 {
     private int TimeSelected { get; set; } = 5; // Default time setting if no options are clicked
-    private AIDifficulty DifficultySelected { get; set; } 
+    private AIDifficulty DifficultySelected { get; set; }
 
     private bool _isNavigatingBack = false;
     Stack<StackPanel> _panelHistory = [];
@@ -33,16 +34,16 @@ public partial class MainMenuView : UserControl
 
             _currentPanel = value;
 
-            bool isMain = _currentPanel == MainMenuOptions;
-
+            bool isMain = _currentPanel == MainMenuOptions; 
             if (isMain)
             {
                 _panelHistory.Clear();
             }
 
             BackButton.IsVisible = !isMain;
-            TimeOptionsText.IsVisible = !isMain;
-            TimeOptions.IsVisible = !isMain;
+            // There needs to be a way to check if the panel is part of the "main" menu for better scaling, 
+            // but for now this works 
+            TimeOptions.IsVisible = !isMain && _currentPanel != CreditsPanel;
 
             _isNavigatingBack = false;
             _currentPanel!.IsVisible = true;
@@ -57,6 +58,7 @@ public partial class MainMenuView : UserControl
         CurrentPanel = MainMenuOptions;
 
         PlayToggle.Click += (_, _) => CurrentPanel = GameModeOptions;
+        CreditsButton.Click += (_, _) => CurrentPanel = CreditsPanel;
         AiGame.Click += (_, _) => CurrentPanel = DifficultyOptions;
         QuitButton.Click += (_, _) => Environment.Exit(0);
 
@@ -65,19 +67,17 @@ public partial class MainMenuView : UserControl
         BackButton.Click += (_, _) =>
         {
             _isNavigatingBack = true;
-            if (_panelHistory.Count != 0)
-            {
-                CurrentPanel = _panelHistory.Pop();
-            }
+            CurrentPanel = _panelHistory.Pop();
         };
     }
 
-    
+
     private void TimeOptionSelected(object? sender, RoutedEventArgs e)
     {
-        ToggleButton button = (ToggleButton) sender!;
+        ToggleButton buttonSelected = (ToggleButton)sender!;
+        buttonSelected.IsChecked = true;
 
-        TimeSelected = button.Content switch
+        TimeSelected = buttonSelected.Content switch
         {
             "10 min" => 10,
             "15 min" => 15,
@@ -87,13 +87,20 @@ public partial class MainMenuView : UserControl
 
         foreach (var child in TimeOptions.Children)
         {
-            if (child != button)
+            if (child is StackPanel TimeOptionsPanel)
             {
-                ((ToggleButton)child).IsChecked = false;
+                foreach (var button in TimeOptionsPanel.Children)
+                {
+                    if (button != buttonSelected)
+                    {
+                        ((ToggleButton)button).IsChecked = false;
+                    }
+                }
+                break;
             }
         }
     }
-    
+
     private void PlayGame(object? sender, RoutedEventArgs e) => MainWindow?.SetMainContent(new GameView(TimeSelected, MainWindow));
 
     private void PlayAIGame(object? sender, RoutedEventArgs e)

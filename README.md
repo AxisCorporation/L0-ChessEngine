@@ -116,27 +116,27 @@ The Development Cycles have been divided into various Stages.
 **Deadline - Passive Stage:** 18rd Aug 23:59 PST
 ***Passive Deadline:** N/A
 
-- [ ] Evaluation Function Sophistication
-- [ ] Bug Fixes
+- [X] Bug Fixes
   - [X] Pawn Promotion - Zain
   - [X] Board Display - Zain
-  - [ ] AI Invalid Moves
+  - [X] Evaluation Function Fix - Zain
+  - [X] AI Invalid Moves - Zain, Daud
 - [X] Alpha-Beta Pruning - Zain
 - [X] Difficulty Settings - Zain
-- [ ] Frontend
+- [X] Frontend
   - [X] Font Change - Zain
   - [X] Displaying All Moves - Zain
   - [X] Game Over Screen - Zain
-  - [ ] Revamp of Main Game Screen
+  - [X] Revamp of Main Game Screen - Zain, Daud
 - [X] Implement Async or Multithreading for AI - Zain
 - [X] AI Pawn Promotion Interface - Zain
 - [X] Hypothetical Move Functions - Zain
-- [ ] Backend
+- [X] Backend
   - [X] Implement Turn Manager - Zain
 - [ ] Basic SFX
 - [X] AI Randomization - Zain
-- [ ] Code Cleanup
-- [ ] Minor AI Optimizations
+- [X] Code Cleanup - Daud
+- [X] Minor AI Optimizations - Zain
 
 
 ### Stage ω

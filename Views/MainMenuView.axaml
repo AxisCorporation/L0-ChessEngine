@@ -24,8 +24,9 @@
                     <Button x:Name="QuitButton" HorizontalContentAlignment="Center" Content="Quit" Width="200" Background="#FEEBC8" Foreground="Black" CornerRadius="10" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
                 </StackPanel>
 
+                <!-- Credits -->
                 <StackPanel x:Name="CreditsPanel" Spacing="5" HorizontalAlignment="Center" IsVisible="False">
-                    <TextBlock FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
+                    <TextBlock FontSize="40" FontWeight="Regular" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
                         Lead Dev/CEO:
                         <LineBreak/>
                         Zain Farhan 
@@ -78,7 +79,7 @@
                 <TextBlock Name="TimeOptionsText" Text="Time Options" FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="1" Spacing="5">
                         <ToggleButton Content="5 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
-                        <ToggleButton Content="10 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
+                        <ToggleButton Content="10 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20" IsChecked="True"/>
                         <ToggleButton Content="15 min" HorizontalContentAlignment="Center" Width="150" Background="#FEEBC8" Foreground="Black" CornerRadius="8" Click="TimeOptionSelected" FontFamily="{StaticResource BlockBlueprint}" FontSize="20"/>
                     </StackPanel>
                 </Grid>

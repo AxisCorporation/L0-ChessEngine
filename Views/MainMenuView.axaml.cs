@@ -1,17 +1,16 @@
 using Avalonia.Interactivity;
 using Avalonia.Controls;
-using Avalonia;
 using System;
 using Avalonia.Controls.Primitives;
 using System.Collections.Generic;
 using L_0_Chess_Engine.Enums;
-using System.Diagnostics;
+using L_0_Chess_Engine.Common;
 
 namespace L_0_Chess_Engine.Views;
 
 public partial class MainMenuView : UserControl
 {
-    private int TimeSelected { get; set; } = 5; // Default time setting if no options are clicked
+    private int TimeSelected { get; set; } = 10; // Default time setting if no options are clicked
     private AIDifficulty DifficultySelected { get; set; }
 
     private bool _isNavigatingBack = false;
@@ -56,16 +55,34 @@ public partial class MainMenuView : UserControl
         MainWindow = mainWindow;
 
         CurrentPanel = MainMenuOptions;
-
-        PlayToggle.Click += (_, _) => CurrentPanel = GameModeOptions;
-        CreditsButton.Click += (_, _) => CurrentPanel = CreditsPanel;
-        AiGame.Click += (_, _) => CurrentPanel = DifficultyOptions;
-        QuitButton.Click += (_, _) => Environment.Exit(0);
+        
+        PlayToggle.Click += (_, _) =>
+        {
+            SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
+            CurrentPanel = GameModeOptions;
+        };
+        CreditsButton.Click += (_, _) =>
+        {
+            SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
+            CurrentPanel = CreditsPanel;
+        };
+        AiGame.Click += (_, _) =>
+        {
+            SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
+            CurrentPanel = DifficultyOptions;
+        };
+        
+        QuitButton.Click += (_, _) =>
+        {
+            SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
+            Environment.Exit(0);
+        };
 
         LocalGame.Click += PlayGame;
 
         BackButton.Click += (_, _) =>
         {
+            SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
             _isNavigatingBack = true;
             CurrentPanel = _panelHistory.Pop();
         };
@@ -74,15 +91,17 @@ public partial class MainMenuView : UserControl
 
     private void TimeOptionSelected(object? sender, RoutedEventArgs e)
     {
+        SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
         ToggleButton buttonSelected = (ToggleButton)sender!;
         buttonSelected.IsChecked = true;
 
         TimeSelected = buttonSelected.Content switch
         {
+            "5 min" => 5,
             "10 min" => 10,
             "15 min" => 15,
 
-            _ => 5 // Default
+            _ => 10 // Default
         };
 
         foreach (var child in TimeOptions.Children)
@@ -101,10 +120,16 @@ public partial class MainMenuView : UserControl
         }
     }
 
-    private void PlayGame(object? sender, RoutedEventArgs e) => MainWindow?.SetMainContent(new GameView(TimeSelected, MainWindow));
+    private void PlayGame(object? sender, RoutedEventArgs e)
+    {
+        SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
+        MainWindow?.SetMainContent(new GameView(TimeSelected, MainWindow));
+    }
 
     private void PlayAIGame(object? sender, RoutedEventArgs e)
     {
+        SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
+        
         Button button = (Button)sender!;
 
         DifficultySelected = button.Content switch

@@ -20,7 +20,33 @@
     </PackageReference>
     <PackageReference Include="CommunityToolKit.MVVM" Version="8.4.0" />
 
-    <AvaloniaResource Include="Assets/**"/>
+    <AvaloniaResource Include="Assets/**" />
+
+    <PackageReference Include="LibVLCSharp" Version="3.9.4" />
+
+    <PackageReference Include="LibVLCSharp.Avalonia" Version="3.9.4" />
+
+    <PackageReference Include="VideoLAN.LibVLC.Mac" Version="3.1.3.1" />
+
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.21" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Runtimes\win\bass.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Runtimes\win\x64\bass.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="runtimes\win-x64\native\bass.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Audio\ButtonClick.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Assets\Audio\ChessPieceSound.mp3">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
 

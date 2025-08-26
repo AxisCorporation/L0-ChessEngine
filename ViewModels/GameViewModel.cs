@@ -15,6 +15,7 @@ using System.Linq;
 
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
+using L_0_Chess_Engine.Common;
 
 namespace L_0_Chess_Engine.ViewModels;
 
@@ -261,6 +262,8 @@ public partial class GameViewModel : ObservableObject
         {
             return false;
         }
+        
+        SoundPlayer.Play("Assets/Audio/ChessPieceSound.mp3");
         
         UpdateMoveList(move);
 

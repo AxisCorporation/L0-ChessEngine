@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Interactivity;
+using L_0_Chess_Engine.Common;
 using L_0_Chess_Engine.Enums;
 using L_0_Chess_Engine.Models;
 using L_0_Chess_Engine.ViewModels;
@@ -25,6 +26,7 @@ public partial class GameView : UserControl
 
     private void GoToMainMenu(object? Sender, RoutedEventArgs e)
     {
+        SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
         ChessBoard.Instance.ResetBoard();
         mainWindow.SetMainContent(new MainMenuView(mainWindow));
     }

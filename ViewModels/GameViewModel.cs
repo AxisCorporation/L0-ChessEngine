@@ -263,7 +263,7 @@ public partial class GameViewModel : ObservableObject
             return false;
         }
         
-        SoundPlayer.Play("Assets/Audio/ChessPieceSound.mp3");
+        Task.Run(() => SoundPlayer.Play("Assets/Audio/ChessPieceSound.mp3"));
         
         UpdateMoveList(move);
 

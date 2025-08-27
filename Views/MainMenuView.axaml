@@ -26,36 +26,38 @@
 
                 <!-- Credits -->
                 <StackPanel x:Name="CreditsPanel" Spacing="5" HorizontalAlignment="Center" IsVisible="False">
-                    <TextBlock FontSize="40" FontWeight="Regular" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
-                        Lead Dev/CEO:
+                    <TextBlock FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
+                        Credits
                         <LineBreak/>
-                        Zain Farhan 
+                        ----------------------
                         <LineBreak/>
-                        -----------
-                        <LineBreak/>
-                        Head Dev:
-                        <LineBreak/>
-                        Daud Khawaja 
-                        <LineBreak/>
-                        -----------
-                        <LineBreak/>
-                        Developers:
-                        <LineBreak/>
-                        Kalsoom Nawaz 
-                        <LineBreak/>
-                        Isaac Ashar 
+                    </TextBlock>
+                    <TextBlock FontSize="30" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
+                        <Run Text="Lead Dev: " FontWeight="Bold"/>
+                        <Run Text="Zain Farhan"/>
                         <LineBreak/>
                         -----------
                         <LineBreak/>
-                        HR:
-                        <LineBreak/>
-                        Haya Afareen 
+                        <Run Text="Head Dev: " FontWeight="Bold"/>
+                        <Run Text="Daud Khawaja"/>
                         <LineBreak/>
                         -----------
                         <LineBreak/>
-                        Chess Pieces:
+                        <Run Text="HR: " FontWeight="Bold"/>
+                        <Run Text="Haya Afareen"/>
                         <LineBreak/>
-                        Dani Maccari (Itch.IO)
+                        -----------
+                        <LineBreak/>
+                        <Run Text="Developers: " FontWeight="Bold"/>
+                        <Run Text="Kalsoom Nawaz, Isaac Ashar"/>
+                        <LineBreak/>
+                        -----------
+                        <LineBreak/>
+                        <Run Text="Art: " FontWeight="Bold"/>
+                        <Run Text=""/>
+                        <LineBreak/>
+                        <Run Text="SFX: " FontWeight="Bold"/>
+                        <Run Text=""/>
                     </TextBlock>
                 </StackPanel>
 

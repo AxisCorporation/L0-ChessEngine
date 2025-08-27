@@ -133,7 +133,7 @@ The Development Cycles have been divided into various Stages.
 - [X] Hypothetical Move Functions - Zain
 - [X] Backend
   - [X] Implement Turn Manager - Zain
-- [ ] Basic SFX
+- [X] Basic SFX -
 - [X] AI Randomization - Zain
 - [X] Code Cleanup - Daud
 - [X] Minor AI Optimizations - Zain

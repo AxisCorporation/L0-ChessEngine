@@ -162,7 +162,7 @@
             </StackPanel>
             
             <!-- Pawn Promotion Panel -->
-            <Border x:Name="PawnPromotionPanel" BorderBrush="Black" BorderThickness="1" Background="#F25A0F" CornerRadius="10" Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
+            <Border x:Name="PawnPromotionPanel" BorderBrush="Black" BorderThickness="3" Background="#F25A0F" CornerRadius="10" Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
                 <StackPanel Width="280" Height="150">
                     <TextBlock Text="Promote Your Pawn!" HorizontalAlignment="Center" FontSize="28"
                                FontWeight="Regular" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"/>
@@ -189,7 +189,7 @@
             </Border>
             
             <!-- Game Over Panel -->
-            <Border x:Name="GameOver" BorderBrush="Black" BorderThickness="1" Background="#F25A0F" CornerRadius="10" Width="300" Height="180" IsVisible="{Binding GameOver}">
+            <Border x:Name="GameOver" BorderBrush="Black" BorderThickness="3" Background="#F25A0F" CornerRadius="10" Width="300" Height="180" IsVisible="{Binding GameOver}">
                 <StackPanel Width="280" Height="160" HorizontalAlignment="Center" Spacing="20">
                     
                     <TextBlock  Text="{Binding GameOverText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center" TextAlignment="Center"/>

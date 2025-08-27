@@ -102,7 +102,7 @@
                     </Grid>
                     
                     <!-- Move History Panel -->
-                    <Border Grid.Column="2" Width="200" HorizontalAlignment="Left"
+                    <Border Grid.Column="2" Width="200" HorizontalAlignment="Left" Height="400"
                             CornerRadius="10" BorderBrush="Black" BorderThickness="2" Background="#F25A0F"
                             Margin="10,0,0,0">
                         

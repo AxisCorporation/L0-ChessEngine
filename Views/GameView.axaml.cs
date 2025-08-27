@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using L_0_Chess_Engine.Common;
@@ -18,15 +19,15 @@ public partial class GameView : UserControl
 
         DataContext = new GameViewModel(timeSetting, AiGame, Difficulty);
 
-        GameOverButton.Click += GoToMainMenu;
-        MainMenuButton.Click += GoToMainMenu;
+        GameOverButton.Click += async (s, e) => await GoToMainMenu(s, e);
+        MainMenuButton.Click += async (s, e) => await GoToMainMenu(s, e);
 
         (DataContext as GameViewModel)!.MovesCN.CollectionChanged += (_, _) => MovesScroller.ScrollToEnd();
     }
 
-    private void GoToMainMenu(object? Sender, RoutedEventArgs e)
+    private async Task GoToMainMenu(object? Sender, RoutedEventArgs e)
     {
-        SoundPlayer.Play("Assets/Audio/ButtonClick.mp3");
+        await Task.Run(() => SoundPlayer.Play("Assets/Audio/ButtonClick.mp3"));
         ChessBoard.Instance.ResetBoard();
         mainWindow.SetMainContent(new MainMenuView(mainWindow));
     }

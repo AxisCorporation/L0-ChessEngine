@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using L_0_Chess_Engine.Enums;
 using Avalonia.Controls;
+using System.Threading.Tasks;
+using L_0_Chess_Engine.Common;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -65,6 +67,15 @@ public class ChessBoard
         else if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
             CheckSpecialPawnConditions(move, ref pieceToMove);
+        }
+
+        if (move.DestPiece.Type != PieceType.Empty || move.IsEnPassant)
+        {
+            Task.Run(() => SoundPlayer.Play(SoundPlayer.CaptureSFXPath));
+        }
+        else
+        {
+            Task.Run(() => SoundPlayer.Play(SoundPlayer.MoveSFXPath));
         }
 
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));

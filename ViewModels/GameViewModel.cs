@@ -115,7 +115,7 @@ public partial class GameViewModel : ObservableObject
                     IsLightSquare = (row + col + 1) % 2 == 0
                 };
 
-                square.ClickCommand = new RelayCommand(() => OnSquareClick(square), () => CanClickSquare(square));
+                square.ClickCommand = new RelayCommand(async () => await OnSquareClick(square), () => CanClickSquare(square));
 
                 GridPieces.Add(square);
             }
@@ -262,9 +262,7 @@ public partial class GameViewModel : ObservableObject
         {
             return false;
         }
-        
-        Task.Run(() => SoundPlayer.Play("Assets/Audio/ChessPieceSound.mp3"));
-        
+                
         UpdateMoveList(move);
 
         Board.MakeMove(move);

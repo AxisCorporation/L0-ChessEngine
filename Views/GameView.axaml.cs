@@ -27,7 +27,7 @@ public partial class GameView : UserControl
 
     private async Task GoToMainMenu(object? Sender, RoutedEventArgs e)
     {
-        await Task.Run(() => SoundPlayer.Play("Assets/Audio/ButtonClick.mp3"));
+        await SoundPlayer.Play(SoundPlayer.ClickSFXPath);
         ChessBoard.Instance.ResetBoard();
         mainWindow.SetMainContent(new MainMenuView(mainWindow));
     }

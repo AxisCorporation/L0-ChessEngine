@@ -1,19 +1,27 @@
-﻿using LibVLCSharp.Shared;
+﻿using System.Threading.Tasks;
+using LibVLCSharp.Shared;
 
 namespace L_0_Chess_Engine.Common;
 
 public static class SoundPlayer
 {
-    private static LibVLC _libVLC = new LibVLC();
+    public static readonly string  MoveSFXPath = "Assets/Audio/ChessPieceMove.mp3";
+    public static readonly string CaptureSFXPath = "Assets/Audio/ChessPieceCapture.mp3";
+    public static readonly string ClickSFXPath = "Assets/Audio/ButtonClick.mp3";
+    private static readonly LibVLC _libVLC = new();
     private static MediaPlayer? _player;
 
-    public static void Play(string filePath)
+    public static async Task Play(string filePath)
     {
-        _player?.Dispose();
-        _player = new MediaPlayer(_libVLC)
+        await Task.Run(() =>
         {
-            Media = new Media(_libVLC, filePath, FromType.FromPath)
-        };
-        _player.Play();
+            _player?.Dispose();
+            _player = new MediaPlayer(_libVLC)
+            {
+                Media = new Media(_libVLC, filePath, FromType.FromPath)
+            };
+            _player.Play();
+        });
+
     }
 }

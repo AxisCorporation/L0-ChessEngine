@@ -5,6 +5,7 @@ using L_0_Chess_Engine.Enums;
 using Avalonia.Controls;
 using System.Threading.Tasks;
 using L_0_Chess_Engine.Common;
+using System.Diagnostics;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -47,7 +48,7 @@ public class ChessBoard
         // Reset all valid En Passant moves
         foreach (var piece in Grid)
         {
-            piece.IsValidPassantPlacement = false;   
+            piece.IsEnPassantSquare = false;
         }
 
         string SFXPath = GetSFX(move);
@@ -58,7 +59,7 @@ public class ChessBoard
 
         pieceToMove.HasMoved = true;
 
-        if (move.IsCastling)
+        if (move.Type == MoveType.Castling)
         {
             HandleCastling(move);
         }
@@ -67,20 +68,11 @@ public class ChessBoard
             CheckEnPassant(move, pieceToMove);
         }
 
-        if (move.DestPiece.Type != PieceType.Empty || move.IsEnPassant)
-        {
-            _ = SoundPlayer.Play(SoundPlayer.CaptureSFXPath);
-        }
-        else
-        {
-            _ = SoundPlayer.Play(SoundPlayer.MoveSFXPath);
-        }
-
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
         pieceToMove.Coordinates = new(destX, destY);
 
-        if (move.IsPromotion)
+        if (move.Type == MoveType.Promotion)
         {
             Grid[destX, destY].Type = move.PromotionPiece;
         }
@@ -110,17 +102,17 @@ public class ChessBoard
 
     private static string GetSFX(Move move)
     {
-        if (move.IsPromotion)
+        if (move.Type == MoveType.Promotion)
         {
             return SoundPlayer.PromotionSFXPath;
         }
 
-        if (move.IsEnPassant || move.DestPiece.Type != PieceType.Empty)
+        if (move.Type == MoveType.EnPassant || move.Type == MoveType.Capture)
         {
             return SoundPlayer.CaptureSFXPath;
         }
 
-        if (move.IsCastling)
+        if (move.Type == MoveType.Castling)
         {
             return SoundPlayer.CastleSFXPath;
         }
@@ -131,6 +123,7 @@ public class ChessBoard
     public void ResetBoard()
     {
         ReadFEN(DefaultFEN);
+        IsWhiteTurn = true;
     }
 
     private bool DrawScan()
@@ -246,7 +239,7 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         originalInit.Coordinates = new(destX, destY);
         
-        if (move.IsPromotion)
+        if (move.Type == MoveType.Promotion)
         {
             originalInit.Type = move.PromotionPiece;
         }
@@ -267,7 +260,7 @@ public class ChessBoard
         originalDest.Coordinates = new(destX, destY);
         originalInit.Coordinates = new(initX, initY);
         
-        if (move.IsPromotion)
+        if (move.Type == MoveType.Promotion)
         {
             originalInit.Type = PieceType.Pawn | (originalInit.IsWhite ? PieceType.White : PieceType.Black);
         }
@@ -281,9 +274,9 @@ public class ChessBoard
         if (Math.Abs(destY - initY) == 2)
         {
             int PassantY = move.InitPiece.IsWhite ? destY - 1 : destY + 1;
-            Grid[destX, PassantY].IsValidPassantPlacement = true;
+            Grid[destX, PassantY].IsEnPassantSquare = true;
         }
-        else if (move.IsEnPassant)
+        else if (move.Type == MoveType.EnPassant)
         {
             int CapturedPawnY = pieceToMove.IsWhite ? destY - 1 : destY + 1;
             Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(destX, CapturedPawnY));

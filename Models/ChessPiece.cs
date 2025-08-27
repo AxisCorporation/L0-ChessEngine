@@ -11,7 +11,7 @@ public class ChessPiece
     public PieceType Type { get; set; }
     public Coordinate Coordinates { get; set; }
     public bool HasMoved { get; set; }
-    public bool IsValidPassantPlacement { get; set; }
+    public bool IsEnPassantSquare { get; set; }
     public bool IsWhite { get => Color == PieceType.White; } 
     public PieceType Color { get; private set; }
 
@@ -25,7 +25,7 @@ public class ChessPiece
         Coordinates = new(0, 0);
 
         HasMoved = false;
-        IsValidPassantPlacement = false;
+        IsEnPassantSquare = false;
     }
 
     public ChessPiece(PieceType type, Coordinate coordinates)
@@ -34,7 +34,7 @@ public class ChessPiece
         Coordinates = coordinates;
 
         HasMoved = false;
-        IsValidPassantPlacement = false;
+        IsEnPassantSquare = false;
 
         Color = GetColor();
     }
@@ -44,7 +44,7 @@ public class ChessPiece
         Type = other.Type;
         Coordinates = other.Coordinates;
         HasMoved = other.HasMoved;
-        IsValidPassantPlacement = other.IsValidPassantPlacement;
+        IsEnPassantSquare = other.IsEnPassantSquare;
         Color = other.Color;
     }
 

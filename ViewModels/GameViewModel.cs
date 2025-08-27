@@ -176,7 +176,7 @@ public partial class GameViewModel : ObservableObject
 
             if (!RegisterMove(move))
             {
-                Debug.WriteLine("Invalid player move, resetting selection.");
+                Debug.WriteLine("DEBUG: Invalid player move, resetting selection.");
                 return;
             }
         }
@@ -195,7 +195,6 @@ public partial class GameViewModel : ObservableObject
     private async Task OnSquareClick(SquareViewModel squareClicked)
     {
         Debug.WriteLine($"DEBUG: {squareClicked.Piece.Type} | {squareClicked.Piece.Coordinates}");
-
         if (_selectedSquare is null)
         {
             _selectedSquare = squareClicked;
@@ -417,7 +416,7 @@ public partial class GameViewModel : ObservableObject
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
-        if (move.IsCastling)
+        if (move.Type == MoveType.Castling)
         {
             if (destX > initX) // Kingside
             {
@@ -450,7 +449,6 @@ public partial class GameViewModel : ObservableObject
         {
             if (piece.Color != move.InitPiece.Color || piece.Coordinates == move.InitPiece.Coordinates || !piece.EqualsUncolored(move.InitPiece.Type ^ move.InitPiece.Color))
             {
-                Debug.WriteLine("Continuing");
                 continue;
             }
 
@@ -473,7 +471,6 @@ public partial class GameViewModel : ObservableObject
             }
             else
             {
-                Debug.WriteLine($"Piece coordinates: {piece.Coordinates} | Coordinates of moving object: {move.InitPiece.Coordinates}");
                 moveCN.Append(Move.CoordinateToString(move.InitPiece.Coordinates));
             }
 

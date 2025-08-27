@@ -422,7 +422,7 @@ public partial class GameViewModel : ObservableObject
             {
                 moveCN.Append("O-O");
             }
-            else if (destX < destY) // Queenside
+            else if (destX < initX) // Queenside
             {
                 moveCN.Append("O-O-O");
             }

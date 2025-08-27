@@ -25,40 +25,50 @@
                 </StackPanel>
 
                 <!-- Credits -->
-                <StackPanel x:Name="CreditsPanel" Spacing="2" HorizontalAlignment="Center" IsVisible="False">
+                <StackPanel x:Name="CreditsPanel" HorizontalAlignment="Center" IsVisible="False">
                     <TextBlock FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
                         Credits
                         <LineBreak/>
-                        ----------------------
-                        <LineBreak/>
                     </TextBlock>
-                    <TextBlock FontSize="30" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
-                        <Run Text="Lead Dev: " FontWeight="Bold"/>
-                        <Run Text="Zain Farhan"/>
-                        <LineBreak/>
-                        -----------
-                        <LineBreak/>
-                        <Run Text="Head Dev: " FontWeight="Bold"/>
-                        <Run Text="Daud Khawaja"/>
-                        <LineBreak/>
-                        -----------
-                        <LineBreak/>
-                        <Run Text="HR: " FontWeight="Bold"/>
-                        <Run Text="Haya Afareen"/>
-                        <LineBreak/>
-                        -----------
-                        <LineBreak/>
-                        <Run Text="Developers: " FontWeight="Bold"/>
-                        <Run Text="Kalsoom Nawaz, Isaac Ashar"/>
-                        <LineBreak/>
-                        -----------
-                        <LineBreak/>
-                        <Run Text="Art: " FontWeight="Bold"/>
-                        <Run Text="Daud Khawaja"/>
-                        <LineBreak/>
-                        <Run Text="SFX: " FontWeight="Bold"/>
-                        <Run Text=""/>
-                    </TextBlock>
+                    <ScrollViewer VerticalScrollBarVisibility="Hidden" Margin="0, 0, 0, 30" MaxHeight="700">
+                        <TextBlock FontSize="35" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
+                            <Run Text="Lead Dev: " FontWeight="Bold"/>
+                            <LineBreak/>
+                            <Run Text="Zain Farhan"/>
+                            <LineBreak/>
+                            --------------
+                            <LineBreak/>
+                            <Run Text="Head Dev: " FontWeight="Bold"/>
+                            <LineBreak/>
+                            <Run Text="Daud Khawaja"/>
+                            <LineBreak/>
+                            --------------
+                            <LineBreak/>
+                            <Run Text="Developers: " FontWeight="Bold"/>
+                            <LineBreak/>
+                            <Run Text="Kalsoom Nawaz"/>
+                            <LineBreak/>
+                            <Run Text="Isaac Ashar"/>
+                            <LineBreak/>
+                            --------------
+                            <LineBreak/>
+                            <Run Text="HR: " FontWeight="Bold"/>
+                            <LineBreak/>
+                            <Run Text="Haya Afareen"/>
+                            <LineBreak/>
+                            --------------
+                            <LineBreak/>
+                            <Run Text="Art: " FontWeight="Bold"/>
+                            <LineBreak/>
+                            <Run Text="Daud Khawaja"/>
+                            <LineBreak/>
+                            -------------- 
+                            <LineBreak/>
+                            <Run Text="SFX: " FontWeight="Bold"/>
+                            <LineBreak/>
+                            <Run Text=""/>
+                        </TextBlock>
+                    </ScrollViewer>
                 </StackPanel>
 
                 <!-- Game Mode Selection -->

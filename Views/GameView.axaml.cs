@@ -19,13 +19,13 @@ public partial class GameView : UserControl
 
         DataContext = new GameViewModel(timeSetting, AiGame, Difficulty);
 
-        GameOverButton.Click += async (s, e) => await GoToMainMenu(s, e);
-        MainMenuButton.Click += async (s, e) => await GoToMainMenu(s, e);
+        GameOverButton.Click += async (_, _) => await GoToMainMenu();
+        MainMenuButton.Click += async (_, _) => await GoToMainMenu();
 
         (DataContext as GameViewModel)!.MovesCN.CollectionChanged += (_, _) => MovesScroller.ScrollToEnd();
     }
 
-    private async Task GoToMainMenu(object? Sender, RoutedEventArgs e)
+    private async Task GoToMainMenu()
     {
         await SoundPlayer.Play(SoundPlayer.ClickSFXPath);
         ChessBoard.Instance.ResetBoard();

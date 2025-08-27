@@ -163,29 +163,29 @@
             
             <!-- Pawn Promotion Panel -->
             <Border x:Name="PawnPromotionPanel" BorderBrush="Black" BorderThickness="3" Background="#F25A0F" CornerRadius="10" Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
-                <StackPanel Width="280" Height="150">
-                    <TextBlock Text="Promote Your Pawn!" HorizontalAlignment="Center" FontSize="28"
+                <Grid Width="300" Height="150" RowSpacing="10" HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="auto, *">
+                    <TextBlock Text="Promote Your Pawn!" HorizontalAlignment="Center" FontSize="28" VerticalAlignment="Center"
                                FontWeight="Regular" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"/>
 
-                    <UniformGrid Rows="1" Columns="4" ColumnSpacing="10" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button x:Name="Rook" Command="{Binding PromotionCommand}" CommandParameter="Rook" Width="60" Height="60">
+                    <UniformGrid Rows="1" Columns="4" ColumnSpacing="5" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+                        <Button x:Name="Rook" Command="{Binding PromotionCommand}" CommandParameter="Rook" Width="65" Height="65">
                             <Image Source="{Binding PawnPromotionRook}"/>
                         </Button>
 
-                        <Button x:Name="Bishop" Command="{Binding PromotionCommand}" CommandParameter="Bishop" Width="60" Height="60">
+                        <Button x:Name="Bishop" Command="{Binding PromotionCommand}" CommandParameter="Bishop" Width="65" Height="65">
                             <Image Source="{Binding PawnPromotionBishop}"/>
                         </Button>
 
-                        <Button x:Name="Knight" Command="{Binding PromotionCommand}" CommandParameter="Knight" Width="60" Height="60">
+                        <Button x:Name="Knight" Command="{Binding PromotionCommand}" CommandParameter="Knight" Width="65" Height="65">
                             <Image Source="{Binding PawnPromotionKnight}"/>
                         </Button>
 
-                        <Button x:Name="Queen" Command="{Binding PromotionCommand}" CommandParameter="Queen" Width="60" Height="60">
+                        <Button x:Name="Queen" Command="{Binding PromotionCommand}" CommandParameter="Queen" Width="65" Height="65">
                             <Image Source="{Binding PawnPromotionQueen}"/>
                         </Button>
                     </UniformGrid>
                     
-                </StackPanel>
+                </Grid>
             </Border>
             
             <!-- Game Over Panel -->

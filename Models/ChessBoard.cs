@@ -45,14 +45,12 @@ public class ChessBoard
     public void MakeMove(Move move)
     {
         // Reset all valid En Passant moves
-        for (int i = 0; i < 8; i++)
+        foreach (var piece in Grid)
         {
-            for (int j = 0; j < 8; j++)
-            {
-                Grid[i, j].IsValidPassantPlacement = false;
-            }
+            piece.IsValidPassantPlacement = false;   
         }
 
+        string SFXPath = GetSFX(move);
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
@@ -66,16 +64,16 @@ public class ChessBoard
         }
         else if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
-            CheckSpecialPawnConditions(move, ref pieceToMove);
+            CheckEnPassant(move, pieceToMove);
         }
 
         if (move.DestPiece.Type != PieceType.Empty || move.IsEnPassant)
         {
-            Task.Run(() => SoundPlayer.Play(SoundPlayer.CaptureSFXPath));
+            _ = SoundPlayer.Play(SoundPlayer.CaptureSFXPath);
         }
         else
         {
-            Task.Run(() => SoundPlayer.Play(SoundPlayer.MoveSFXPath));
+            _ = SoundPlayer.Play(SoundPlayer.MoveSFXPath);
         }
 
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
@@ -97,7 +95,37 @@ public class ChessBoard
             IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
         }
 
+        if (IsCheck)
+        {
+            SFXPath = SoundPlayer.CheckSFXPath;
+        }
+        else if (IsCheckMate)
+        {
+            SFXPath = SoundPlayer.CheckmateSFXPath;
+        }
+
+        _ = SoundPlayer.Play(SFXPath);
         GridUpdated?.Invoke();
+    }
+
+    private static string GetSFX(Move move)
+    {
+        if (move.IsPromotion)
+        {
+            return SoundPlayer.PromotionSFXPath;
+        }
+
+        if (move.IsEnPassant || move.DestPiece.Type != PieceType.Empty)
+        {
+            return SoundPlayer.CaptureSFXPath;
+        }
+
+        if (move.IsCastling)
+        {
+            return SoundPlayer.CastleSFXPath;
+        }
+
+        return SoundPlayer.MoveSFXPath;
     }
 
     public void ResetBoard()
@@ -245,7 +273,7 @@ public class ChessBoard
         }
     }
 
-    private void CheckSpecialPawnConditions(Move move, ref ChessPiece pieceToMove)
+    private void CheckEnPassant(Move move, ChessPiece pieceToMove)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;

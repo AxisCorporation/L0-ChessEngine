@@ -63,9 +63,9 @@ public partial class MainMenuView : UserControl
         AiGame.Click += (_, _) => SetPanel(DifficultyOptions);
         LocalGame.Click += PlayGame;
 
-        QuitButton.Click += (_, _) =>
+        QuitButton.Click += async (_, _) =>
         {
-            _ = SoundPlayer.Play(SoundPlayer.ClickSFXPath);
+            await SoundPlayer.Play(SoundPlayer.ClickSFXPath);
             Environment.Exit(0);
         };
 
@@ -88,7 +88,6 @@ public partial class MainMenuView : UserControl
         TimeSelected = buttonSelected.Content switch
         {
             "5 min" => 5,
-            "10 min" => 10,
             "15 min" => 15,
 
             _ => 10 // Default

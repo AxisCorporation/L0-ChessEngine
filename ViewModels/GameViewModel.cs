@@ -260,6 +260,7 @@ public partial class GameViewModel : ObservableObject
     {
         if (!move.IsValid || Board.WouldCauseCheck(move) || move.TargetsKing)
         {
+            _ = SoundPlayer.Play(SoundPlayer.IllegalMoveSFXPath);
             return false;
         }
                 
@@ -372,6 +373,11 @@ public partial class GameViewModel : ObservableObject
             {
                 BlackTimer -= TimeSpan.FromMilliseconds(100);
                 BlackTimerText = BlackTimer.ToString(_timeFormat);
+            }
+
+            if (WhiteTimer == TimeSpan.FromSeconds(10) || BlackTimer == TimeSpan.FromSeconds(10))
+            {
+                _ = SoundPlayer.Play(SoundPlayer.TenSecondsLeftSFXPath);
             }
 
             if (WhiteTimer <= TimeSpan.Zero || BlackTimer <= TimeSpan.Zero)

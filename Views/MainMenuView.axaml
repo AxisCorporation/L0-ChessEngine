@@ -25,7 +25,7 @@
                 </StackPanel>
 
                 <!-- Credits -->
-                <StackPanel x:Name="CreditsPanel" Spacing="5" HorizontalAlignment="Center" IsVisible="False">
+                <StackPanel x:Name="CreditsPanel" Spacing="5    " HorizontalAlignment="Center" IsVisible="False">
                     <TextBlock FontSize="40" FontWeight="Bold" Foreground="#ECF0F1" HorizontalAlignment="Center" FontFamily="{StaticResource BlockBlueprint}" TextAlignment="Center">
                         Credits
                         <LineBreak/>

@@ -418,15 +418,7 @@ public partial class GameViewModel : ObservableObject
 
         if (move.Type == MoveType.Castling)
         {
-            if (destX > initX) // Kingside
-            {
-                moveCN.Append("O-O");
-            }
-            else if (destX < initX) // Queenside
-            {
-                moveCN.Append("O-O-O");
-            }
-
+            moveCN.Append(destX > initX ? "O-O" : "O-O-O");
             return moveCN.ToString();
         }
 

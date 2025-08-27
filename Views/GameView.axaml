@@ -21,7 +21,7 @@
             <StackPanel VerticalAlignment="Center" Spacing="10">
                 
                 <!-- Player 2 -->
-                <Grid HorizontalAlignment="Center" RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="5" Width="800">
+                <Grid HorizontalAlignment="Center" RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="5" Width="640">
                     <!-- Profile Pic -->
                     <Border Background="Beige" BorderBrush="Black" BorderThickness="2"
                             CornerRadius="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"
@@ -64,7 +64,7 @@
                         
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
-                                    <UniformGrid Rows="8" Columns="8" Width="800" Height="800">
+                                    <UniformGrid Rows="8" Columns="8" Width="640" Height="640">
                                     </UniformGrid>
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
@@ -73,7 +73,7 @@
                                 <DataTemplate>
                                     <Button Command="{Binding ClickCommand}" Padding="0" Background="Transparent" BorderThickness="0">
                         
-                                        <Border BorderBrush="Black" BorderThickness="1" Width="100" Height="100">
+                                        <Border BorderBrush="Black" BorderThickness="1" Width="80" Height="80">
                                             <Grid>
                                                 <Rectangle Fill="{Binding IsLightSquare, Converter={StaticResource LightSquareConverter}}"></Rectangle>
                                                 <Rectangle Opacity="0.3" Fill="Red" IsVisible="{Binding IsHighlighted}"></Rectangle>
@@ -121,7 +121,7 @@
                 
                 
                 <!-- Player 1 -->
-                <Grid HorizontalAlignment="Center" RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="5" Width="800">
+                <Grid HorizontalAlignment="Center" RowDefinitions="Auto" ColumnDefinitions="Auto, *, Auto" ColumnSpacing="5" Width="640">
                     <!-- Profile Pic -->
                     <Border Background="Beige" BorderBrush="Black" BorderThickness="2"
                             CornerRadius="5" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Right"

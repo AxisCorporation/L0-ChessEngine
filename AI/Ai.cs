@@ -255,7 +255,7 @@ namespace L_0_Chess_Engine.AI
             }
             else if (ChessBoard.Instance.IsCheck)
             {
-                score += ChessBoard.Instance.IsWhiteTurn ? -20 : 20;
+                score += ChessBoard.Instance.IsWhiteTurn ? -200 : 200;
             }
 
             for (int x = 0; x < 8; x++)
@@ -272,9 +272,9 @@ namespace L_0_Chess_Engine.AI
                         continue;
 
                     if (piece.IsWhite)
-                        score += value;
+                        score += value * 10;
                     else
-                        score -= value;
+                        score -= value * 10;
 
                     int positionValue = 0;
 
@@ -283,11 +283,11 @@ namespace L_0_Chess_Engine.AI
                     {
                         if (piece.IsWhite)
                         {
-                            positionValue += 10;
+                            positionValue += 9;
                         }
                         else
                         {
-                            positionValue -= 10;
+                            positionValue -= 9;
                         }
                     }
 
@@ -296,11 +296,11 @@ namespace L_0_Chess_Engine.AI
                     {
                         if (piece.IsWhite)
                         {
-                            positionValue += y * 5;
+                            positionValue += y;
                         }
                         else
                         {
-                            positionValue -= (7 - y) * 5;
+                            positionValue -= 7 - y;
                         }
                     }
 
@@ -311,11 +311,11 @@ namespace L_0_Chess_Engine.AI
                         {
                             if (piece.IsWhite)
                             {
-                                positionValue += 10;
+                                positionValue -= 8;
                             }
                             else
                             {
-                                positionValue -= 10;
+                                positionValue += 8;
                             }
                         }
                     }

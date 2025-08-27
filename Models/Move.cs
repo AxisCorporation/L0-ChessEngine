@@ -56,7 +56,7 @@ public class Move
         AuraMap[PieceType.Rook] = new(8, 8);
         AuraMap[PieceType.Bishop] = new(8, 8);
         AuraMap[PieceType.Queen] = new(8, 8);
-        AuraMap[PieceType.King] = new(1, 1);
+        AuraMap[PieceType.King] = new(3, 3);
     }
 
     public Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotionPiece = PieceType.Empty)

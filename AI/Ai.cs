@@ -142,7 +142,7 @@ namespace L_0_Chess_Engine.AI
             PieceType initType = move.InitPiece.Type & ~PieceType.White & ~PieceType.Black;
             int initValue = ValueMap.TryGetValue(initType, out var iv) ? iv : 0;
 
-            PieceType destType = move.IsEnPassant ? PieceType.Pawn : move.DestPiece.Type & ~PieceType.White & ~PieceType.Black;
+            PieceType destType = move.Type == MoveType.EnPassant ? PieceType.Pawn : move.DestPiece.Type & ~PieceType.White & ~PieceType.Black;
             int destValue = ValueMap.TryGetValue(initType, out var dv) ? dv : 0;
 
             (int destX, int destY) = move.DestPiece.Coordinates;
@@ -152,7 +152,7 @@ namespace L_0_Chess_Engine.AI
                 score += 1000 + 100 * destValue - 10 * initValue;
             }
 
-            bool isPromotion = move.IsPromotion;
+            bool isPromotion = move.Type == MoveType.Promotion;
             PieceType promotionBase = move.PromotionPiece & ~PieceType.White & ~PieceType.Black;
 
             if (isPromotion)

@@ -12,6 +12,7 @@ namespace L_0_Chess_Engine.Models;
 public class Move
 {
     public bool IsValid { get => IsValidMove(); }
+    private static bool _inCheckValidation = false;
 
     // The message to be displayed when a move is invalidated
     public string ErrorMessage { get; set; } = "";
@@ -306,17 +307,27 @@ public class Move
                     return false;
             }
 
-            // Check for check on current and intermediate squares
+            // Check for check on current square
             if (ChessBoard.Instance.IsCheck)
                 return false;
 
-            int[] kingPath = isKingSide ? [InitX + 1, InitX + 2] : [InitX - 1, InitX - 2];
-
-            foreach (int x in kingPath)
+            // Only check intermediate squares if we're not already in a check validation
+            if (!_inCheckValidation)
             {
-                var simulatedMove = new Move(move.InitPiece, ChessBoard.Instance.Grid[x, InitY]);
-                if (ChessBoard.Instance.WouldCauseCheck(simulatedMove))
-                    return false;
+                _inCheckValidation = true;
+
+                int[] kingPath = isKingSide ? [InitX + 1, InitX + 2] : [InitX - 1, InitX - 2];
+
+                foreach (int x in kingPath)
+                {
+                    var simulatedMove = new Move(move.InitPiece, ChessBoard.Instance.Grid[x, InitY]);
+                    if (ChessBoard.Instance.WouldCauseCheck(simulatedMove))
+                    {
+                        _inCheckValidation = false;
+                        return false;
+                    }
+                }
+                _inCheckValidation = false;
             }
 
             move.Type = MoveType.Castling;

@@ -9,19 +9,19 @@ namespace L_0_Chess_Engine.Models;
 /// <param name="destination">Destination Coordinate</param>
 /// <param name="initPiece">Piece that belongs at the starting coordinate</param>
 /// <param name="destPiece">Piece that belongs at the end coordinate</param>
-public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotionPiece = PieceType.Empty)
+public class Move
 {
     public bool IsValid { get => IsValidMove(); }
 
     // The message to be displayed when a move is invalidated
     public string ErrorMessage { get; set; } = "";
 
-    public ChessPiece InitPiece { get; } = new ChessPiece(initPiece);
-    public ChessPiece DestPiece { get; } = new ChessPiece(destPiece);
+    public ChessPiece InitPiece { get; } 
+    public ChessPiece DestPiece { get; } 
 
-    public PieceType PromotionPiece { get; } = promotionPiece;
+    public PieceType PromotionPiece { get; } 
+    public MoveType Type { get; set; }
     
-    public bool IsPromotion => PromotionPiece != PieceType.Empty;
 
     public bool TargetsKing
     {
@@ -36,9 +36,6 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
             return false;
         }
     }
-
-    public bool IsEnPassant { get; set; }
-    public bool IsCastling { get; set; }
     
     private static readonly Dictionary<PieceType, Func<Move, bool>> ValidationMap = [];
     
@@ -59,10 +56,32 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
         AuraMap[PieceType.Rook] = new(8, 8);
         AuraMap[PieceType.Bishop] = new(8, 8);
         AuraMap[PieceType.Queen] = new(8, 8);
-        AuraMap[PieceType.King] = new(1, 1);
+        AuraMap[PieceType.King] = new(3, 3);
     }
 
-    
+    public Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotionPiece = PieceType.Empty)
+    {
+        InitPiece = new(initPiece);
+        DestPiece = new(destPiece);
+        PromotionPiece = promotionPiece;
+
+        if (PromotionPiece != PieceType.Empty)
+        {
+            Type = MoveType.Promotion;
+        }
+        else if (DestPiece.IsEnPassantSquare)
+        {
+            Type = MoveType.EnPassant;
+        }
+        else if (DestPiece.Type != PieceType.Empty)
+        {
+            Type = MoveType.Capture;
+        }
+        else
+        {
+            Type = MoveType.Move;
+        }
+    }
 
     public bool IsValidMove()
     {
@@ -114,7 +133,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
                 IsValidForward &= destY == initY + 1;
             }
 
-            IsValidDiagonal &= destY == initY + 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece.Type != PieceType.Empty);
+            IsValidDiagonal &= destY == initY + 1 && (move.DestPiece.IsEnPassantSquare || move.DestPiece.Type != PieceType.Empty);
         }
         else
         {
@@ -127,11 +146,14 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
                 IsValidForward &= destY == initY - 1;
             }
 
-            IsValidDiagonal &= destY == initY - 1 && (move.DestPiece.IsValidPassantPlacement || move.DestPiece.Type != PieceType.Empty);
+            IsValidDiagonal &= destY == initY - 1 && (move.DestPiece.IsEnPassantSquare || move.DestPiece.Type != PieceType.Empty);
 
         }
 
-        move.IsEnPassant = IsValidDiagonal && move.DestPiece.IsValidPassantPlacement;
+        if (IsValidDiagonal && move.DestPiece.IsEnPassantSquare)
+        {
+            move.Type = MoveType.EnPassant;
+        }
 
         return IsValidForward || IsValidDiagonal;
     }
@@ -297,7 +319,7 @@ public class Move(ChessPiece initPiece, ChessPiece destPiece, PieceType promotio
                     return false;
             }
 
-            move.IsCastling = true;
+            move.Type = MoveType.Castling;
             return true;
         }
 

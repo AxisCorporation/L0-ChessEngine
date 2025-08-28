@@ -3,6 +3,9 @@ using System.Linq;
 using System.Collections.Generic;
 using L_0_Chess_Engine.Enums;
 using Avalonia.Controls;
+using System.Threading.Tasks;
+using L_0_Chess_Engine.Common;
+using System.Diagnostics;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -43,14 +46,12 @@ public class ChessBoard
     public void MakeMove(Move move)
     {
         // Reset all valid En Passant moves
-        for (int i = 0; i < 8; i++)
+        foreach (var piece in Grid)
         {
-            for (int j = 0; j < 8; j++)
-            {
-                Grid[i, j].IsValidPassantPlacement = false;
-            }
+            piece.IsEnPassantSquare = false;
         }
 
+        string SFXPath = GetSFX(move);
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
@@ -58,20 +59,20 @@ public class ChessBoard
 
         pieceToMove.HasMoved = true;
 
-        if (move.IsCastling)
+        if (move.Type == MoveType.Castling)
         {
             HandleCastling(move);
         }
         else if (move.InitPiece.EqualsUncolored(PieceType.Pawn))
         {
-            CheckSpecialPawnConditions(move, ref pieceToMove);
+            CheckEnPassant(move, pieceToMove);
         }
 
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         Grid[destX, destY] = pieceToMove;
         pieceToMove.Coordinates = new(destX, destY);
 
-        if (move.IsPromotion)
+        if (move.Type == MoveType.Promotion)
         {
             Grid[destX, destY].Type = move.PromotionPiece;
         }
@@ -86,12 +87,43 @@ public class ChessBoard
             IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
         }
 
+        if (IsCheck)
+        {
+            SFXPath = SoundPlayer.CheckSFXPath;
+        }
+        else if (IsCheckMate)
+        {
+            SFXPath = SoundPlayer.CheckmateSFXPath;
+        }
+
+        _ = SoundPlayer.Play(SFXPath);
         GridUpdated?.Invoke();
+    }
+
+    private static string GetSFX(Move move)
+    {
+        if (move.Type == MoveType.Promotion)
+        {
+            return SoundPlayer.PromotionSFXPath;
+        }
+
+        if (move.Type == MoveType.EnPassant || move.Type == MoveType.Capture)
+        {
+            return SoundPlayer.CaptureSFXPath;
+        }
+
+        if (move.Type == MoveType.Castling)
+        {
+            return SoundPlayer.CastleSFXPath;
+        }
+
+        return SoundPlayer.MoveSFXPath;
     }
 
     public void ResetBoard()
     {
         ReadFEN(DefaultFEN);
+        IsWhiteTurn = true;
     }
 
     private bool DrawScan()
@@ -207,7 +239,7 @@ public class ChessBoard
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         originalInit.Coordinates = new(destX, destY);
         
-        if (move.IsPromotion)
+        if (move.Type == MoveType.Promotion)
         {
             originalInit.Type = move.PromotionPiece;
         }
@@ -228,13 +260,13 @@ public class ChessBoard
         originalDest.Coordinates = new(destX, destY);
         originalInit.Coordinates = new(initX, initY);
         
-        if (move.IsPromotion)
+        if (move.Type == MoveType.Promotion)
         {
             originalInit.Type = PieceType.Pawn | (originalInit.IsWhite ? PieceType.White : PieceType.Black);
         }
     }
 
-    private void CheckSpecialPawnConditions(Move move, ref ChessPiece pieceToMove)
+    private void CheckEnPassant(Move move, ChessPiece pieceToMove)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
@@ -242,9 +274,9 @@ public class ChessBoard
         if (Math.Abs(destY - initY) == 2)
         {
             int PassantY = move.InitPiece.IsWhite ? destY - 1 : destY + 1;
-            Grid[destX, PassantY].IsValidPassantPlacement = true;
+            Grid[destX, PassantY].IsEnPassantSquare = true;
         }
-        else if (move.IsEnPassant)
+        else if (move.Type == MoveType.EnPassant)
         {
             int CapturedPawnY = pieceToMove.IsWhite ? destY - 1 : destY + 1;
             Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(destX, CapturedPawnY));

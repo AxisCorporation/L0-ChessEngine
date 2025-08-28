@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using L_0_Chess_Engine.Enums;
 using L_0_Chess_Engine.Common;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace L_0_Chess_Engine.Views;
 
@@ -62,16 +63,16 @@ public partial class MainMenuView : UserControl
         AiGame.Click += (_, _) => SetPanel(DifficultyOptions);
         LocalGame.Click += PlayGame;
 
-        QuitButton.Click += (_, _) =>
+        QuitButton.Click += async (_, _) =>
         {
-            Task.Run(() => SoundPlayer.Play("Assets/Audio/ButtonClick.mp3"));
+            await SoundPlayer.Play(SoundPlayer.ClickSFXPath);
             Environment.Exit(0);
         };
 
 
         BackButton.Click += (_, _) =>
         {
-            Task.Run(() => SoundPlayer.Play("Assets/Audio/ButtonClick.mp3"));
+            _ = SoundPlayer.Play(SoundPlayer.ClickSFXPath);
             _isNavigatingBack = true;
             CurrentPanel = _panelHistory.Pop();
         };
@@ -80,30 +81,29 @@ public partial class MainMenuView : UserControl
 
     private void TimeOptionSelected(object? sender, RoutedEventArgs e)
     {
-        Task.Run(() => SoundPlayer.Play("Assets/Audio/ButtonClick.mp3"));
+        _ = SoundPlayer.Play(SoundPlayer.ClickSFXPath);
         ToggleButton buttonSelected = (ToggleButton)sender!;
         buttonSelected.IsChecked = true;
 
         TimeSelected = buttonSelected.Content switch
         {
             "5 min" => 5,
-            "10 min" => 10,
             "15 min" => 15,
 
             _ => 10 // Default
         };
 
-        foreach (var child in TimeOptions.Children)
+        foreach (var panel in from child in TimeOptions.Children where child is StackPanel select child)
         {
-            if (child is StackPanel TimeOptionsPanel)
+            if (panel is StackPanel TimeOptionsPanel)
             {
-                foreach (var button in TimeOptionsPanel.Children)
+                foreach (var button in from buttons in TimeOptionsPanel.Children
+                                       where buttons != buttonSelected
+                                       select buttons)
                 {
-                    if (button != buttonSelected)
-                    {
-                        ((ToggleButton)button).IsChecked = false;
-                    }
+                    ((ToggleButton)button).IsChecked = false;
                 }
+
                 break;
             }
         }
@@ -111,13 +111,13 @@ public partial class MainMenuView : UserControl
 
     private void PlayGame(object? sender, RoutedEventArgs e)
     {
-        Task.Run(() => SoundPlayer.Play("Assets/Audio/ButtonClick.mp3"));
+        _ = SoundPlayer.Play(SoundPlayer.ClickSFXPath);
         MainWindow?.SetMainContent(new GameView(TimeSelected, MainWindow));
     }
 
     private void PlayAIGame(object? sender, RoutedEventArgs e)
     {
-        Task.Run(() => SoundPlayer.Play("Assets/Audio/ButtonClick.mp3"));
+        _ = SoundPlayer.Play(SoundPlayer.ClickSFXPath);
 
         Button button = (Button)sender!;
 
@@ -136,7 +136,7 @@ public partial class MainMenuView : UserControl
 
     private void SetPanel(StackPanel panel)
     {
-        Task.Run(() => SoundPlayer.Play("Assets/Audio/ButtonClick.mp3"));
+        _ = SoundPlayer.Play(SoundPlayer.ClickSFXPath);
         CurrentPanel = panel;
     }
     

@@ -226,6 +226,7 @@ public class ChessBoard
         return validMoves.Count == 0;
     }
 
+    // These two functions don't work rn, will have to fix later
     public void HypotheticalMove(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
@@ -237,18 +238,10 @@ public class ChessBoard
         Grid[destX, destY] = originalInit;
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         originalInit.Coordinates = new(destX, destY);
-
+        
         if (move.Type == MoveType.Promotion)
         {
             originalInit.Type = move.PromotionPiece;
-        }
-        
-        IsDraw = DrawScan();
-
-        if (!IsDraw)
-        {
-            IsCheck = CheckScan();
-            IsCheckMate = IsCheck && CheckMateScan(); // CheckmateScan is only called if game is in check
         }
     }
 

@@ -13,6 +13,9 @@ public class Move
 {
     public bool IsValid { get => IsValidMove(); }
 
+    // The message to be displayed when a move is invalidated
+    public string ErrorMessage { get; set; } = "";
+
     public ChessPiece InitPiece { get; } 
     public ChessPiece DestPiece { get; } 
 
@@ -26,6 +29,7 @@ public class Move
         {
             if (DestPiece.EqualsUncolored(PieceType.King))
             {
+                ErrorMessage = "Cannot capture king!";
                 return true;
             }
 
@@ -81,25 +85,36 @@ public class Move
 
     public bool IsValidMove()
     {
-        if (InitPiece.Coordinates == DestPiece.Coordinates)
-        {
-            return false;
-        }
-
-        // Cannot capture same team
-        if (DestPiece.Type != PieceType.Empty && (DestPiece.Color == InitPiece.Color))
-        {
-            return false;
-        }
-
         // We can take out the color to make the mapping simpler
         PieceType type = InitPiece.Type ^ InitPiece.Color;
 
         return ValidationMap[type](this);
     }
+    
+    private static bool IsValidGenericMove(Move move)
+    {
+        // False if the player just sets the piece back down in order to avoid turn skipping
+        if (move.InitPiece.Coordinates == move.DestPiece.Coordinates)
+        {
+            return false;
+        }
+
+        // Cannot capture same team
+        if (move.DestPiece.Type != PieceType.Empty && (move.DestPiece.Color == move.InitPiece.Color))
+        {
+            move.ErrorMessage = "Path obstructed!";
+            return false;
+        }
+
+        return true;
+    }
 
     private static bool IsValidPawnMove(Move move)
     {
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
 
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
@@ -146,6 +161,11 @@ public class Move
 
     private static bool IsValidKnightMove(Move move)
     {
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
+
         (int initX, int initY) = move.InitPiece.Coordinates;
         (int destX, int destY) = move.DestPiece.Coordinates;
 
@@ -156,6 +176,12 @@ public class Move
 
     private static bool IsValidRookMove(Move move)
     {
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
+
+
         (int InitX, int InitY) = move.InitPiece.Coordinates;
         (int DestX, int DestY) = move.DestPiece.Coordinates;
 
@@ -200,6 +226,11 @@ public class Move
 
     private static bool IsValidBishopMove(Move move)
     {
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
+
         (int InitX, int InitY) = move.InitPiece.Coordinates;
         (int DestX, int DestY) = move.DestPiece.Coordinates;
 
@@ -237,6 +268,11 @@ public class Move
 
     private static bool IsValidKingMove(Move move)
     {
+        if (!IsValidGenericMove(move))
+        {
+            return false;
+        }
+
         (int InitX, int InitY) = move.InitPiece.Coordinates;
         (int DestX, int DestY) = move.DestPiece.Coordinates;
 
@@ -279,15 +315,8 @@ public class Move
             foreach (int x in kingPath)
             {
                 var simulatedMove = new Move(move.InitPiece, ChessBoard.Instance.Grid[x, InitY]);
-                ChessBoard.Instance.HypotheticalMove(simulatedMove);
-
-                if (ChessBoard.Instance.IsCheck)
-                {
-                    ChessBoard.Instance.UndoHypotheticalMove(simulatedMove);
+                if (ChessBoard.Instance.WouldCauseCheck(simulatedMove))
                     return false;
-                }
-                
-                ChessBoard.Instance.UndoHypotheticalMove(simulatedMove);
             }
 
             move.Type = MoveType.Castling;

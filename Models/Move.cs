@@ -312,12 +312,13 @@ public class Move
 
             int[] kingPath = isKingSide ? [InitX + 1, InitX + 2] : [InitX - 1, InitX - 2];
 
-            foreach (int x in kingPath)
-            {
-                var simulatedMove = new Move(move.InitPiece, ChessBoard.Instance.Grid[x, InitY]);
-                if (ChessBoard.Instance.WouldCauseCheck(simulatedMove))
-                    return false;
-            }
+            // Hopefully a Temp Fix
+            // foreach (int x in kingPath)
+            // {
+            //     var simulatedMove = new Move(move.InitPiece, ChessBoard.Instance.Grid[x, InitY]);
+            //     if (ChessBoard.Instance.WouldCauseCheck(simulatedMove))
+            //         return false;
+            // }
 
             move.Type = MoveType.Castling;
             return true;

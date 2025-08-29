@@ -374,7 +374,7 @@ public partial class GameViewModel : ObservableObject
                 BlackTimerText = BlackTimer.ToString(_timeFormat);
             }
 
-            if (WhiteTimer == TimeSpan.FromSeconds(10) || BlackTimer == TimeSpan.FromSeconds(10))
+            if (WhiteTimer == TimeSpan.FromSeconds(30) || BlackTimer == TimeSpan.FromSeconds(30))
             {
                 _ = SoundPlayer.Play(SoundPlayer.TenSecondsLeftSFXPath);
             }

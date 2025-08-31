@@ -32,6 +32,8 @@ public partial class GameViewModel : ObservableObject
     [ObservableProperty]
     private string _blackTimerText;
     [ObservableProperty]
+    private string? _lastMoveText;
+    [ObservableProperty]
     private string? _turnText;
     [ObservableProperty]
     private string _whiteTimerText;
@@ -129,6 +131,8 @@ public partial class GameViewModel : ObservableObject
 
         IsWhiteTurn = true;
         GameOver = false;
+
+        LastMoveText = "";
 
         _ = UpdateTurnTimersAsync();
     }
@@ -270,6 +274,8 @@ public partial class GameViewModel : ObservableObject
         UpdateGameState();
 
         IsWhiteTurn = !IsWhiteTurn;
+        LastMoveText = "Last Move: " + AppendMove("", move);
+        
         return true;
     }
 

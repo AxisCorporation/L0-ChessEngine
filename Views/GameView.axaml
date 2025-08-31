@@ -16,8 +16,46 @@
     <Border Background="#FF7D29" Padding="30">
         
         <Grid>
-            
-        
+
+
+            <!-- Pawn Promotion Panel -->
+            <Border x:Name="PawnPromotionPanel" BorderBrush="Black" BorderThickness="3" Background="#F25A0F" CornerRadius="10" Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
+                <Grid Width="300" Height="150" RowSpacing="10" HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="auto, *">
+                    <TextBlock Text="Promote Your Pawn!" HorizontalAlignment="Center" FontSize="28" VerticalAlignment="Center"
+                               FontWeight="Regular" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"/>
+
+                    <UniformGrid Rows="1" Columns="4" ColumnSpacing="5" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+                        <Button x:Name="Rook" Command="{Binding PromotionCommand}" CommandParameter="Rook" Width="65" Height="65">
+                            <Image Source="{Binding PawnPromotionRook}"/>
+                        </Button>
+
+                        <Button x:Name="Bishop" Command="{Binding PromotionCommand}" CommandParameter="Bishop" Width="65" Height="65">
+                            <Image Source="{Binding PawnPromotionBishop}"/>
+                        </Button>
+
+                        <Button x:Name="Knight" Command="{Binding PromotionCommand}" CommandParameter="Knight" Width="65" Height="65">
+                            <Image Source="{Binding PawnPromotionKnight}"/>
+                        </Button>
+
+                        <Button x:Name="Queen" Command="{Binding PromotionCommand}" CommandParameter="Queen" Width="65" Height="65">
+                            <Image Source="{Binding PawnPromotionQueen}"/>
+                        </Button>
+                    </UniformGrid>
+                    
+                </Grid>
+            </Border>
+
+            <!-- Game Over Panel -->
+            <Border x:Name="GameOver" BorderBrush="Black" BorderThickness="3" Background="#F25A0F" CornerRadius="10" Width="300" Height="180" IsVisible="{Binding GameOver}">
+                <StackPanel Width="280" Height="160" HorizontalAlignment="Center" Spacing="20">
+                    
+                    <TextBlock  Text="{Binding GameOverText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center" TextAlignment="Center"/>
+                    <Button x:Name="GameOverButton" Content="Return to Main Menu" HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                            Width="200" Background="#FEEBC8" FontFamily="{StaticResource BlockBlueprint}"
+                            FontSize="20" Foreground="Black" CornerRadius="8"/>
+                    
+                </StackPanel>
+            </Border>
             <StackPanel VerticalAlignment="Center" Spacing="10">
                 
                 <!-- Player 2 -->
@@ -142,7 +180,9 @@
                 </Grid>
                 
                 <!-- Turn Text -->
-                <TextBlock Text="{Binding TurnText}" FontSize="32" FontWeight="Regular" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center"/>
+                <TextBlock Text="{Binding TurnText}" FontSize="32" FontWeight="Regular" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center" TextAlignment="Center"/>
+                <!-- Move Text -->
+                <TextBlock Text="{Binding LastMoveText}" FontSize="28" FontWeight="Regular" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center" TextAlignment="Center"/>
                 
                 <!-- Exit Button -->
                 <Button x:Name="MainMenuButton"
@@ -160,46 +200,7 @@
                 </Button>
                 
             </StackPanel>
-            
-            <!-- Pawn Promotion Panel -->
-            <Border x:Name="PawnPromotionPanel" BorderBrush="Black" BorderThickness="3" Background="#F25A0F" CornerRadius="10" Width="300" Height="150" IsVisible="{Binding PawnPromotionActive}">
-                <Grid Width="300" Height="150" RowSpacing="10" HorizontalAlignment="Center" VerticalAlignment="Center" RowDefinitions="auto, *">
-                    <TextBlock Text="Promote Your Pawn!" HorizontalAlignment="Center" FontSize="28" VerticalAlignment="Center"
-                               FontWeight="Regular" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1"/>
 
-                    <UniformGrid Rows="1" Columns="4" ColumnSpacing="5" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
-                        <Button x:Name="Rook" Command="{Binding PromotionCommand}" CommandParameter="Rook" Width="65" Height="65">
-                            <Image Source="{Binding PawnPromotionRook}"/>
-                        </Button>
-
-                        <Button x:Name="Bishop" Command="{Binding PromotionCommand}" CommandParameter="Bishop" Width="65" Height="65">
-                            <Image Source="{Binding PawnPromotionBishop}"/>
-                        </Button>
-
-                        <Button x:Name="Knight" Command="{Binding PromotionCommand}" CommandParameter="Knight" Width="65" Height="65">
-                            <Image Source="{Binding PawnPromotionKnight}"/>
-                        </Button>
-
-                        <Button x:Name="Queen" Command="{Binding PromotionCommand}" CommandParameter="Queen" Width="65" Height="65">
-                            <Image Source="{Binding PawnPromotionQueen}"/>
-                        </Button>
-                    </UniformGrid>
-                    
-                </Grid>
-            </Border>
-            
-            <!-- Game Over Panel -->
-            <Border x:Name="GameOver" BorderBrush="Black" BorderThickness="3" Background="#F25A0F" CornerRadius="10" Width="300" Height="180" IsVisible="{Binding GameOver}">
-                <StackPanel Width="280" Height="160" HorizontalAlignment="Center" Spacing="20">
-                    
-                    <TextBlock  Text="{Binding GameOverText}" FontSize="32" FontWeight="Bold" FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Center" TextAlignment="Center"/>
-                    <Button x:Name="GameOverButton" Content="Return to Main Menu" HorizontalContentAlignment="Center" HorizontalAlignment="Center"
-                            Width="200" Background="#FEEBC8" FontFamily="{StaticResource BlockBlueprint}"
-                            FontSize="20" Foreground="Black" CornerRadius="8"/>
-                    
-                </StackPanel>
-            </Border>
-            
         </Grid>
         
     </Border>

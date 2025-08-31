@@ -2,10 +2,8 @@
 using System.Linq;
 using System.Collections.Generic;
 using L_0_Chess_Engine.Enums;
-using Avalonia.Controls;
-using System.Threading.Tasks;
 using L_0_Chess_Engine.Common;
-using System.Diagnostics;
+using L_0_Chess_Engine.AI;
 
 namespace L_0_Chess_Engine.Models;
 
@@ -14,7 +12,7 @@ public class ChessBoard
     //Constant FEN for the starting position
     private const string DefaultFEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
     private PieceType _promotedPieceType = PieceType.Empty;
-    
+
     public ChessPiece[,] Grid { get; set; }
     public bool IsDraw { get; private set; }
 
@@ -80,6 +78,8 @@ public class ChessBoard
         IsWhiteTurn = !IsWhiteTurn;
 
         IsDraw = DrawScan();
+        
+        Console.WriteLine($"IsDraw: {IsDraw}");
 
         if (!IsDraw)
         {
@@ -146,19 +146,10 @@ public class ChessBoard
         }
 
         // 2. Stalemate
-        List<Move> moves = [];
-
-        foreach (var square in Grid)
-        {
-            if (square.Type == PieceType.Empty)
-            {
-                continue;
-            }
-
-            moves.AddRange(from move in Move.GeneratePieceMoves(square)
-                           where !WouldCauseCheck(move)
-                           select move);
-        }
+        List<Move> moves = [..from m in Ai.GenerateAllMoves()
+            where m.InitPiece.IsWhite == IsWhiteTurn && !WouldCauseCheck(m)
+            select m]; // Gets all moves for piece where it can threaten the king
+        Console.WriteLine($"Valid Moves: {moves.Count}");
 
         return moves.Count == 0;
     }
@@ -199,7 +190,7 @@ public class ChessBoard
             {
                 return true;
             }
-            
+
         }
 
         return false;
@@ -238,7 +229,7 @@ public class ChessBoard
         Grid[destX, destY] = originalInit;
         Grid[initX, initY] = new ChessPiece(PieceType.Empty, new(initX, initY));
         originalInit.Coordinates = new(destX, destY);
-        
+
         if (move.Type == MoveType.Promotion)
         {
             originalInit.Type = move.PromotionPiece;
@@ -259,7 +250,7 @@ public class ChessBoard
 
         originalDest.Coordinates = new(destX, destY);
         originalInit.Coordinates = new(initX, initY);
-        
+
         if (move.Type == MoveType.Promotion)
         {
             originalInit.Type = PieceType.Pawn | (originalInit.IsWhite ? PieceType.White : PieceType.Black);
@@ -282,7 +273,7 @@ public class ChessBoard
             Grid[destX, CapturedPawnY] = new ChessPiece(PieceType.Empty, new(destX, CapturedPawnY));
         }
     }
-    
+
     public void HandleCastling(Move move)
     {
         (int initX, int initY) = move.InitPiece.Coordinates;
@@ -328,7 +319,7 @@ public class ChessBoard
         Grid[destX, destY] = originalDest;
         originalInit.Coordinates = new(initX, initY);
         originalDest.Coordinates = new(destX, destY); // if needed
-        
+
         return causesCheck;
     }
 
@@ -402,20 +393,6 @@ public class ChessBoard
         // Return true when the board is successfully set up
         return true;
     }
-
-    public void SetPromotedPieceType(PieceType pieceType)
-    {
-        _promotedPieceType = pieceType;
-    }
-
-    public ChessPiece GetPieceFromPromotion()
-    {
-        if (_promotedPieceType == PieceType.Empty)
-        {
-            throw new InvalidOperationException("Promoted piece type is not set.");
-        }
-        
-        // Coordinates are set later
-        return new ChessPiece(_promotedPieceType, new(0, 0));
-    }
+    
+    
 }

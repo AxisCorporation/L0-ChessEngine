@@ -5,8 +5,6 @@ using CommunityToolkit.Mvvm.Input;
 using L_0_Chess_Engine.Models;
 using System;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using L_0_Chess_Engine.Views;
 using L_0_Chess_Engine.AI;
 using L_0_Chess_Engine.Enums;
 using System.Collections.Generic;
@@ -54,9 +52,9 @@ public partial class GameViewModel : ObservableObject
 
     private PieceType _promotionPiece;
 
-    public TimeSpan WhiteTimer { get; set; }
+    private TimeSpan WhiteTimer { get; set; }
 
-    public bool IsWhiteWinner = true;
+    private bool IsWhiteWinner = true;
 
     private TimeSpan BlackTimer { get; set; }
 
@@ -83,7 +81,7 @@ public partial class GameViewModel : ObservableObject
 
 
     private bool _isWhiteTurn;
-    public bool IsWhiteTurn
+    private bool IsWhiteTurn
     {
         get => _isWhiteTurn;
         set
@@ -184,6 +182,8 @@ public partial class GameViewModel : ObservableObject
         if (_ai is not null && !IsWhiteTurn)
         {
             LockInput = true;
+
+            await Task.Delay(200);
 
             Move aiMove = await Task.Run(_ai.GenerateMove);
             RegisterMove(aiMove);

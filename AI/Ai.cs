@@ -47,27 +47,19 @@ namespace L_0_Chess_Engine.AI
 
                 if (ChessBoard.Instance.WouldCauseCheck(move)) continue;
 
-                if (!move.IsValid)
-                {
-                    Console.WriteLine($"DEBUG1 - Type: {move.InitPiece.Type} From: {move.InitPiece.Coordinates} To: {move.DestPiece.Coordinates}");
-                }
-
                 int eval = 0;
 
                 ChessBoard.Instance.HypotheticalMove(move);
 
                 eval = _difficulty switch
                 {
-                    AIDifficulty.Easy => MiniMax(1, int.MinValue, int.MaxValue, !_white),
-                    AIDifficulty.Medium => MiniMax(2, int.MinValue, int.MaxValue, !_white),
+                    AIDifficulty.Easy => MiniMax(2, int.MinValue, int.MaxValue, !_white),
+                    AIDifficulty.Medium => MiniMax(3, int.MinValue, int.MaxValue, !_white),
                     AIDifficulty.Hard => MiniMax(4, int.MinValue, int.MaxValue, !_white),
                     _ => MiniMax(2, int.MinValue, int.MaxValue, !_white)
                 };
-
-
-                ChessBoard.Instance.UndoHypotheticalMove(move);
                 
-                Console.WriteLine($"DEBUG 2 - Type: {move.InitPiece.Type} From: {move.InitPiece.Coordinates} To: {move.DestPiece.Coordinates}");
+                ChessBoard.Instance.UndoHypotheticalMove(move);
 
                 if (_white)
                 {
@@ -97,18 +89,11 @@ namespace L_0_Chess_Engine.AI
                 }
 
             }
-            
-            Console.WriteLine("-----------");
-
-            foreach (var move in bestMoves)
-            {
-                Console.WriteLine($"DEBUG 3 - Type: {move.InitPiece.Type} From: {move.InitPiece.Coordinates} To: {move.DestPiece.Coordinates}");
-            }
 
             return bestMoves.Count > 0 ? bestMoves[rng.Next(bestMoves.Count)] : null;
         }
 
-        public List<Move> GenerateAllMoves()
+        public static List<Move> GenerateAllMoves()
         {
             List<Move> moves = [];
 
@@ -116,12 +101,12 @@ namespace L_0_Chess_Engine.AI
             {
                 for (int y = 0; y < 8; y++)
                 {
-                    if (Grid[x, y].Type == PieceType.Empty)
+                    if (ChessBoard.Instance.Grid[x, y].Type == PieceType.Empty)
                     {
                         continue;
                     }
 
-                    moves.AddRange(Move.GeneratePieceMoves(Grid[x, y]));
+                    moves.AddRange(Move.GeneratePieceMoves(ChessBoard.Instance.Grid[x, y]));
                 }
             }
 
@@ -249,11 +234,13 @@ namespace L_0_Chess_Engine.AI
             {
                 return ChessBoard.Instance.IsWhiteTurn ? int.MinValue : int.MaxValue;
             }
-            else if (ChessBoard.Instance.IsDraw)
+            
+            if (ChessBoard.Instance.IsDraw)
             {
                 return 0;
             }
-            else if (ChessBoard.Instance.IsCheck)
+            
+            if (ChessBoard.Instance.IsCheck)
             {
                 score += ChessBoard.Instance.IsWhiteTurn ? -200 : 200;
             }

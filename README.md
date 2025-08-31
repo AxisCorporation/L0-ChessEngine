@@ -113,7 +113,7 @@ The Development Cycles have been divided into various Stages.
 - [X] MinMax Algorithm - Zain
 
 ### Stage 5
-**Deadline - Passive Stage:** 18rd Aug 23:59 PST
+**Deadline - Passive Stage:** 18rd Aug 23:59 PST  
 **Passive Deadline:** N/A
 
 - [X] Bug Fixes

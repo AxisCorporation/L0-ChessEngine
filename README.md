@@ -114,7 +114,7 @@ The Development Cycles have been divided into various Stages.
 
 ### Stage 5
 **Deadline - Passive Stage:** 18rd Aug 23:59 PST
-***Passive Deadline:** N/A
+**Passive Deadline:** N/A
 
 - [X] Bug Fixes
   - [X] Pawn Promotion - Zain

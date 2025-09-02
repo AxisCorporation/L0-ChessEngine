@@ -96,6 +96,9 @@ public partial class GameViewModel : ObservableObject
 
     private SquareViewModel? _selectedSquare;
 
+    [ObservableProperty]
+    private string playerText;
+
     public GameViewModel(int timeLimit, bool LoadAi, AIDifficulty Difficulty)
     {
         WhiteTimer = TimeSpan.FromMinutes(timeLimit);
@@ -121,6 +124,7 @@ public partial class GameViewModel : ObservableObject
             }
         }
 
+        PlayerText = LoadAi ? "J.A.R.V.I.S." : "Player 2";
 
         if (LoadAi)
         {

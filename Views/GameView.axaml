@@ -67,8 +67,8 @@
                         
                         <Image Source="avares://L-0 Chess Engine/Assets/Images/User_Profile.png" Width="32" Height="32"></Image>
                     </Border>
-                    
-                    <TextBlock Text="Player 2" FontSize="20" FontWeight="Regular"
+
+					<TextBlock Text="{Binding PlayerText}" FontSize="20" FontWeight="Regular"
                                FontFamily="{StaticResource BlockBlueprint}" Foreground="#ECF0F1" HorizontalAlignment="Left"
                                Grid.Column="1"/>
                     
